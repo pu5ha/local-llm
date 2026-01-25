@@ -155,10 +155,11 @@ export const tiers: Record<TierId, Tier> = {
 
 export const tierOrder: TierId[] = ["entry", "standard", "power"];
 
-export function getTierForRam(ramGB: number): TierId {
+export function getTierForRam(ramGB: number): TierId | null {
   if (ramGB >= 32) return "power";
   if (ramGB >= 16) return "standard";
-  return "entry";
+  if (ramGB >= 8) return "entry";
+  return null; // Below minimum - can't run local LLMs
 }
 
 export function getTierById(id: TierId): Tier {

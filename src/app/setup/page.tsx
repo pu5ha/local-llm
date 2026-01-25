@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   ArrowRight,
   ArrowLeft,
@@ -33,7 +34,11 @@ const stepInfo = {
   complete: { title: "Complete", icon: MessageSquare },
 };
 
-export default function SetupPage() {
+function SetupPageContent() {
+  const searchParams = useSearchParams();
+  const ramFromUrl = searchParams.get("ram");
+  const confirmedRam = ramFromUrl ? parseInt(ramFromUrl, 10) : null;
+
   const [currentStep, setCurrentStep] = useState<Step>("hardware");
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
@@ -156,7 +161,7 @@ export default function SetupPage() {
             transition={{ duration: 0.3 }}
           >
             {currentStep === "hardware" && (
-              <StepHardware onNext={goNext} />
+              <StepHardware onNext={goNext} confirmedRam={confirmedRam} />
             )}
             {currentStep === "tool" && (
               <StepTool
@@ -181,6 +186,7 @@ export default function SetupPage() {
                 onSelect={setSelectedModel}
                 onNext={goNext}
                 onPrev={goPrev}
+                confirmedRam={confirmedRam}
               />
             )}
             {currentStep === "complete" && (
@@ -196,10 +202,10 @@ export default function SetupPage() {
   );
 }
 
-function StepHardware({ onNext }: { onNext: () => void }) {
+function StepHardware({ onNext, confirmedRam }: { onNext: () => void; confirmedRam: number | null }) {
   return (
     <div>
-      <HardwareDetector />
+      <HardwareDetector confirmedRam={confirmedRam} />
       <div className="mt-8 flex justify-end">
         <Button onClick={onNext}>
           Continue
@@ -223,50 +229,80 @@ function StepTool({
 }) {
   const beginnerTools = tools.filter((t) => t.difficulty === "beginner");
 
+  // Tool descriptions with more detail for beginners
+  const toolDetails: Record<string, { description: string; bestFor: string; interface: string }> = {
+    ollama: {
+      description: "A simple app that runs in the background. You chat with AI by typing commands in Terminal.",
+      bestFor: "Best for: Getting started quickly, developers, power users",
+      interface: "Terminal (command line)",
+    },
+    "lm-studio": {
+      description: "A visual app with a chat interface similar to ChatGPT. Everything happens in one window.",
+      bestFor: "Best for: People who prefer visual interfaces, ChatGPT-like experience",
+      interface: "Desktop app with chat UI",
+    },
+    "gpt4all": {
+      description: "A simple desktop app focused on privacy. Easy to use with a clean chat interface.",
+      bestFor: "Best for: Privacy-focused users, simple needs",
+      interface: "Desktop app with chat UI",
+    },
+  };
+
   return (
     <div>
       <Card>
-        <h3 className="text-lg font-semibold mb-2">Choose Your Tool</h3>
-        <p className="text-muted mb-6">
-          We recommend starting with one of these beginner-friendly options.
+        <h3 className="text-lg font-semibold mb-2">How do you want to chat with AI?</h3>
+        <p className="text-muted mb-2">
+          To run AI on your computer, you need an app to manage and run the AI models.
+          Pick the one that matches how you like to work:
         </p>
+        <div className="bg-background-alt rounded-lg p-3 mb-6 text-sm">
+          <strong>Not sure?</strong> Choose <span className="text-primary font-medium">Ollama</span> — it's the most popular and has the best model support.
+        </div>
 
         <div className="space-y-4">
-          {beginnerTools.map((tool) => (
-            <button
-              key={tool.id}
-              onClick={() => onSelect(tool.id)}
-              className={`w-full text-left p-4 rounded-lg border transition-colors ${
-                selectedTool === tool.id
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:border-primary/50"
-              }`}
-            >
-              <div className="flex items-start gap-4">
-                <div
-                  className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                    selectedTool === tool.id
-                      ? "bg-primary text-white"
-                      : "bg-card-hover"
-                  }`}
-                >
-                  <Terminal className="w-5 h-5" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-semibold">{tool.name}</span>
-                    {tool.id === "ollama" && (
-                      <Badge variant="primary">Recommended</Badge>
-                    )}
+          {beginnerTools.map((tool) => {
+            const details = toolDetails[tool.id];
+            return (
+              <button
+                key={tool.id}
+                onClick={() => onSelect(tool.id)}
+                className={`w-full text-left p-4 rounded-lg border transition-colors ${
+                  selectedTool === tool.id
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/50"
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <div
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                      selectedTool === tool.id
+                        ? "bg-primary text-white"
+                        : "bg-card-hover"
+                    }`}
+                  >
+                    <Terminal className="w-5 h-5" />
                   </div>
-                  <p className="text-sm text-muted">{tool.tagline}</p>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-semibold">{tool.name}</span>
+                      {tool.id === "ollama" && (
+                        <Badge variant="primary">Recommended</Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-muted mb-2">{details?.description || tool.tagline}</p>
+                    <div className="flex flex-wrap gap-2 text-xs">
+                      <span className="bg-background-alt px-2 py-1 rounded">{details?.interface}</span>
+                      <span className="text-muted">{details?.bestFor}</span>
+                    </div>
+                  </div>
+                  {selectedTool === tool.id && (
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                  )}
                 </div>
-                {selectedTool === tool.id && (
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                )}
-              </div>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
 
         <div className="mt-6 pt-4 border-t border-border">
@@ -310,13 +346,24 @@ function StepInstall({
         return {
           title: "Install Ollama on macOS",
           steps: [
-            { text: "Download Ollama from the official website", command: null },
-            { text: "Open the downloaded .dmg file", command: null },
-            { text: "Drag Ollama to your Applications folder", command: null },
-            { text: "Open Ollama from Applications", command: null },
+            { text: "Download Ollama from the official website", command: null, detail: null },
+            { text: "Open the downloaded file (Ollama-darwin.zip)", command: null, detail: "Find it in your Downloads folder and double-click it" },
+            { text: "Drag Ollama to your Applications folder", command: null, detail: "A window will appear showing you where to drag it" },
+            { text: "Open Ollama from your Applications folder", command: null, detail: "Double-click Ollama. You'll see a llama icon appear in your menu bar (top-right of screen)" },
             {
-              text: "Verify installation by running:",
+              text: "Verify it's working",
               command: "ollama --version",
+              detail: null,
+              terminalHelp: {
+                title: "How to open Terminal:",
+                steps: [
+                  "Press Command (⌘) + Space to open Spotlight",
+                  "Type \"Terminal\" and press Enter",
+                  "A black/white window will open — this is Terminal",
+                  "Copy and paste the command above, then press Enter",
+                ],
+                successMessage: "You should see a version number like \"ollama version 0.1.xx\""
+              }
             },
           ],
           downloadUrl: "https://ollama.ai/download/mac",
@@ -326,13 +373,16 @@ function StepInstall({
           title: "Install Ollama on Linux",
           steps: [
             {
-              text: "Run this command in your terminal:",
+              text: "Open your terminal and run this command:",
               command: "curl -fsSL https://ollama.ai/install.sh | sh",
+              detail: "This downloads and installs Ollama automatically",
             },
-            { text: "Wait for the installation to complete", command: null },
+            { text: "Wait for the installation to complete", command: null, detail: "This may take a minute or two" },
             {
-              text: "Verify installation:",
+              text: "Verify it's working:",
               command: "ollama --version",
+              detail: null,
+              terminalHelp: null,
             },
           ],
           downloadUrl: null,
@@ -341,12 +391,23 @@ function StepInstall({
         return {
           title: "Install Ollama on Windows",
           steps: [
-            { text: "Download Ollama from the official website", command: null },
-            { text: "Run the installer (.exe file)", command: null },
-            { text: "Follow the installation prompts", command: null },
+            { text: "Download Ollama from the official website", command: null, detail: null },
+            { text: "Run the installer (.exe file)", command: null, detail: "Find OllamaSetup.exe in your Downloads folder and double-click it" },
+            { text: "Follow the installation prompts", command: null, detail: "Click \"Next\" through the installer, then \"Install\"" },
             {
-              text: "Open PowerShell and verify:",
+              text: "Verify it's working",
               command: "ollama --version",
+              detail: null,
+              terminalHelp: {
+                title: "How to open PowerShell:",
+                steps: [
+                  "Press the Windows key",
+                  "Type \"PowerShell\" and click on it",
+                  "A blue window will open — this is PowerShell",
+                  "Copy and paste the command above, then press Enter",
+                ],
+                successMessage: "You should see a version number like \"ollama version 0.1.xx\""
+              }
             },
           ],
           downloadUrl: "https://ollama.ai/download/windows",
@@ -410,15 +471,31 @@ function StepInstall({
           </a>
         )}
 
-        <ol className="space-y-4">
-          {instructions.steps.map((step, index) => (
+        <ol className="space-y-6">
+          {instructions.steps.map((step: { text: string; command: string | null; detail?: string | null; terminalHelp?: { title: string; steps: string[]; successMessage: string } | null }, index: number) => (
             <li key={index} className="flex gap-4">
-              <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-sm font-medium">
+              <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-sm font-bold">
                 {index + 1}
               </div>
               <div className="flex-1">
-                <p className="mb-2">{step.text}</p>
+                <p className="font-medium mb-1">{step.text}</p>
+                {step.detail && (
+                  <p className="text-sm text-muted mb-2">{step.detail}</p>
+                )}
                 {step.command && <CodeBlock code={step.command} />}
+                {step.terminalHelp && (
+                  <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="font-medium text-blue-900 mb-2">{step.terminalHelp.title}</p>
+                    <ol className="list-decimal list-inside space-y-1 text-sm text-blue-800 mb-3">
+                      {step.terminalHelp.steps.map((helpStep: string, i: number) => (
+                        <li key={i}>{helpStep}</li>
+                      ))}
+                    </ol>
+                    <p className="text-sm text-blue-700">
+                      <strong>Success:</strong> {step.terminalHelp.successMessage}
+                    </p>
+                  </div>
+                )}
               </div>
             </li>
           ))}
@@ -461,12 +538,14 @@ function StepModel({
   onSelect,
   onNext,
   onPrev,
+  confirmedRam,
 }: {
   selectedTool: string | null;
   selectedModel: string | null;
   onSelect: (model: string) => void;
   onNext: () => void;
   onPrev: () => void;
+  confirmedRam?: number | null;
 }) {
   const [downloaded, setDownloaded] = useState(false);
   const models = getFeaturedModels();
@@ -480,49 +559,110 @@ function StepModel({
 
   const selectedModelData = models.find((m) => m.id === selectedModel);
 
+  // Determine which models are recommended based on RAM
+  const userRam = confirmedRam || 16; // default to 16 if unknown
+  const getModelRecommendation = (modelId: string): { recommended: boolean; reason: string } => {
+    if (userRam >= 16) {
+      // 16GB+ users: recommend the 8B model
+      if (modelId === "llama-3.1-8b") return { recommended: true, reason: "Best for your 16GB RAM" };
+    } else if (userRam >= 8) {
+      // 8GB users: recommend the 3B model
+      if (modelId === "llama-3.2-3b") return { recommended: true, reason: "Best for your 8GB RAM" };
+    }
+    return { recommended: false, reason: "" };
+  };
+
+  // Model descriptions for beginners
+  const modelInfo: Record<string, { simple: string; goodFor: string; size: string }> = {
+    "llama-3.2-3b": {
+      simple: "Fast and lightweight — great for testing",
+      goodFor: "Quick questions, simple tasks, older/slower computers",
+      size: "Small (2GB download)",
+    },
+    "llama-3.1-8b": {
+      simple: "Smart and capable — the sweet spot",
+      goodFor: "Most tasks: writing, coding help, analysis, conversations",
+      size: "Medium (4.7GB download)",
+    },
+    "mistral-7b": {
+      simple: "European model known for reasoning",
+      goodFor: "Logical tasks, coding, detailed explanations",
+      size: "Medium (4GB download)",
+    },
+    "deepseek-coder-6.7b": {
+      simple: "Built specifically for programming",
+      goodFor: "Writing code, debugging, technical questions",
+      size: "Medium (3.8GB download)",
+    },
+  };
+
   return (
     <div>
       <Card>
-        <h3 className="text-lg font-semibold mb-2">Download a Model</h3>
-        <p className="text-muted mb-6">
-          Choose a model to download. We recommend starting with a smaller model
-          to test your setup.
-        </p>
+        <h3 className="text-lg font-semibold mb-2">Download an AI Model</h3>
+        <div className="text-muted mb-4">
+          <p className="mb-2">
+            A <strong>model</strong> is the AI brain that runs on your computer. Different models have different strengths.
+          </p>
+          <div className="bg-background-alt rounded-lg p-3 text-sm">
+            <strong>What does "{userRam}GB RAM required" mean?</strong>
+            <p className="mt-1">Your computer needs at least that much memory to run the model. You have {userRam}GB, so you can run any model marked {userRam}GB or less.</p>
+          </div>
+        </div>
 
-        <div className="grid gap-3">
-          {models.slice(0, 4).map((model) => (
-            <button
-              key={model.id}
-              onClick={() => onSelect(model.id)}
-              className={`w-full text-left p-4 rounded-lg border transition-colors ${
-                selectedModel === model.id
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:border-primary/50"
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium">
-                      {model.name} {model.parameters}
-                    </span>
-                    <Badge variant="default">{model.ramRequired}</Badge>
-                    {model.id === "llama-3.2-3b" && (
-                      <Badge variant="primary">Recommended</Badge>
+        <div className="space-y-3">
+          {models.slice(0, 4).map((model) => {
+            const info = modelInfo[model.id];
+            const rec = getModelRecommendation(model.id);
+            const ramNumber = parseInt(model.ramRequired.replace(/[^0-9]/g, '')) || 8;
+            const canRun = userRam >= ramNumber;
+
+            return (
+              <button
+                key={model.id}
+                onClick={() => canRun && onSelect(model.id)}
+                disabled={!canRun}
+                className={`w-full text-left p-4 rounded-lg border transition-colors ${
+                  !canRun
+                    ? "border-border bg-gray-50 opacity-60 cursor-not-allowed"
+                    : selectedModel === model.id
+                    ? "border-primary bg-primary/5"
+                    : rec.recommended
+                    ? "border-primary/50 bg-primary/5 hover:border-primary"
+                    : "border-border hover:border-primary/50"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className="font-semibold">{model.name}</span>
+                      <Badge variant="default">{model.ramRequired} RAM</Badge>
+                      {rec.recommended && (
+                        <Badge variant="primary">{rec.reason}</Badge>
+                      )}
+                      {!canRun && (
+                        <Badge variant="default">Needs more RAM</Badge>
+                      )}
+                    </div>
+                    <p className="text-sm font-medium text-foreground mb-1">
+                      {info?.simple || model.description}
+                    </p>
+                    <p className="text-xs text-muted">
+                      {info?.goodFor && <><strong>Good for:</strong> {info.goodFor}</>}
+                    </p>
+                    {info?.size && (
+                      <p className="text-xs text-muted mt-1">{info.size}</p>
                     )}
                   </div>
-                  <p className="text-sm text-muted line-clamp-1">
-                    {model.description}
-                  </p>
+                  {selectedModel === model.id ? (
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                  ) : (
+                    <Circle className="w-5 h-5 text-border flex-shrink-0" />
+                  )}
                 </div>
-                {selectedModel === model.id ? (
-                  <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                ) : (
-                  <Circle className="w-5 h-5 text-border flex-shrink-0" />
-                )}
-              </div>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
 
         {selectedModel && selectedModelData && (
@@ -708,5 +848,18 @@ function StepComplete({
         )}
       </div>
     </div>
+  );
+}
+
+// Main export with Suspense boundary for useSearchParams
+export default function SetupPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <SetupPageContent />
+    </Suspense>
   );
 }

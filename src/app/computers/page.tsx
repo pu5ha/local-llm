@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
@@ -30,15 +30,10 @@ function ComputersPageContent() {
   const tiers = getAllTiers();
 
   const [userTier, setUserTier] = useState<TierId | null>(null);
-  const [showManualSelect, setShowManualSelect] = useState(false);
   const [expandedSection, setExpandedSection] = useState<"upgrade" | "buy" | null>(null);
 
-  // Determine user's tier from detected hardware
-  useEffect(() => {
-    if (!hardware.isLoading && hardware.ram) {
-      setUserTier(getTierForRam(hardware.ram));
-    }
-  }, [hardware]);
+  // Track if user has manually selected RAM (browser detection is unreliable)
+  const [manualRamSelected, setManualRamSelected] = useState<number | null>(null);
 
   const detectedTier = userTier ? getTierById(userTier) : null;
 
@@ -137,8 +132,8 @@ function ComputersPageContent() {
                 </div>
               ) : (
                 <>
-                  {/* Specs Grid */}
-                  <div className="grid grid-cols-3 gap-4 mb-6">
+                  {/* Specs Grid - OS and Cores only (RAM is unreliable) */}
+                  <div className="grid grid-cols-2 gap-4 mb-6">
                     <div className="text-center">
                       <div className="w-10 h-10 rounded-lg bg-background-alt flex items-center justify-center mx-auto mb-2">
                         <Monitor className="w-5 h-5 text-muted" />
@@ -147,15 +142,6 @@ function ComputersPageContent() {
                       <div className="font-medium">
                         {getOSLabel(hardware.os)}
                         {hardware.osVersion && ` ${hardware.osVersion}`}
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-10 h-10 rounded-lg bg-background-alt flex items-center justify-center mx-auto mb-2">
-                        <HardDrive className="w-5 h-5 text-muted" />
-                      </div>
-                      <div className="text-sm text-muted">RAM</div>
-                      <div className="font-medium">
-                        {hardware.ram ? `${hardware.ram}GB` : "Unknown"}
                       </div>
                     </div>
                     <div className="text-center">
@@ -169,8 +155,136 @@ function ComputersPageContent() {
                     </div>
                   </div>
 
-                  {/* Tier Result */}
-                  {detectedTier ? (
+                  {/* RAM Selection - Primary UI */}
+                  {!manualRamSelected && (
+                    <div className="mb-6">
+                      {/* Header */}
+                      <div className="flex items-start gap-3 mb-4">
+                        <HardDrive className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-medium">
+                            How much RAM does your computer have?
+                          </p>
+                          <p className="text-sm text-muted mt-1">
+                            Follow the steps below to find out, then select your amount.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Instructions - shown first */}
+                      <div className="bg-background-alt rounded-xl p-4 mb-5">
+                        {hardware.os === "mac" ? (
+                          /* Mac Instructions */
+                          <div>
+                            <p className="font-medium mb-3">Find your RAM on Mac:</p>
+                            <ol className="space-y-2 text-sm">
+                              <li className="flex gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">1</span>
+                                <span>Click the <strong>Apple logo </strong> in the top-left corner of your screen</span>
+                              </li>
+                              <li className="flex gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">2</span>
+                                <span>Click <strong>"About This Mac"</strong></span>
+                              </li>
+                              <li className="flex gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">3</span>
+                                <div>
+                                  <span>Look for <strong>"Memory"</strong> — you'll see a number like:</span>
+                                  <div className="mt-1 inline-block font-mono bg-white border border-border px-3 py-1 rounded text-sm">
+                                    16 GB
+                                  </div>
+                                </div>
+                              </li>
+                            </ol>
+                            <p className="text-xs text-muted mt-3">
+                              The number before "GB" is your RAM (8, 16, 32, etc.)
+                            </p>
+                          </div>
+                        ) : hardware.os === "windows" ? (
+                          /* Windows Instructions */
+                          <div>
+                            <p className="font-medium mb-3">Find your RAM on Windows:</p>
+                            <ol className="space-y-2 text-sm">
+                              <li className="flex gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">1</span>
+                                <span>Press <strong>Windows key + I</strong> to open Settings</span>
+                              </li>
+                              <li className="flex gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">2</span>
+                                <span>Click <strong>"System"</strong>, then scroll down and click <strong>"About"</strong></span>
+                              </li>
+                              <li className="flex gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">3</span>
+                                <div>
+                                  <span>Look for <strong>"Installed RAM"</strong> — you'll see a number like:</span>
+                                  <div className="mt-1 inline-block font-mono bg-white border border-border px-3 py-1 rounded text-sm">
+                                    16.0 GB
+                                  </div>
+                                </div>
+                              </li>
+                            </ol>
+                            <p className="text-xs text-muted mt-3">
+                              Ignore decimals — 15.8 GB means you have 16GB
+                            </p>
+                          </div>
+                        ) : (
+                          /* Generic Instructions for Linux/Unknown */
+                          <div>
+                            <p className="font-medium mb-3">Find your RAM:</p>
+                            <div className="space-y-3 text-sm">
+                              <div className="bg-white rounded-lg p-3 border border-border">
+                                <p className="font-medium text-sm mb-1">Mac:</p>
+                                <p className="text-muted">Apple menu  → About This Mac → Look for "Memory"</p>
+                              </div>
+                              <div className="bg-white rounded-lg p-3 border border-border">
+                                <p className="font-medium text-sm mb-1">Windows:</p>
+                                <p className="text-muted">Settings → System → About → Look for "Installed RAM"</p>
+                              </div>
+                              <div className="bg-white rounded-lg p-3 border border-border">
+                                <p className="font-medium text-sm mb-1">Linux:</p>
+                                <p className="text-muted">Open terminal and run: <code className="bg-gray-100 px-1 rounded">free -h</code></p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* RAM Selection */}
+                      <div className="bg-primary-pale rounded-xl p-4">
+                        <p className="font-medium mb-3">Select your RAM:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {[8, 16, 32, 64].map((ram) => {
+                            const isSuggested = ram === hardware.suggestedRam;
+                            return (
+                              <button
+                                key={ram}
+                                onClick={() => {
+                                  setManualRamSelected(ram);
+                                  setUserTier(getTierForRam(ram));
+                                }}
+                                className={`px-5 py-2.5 rounded-lg border-2 font-medium transition-colors ${
+                                  isSuggested
+                                    ? "border-primary bg-primary text-white hover:bg-primary/90"
+                                    : "border-border bg-white hover:border-primary"
+                                }`}
+                              >
+                                {ram}GB
+                                {isSuggested && " (likely yours)"}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {hardware.suggestedRam && (
+                          <p className="text-xs text-muted mt-3">
+                            Based on your {hardware.suggestedRamReason?.toLowerCase()}, you likely have {hardware.suggestedRam}GB
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Tier Result - Only show after manual RAM selection */}
+                  {manualRamSelected && detectedTier && (
                     <div
                       className={`rounded-xl p-6 ${
                         detectedTier.id === "entry"
@@ -183,9 +297,14 @@ function ComputersPageContent() {
                       <div className="flex items-start gap-4">
                         <span className="text-4xl">{detectedTier.emoji}</span>
                         <div className="flex-1">
-                          <h3 className="font-serif text-xl mb-1">
-                            You're in the {detectedTier.name} Tier
-                          </h3>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-serif text-xl">
+                              You're in the {detectedTier.name} Tier
+                            </h3>
+                            <span className="text-xs bg-white/60 px-2 py-0.5 rounded">
+                              {manualRamSelected}GB RAM
+                            </span>
+                          </div>
                           <p className="text-sm text-muted mb-4">
                             {detectedTier.tagline}
                           </p>
@@ -238,7 +357,7 @@ function ComputersPageContent() {
                       {/* CTA */}
                       <div className="mt-6 flex flex-col sm:flex-row gap-3">
                         <Link
-                          href={`/setup?tier=${detectedTier.id}${useCase ? `&use=${useCase.id}` : ""}`}
+                          href={`/setup?tier=${detectedTier.id}&ram=${manualRamSelected}${useCase ? `&use=${useCase.id}` : ""}`}
                           className="btn-primary justify-center"
                         >
                           <Sparkles className="w-4 h-4" />
@@ -254,58 +373,19 @@ function ComputersPageContent() {
                           </button>
                         )}
                       </div>
-                    </div>
-                  ) : (
-                    /* Manual selection if detection failed */
-                    <div className="text-center py-4">
-                      <p className="text-muted mb-4">
-                        We couldn't detect your RAM automatically.
-                      </p>
+
+                      {/* Change selection link */}
                       <button
-                        onClick={() => setShowManualSelect(true)}
-                        className="btn-secondary"
+                        onClick={() => {
+                          setManualRamSelected(null);
+                          setUserTier(null);
+                        }}
+                        className="mt-4 text-sm text-muted hover:text-foreground transition-colors"
                       >
-                        Tell us about your computer
+                        Change RAM selection
                       </button>
                     </div>
                   )}
-
-                  {/* Manual RAM Selection */}
-                  <AnimatePresence>
-                    {(showManualSelect || !hardware.ram) && !hardware.isLoading && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="mt-6 pt-6 border-t border-border"
-                      >
-                        <p className="text-sm text-muted mb-3">
-                          Select your RAM amount:
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {[4, 8, 16, 32, 64].map((ram) => (
-                            <button
-                              key={ram}
-                              onClick={() => {
-                                setUserTier(getTierForRam(ram));
-                                setShowManualSelect(false);
-                              }}
-                              className={`px-4 py-2 rounded-lg border transition-colors ${
-                                hardware.ram === ram
-                                  ? "border-primary bg-primary-pale"
-                                  : "border-border hover:border-primary"
-                              }`}
-                            >
-                              {ram}GB
-                            </button>
-                          ))}
-                        </div>
-                        <p className="text-xs text-muted mt-3">
-                          Not sure? Check System Information (Mac) or Task Manager (Windows).
-                        </p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </>
               )}
             </div>
@@ -474,7 +554,7 @@ function ComputersPageContent() {
                   {/* CTA */}
                   {isUserTier ? (
                     <Link
-                      href={`/setup?tier=${tier.id}`}
+                      href={`/setup?tier=${tier.id}&ram=${manualRamSelected}`}
                       className="btn-primary w-full justify-center mt-4"
                     >
                       Get Started
@@ -602,7 +682,7 @@ function ComputersPageContent() {
                 : "Once you know your tier, follow our simple setup guide to start using private AI."}
             </p>
             <Link
-              href={`/setup${userTier ? `?tier=${userTier}` : ""}`}
+              href={`/setup${userTier ? `?tier=${userTier}&ram=${manualRamSelected}` : ""}`}
               className="inline-flex items-center gap-2 px-6 py-3 bg-white text-foreground font-semibold rounded-lg hover:bg-primary-pale transition-colors"
             >
               <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse" />

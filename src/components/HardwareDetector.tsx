@@ -18,8 +18,26 @@ const osNames = {
   unknown: "Unknown OS",
 };
 
-export default function HardwareDetector() {
-  const { hardware, recommendations } = useHardwareDetection();
+interface HardwareDetectorProps {
+  confirmedRam?: number | null;
+}
+
+export default function HardwareDetector({ confirmedRam }: HardwareDetectorProps = {}) {
+  const { hardware, recommendations: baseRecommendations } = useHardwareDetection();
+
+  // Use confirmed RAM if provided (user selected on computers page)
+  const displayRam = confirmedRam || hardware.suggestedRam;
+  const ramSource = confirmedRam ? "confirmed" : "estimated";
+
+  // Recalculate recommendations based on confirmed RAM if provided
+  const recommendations = confirmedRam
+    ? {
+        ...baseRecommendations,
+        canRun4GB: confirmedRam >= 4,
+        canRun8GB: confirmedRam >= 8,
+        canRun16GB: confirmedRam >= 16,
+      }
+    : baseRecommendations;
 
   if (hardware.isLoading) {
     return (
@@ -39,7 +57,7 @@ export default function HardwareDetector() {
       <h3 className="font-serif text-xl mb-6">Your System</h3>
 
       {/* Hardware Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         <div className="bg-background-alt rounded-lg p-4">
           <Monitor className="w-5 h-5 text-primary mb-2" />
           <div className="text-xs text-muted mb-1">Operating System</div>
@@ -48,14 +66,6 @@ export default function HardwareDetector() {
             {hardware.osVersion && (
               <span className="text-muted ml-1">{hardware.osVersion}</span>
             )}
-          </div>
-        </div>
-
-        <div className="bg-background-alt rounded-lg p-4">
-          <HardDrive className="w-5 h-5 text-primary mb-2" />
-          <div className="text-xs text-muted mb-1">Memory (RAM)</div>
-          <div className="font-medium">
-            {hardware.ram ? `${hardware.ram}GB+` : "Unknown"}
           </div>
         </div>
 
@@ -80,89 +90,155 @@ export default function HardwareDetector() {
         </div>
       </div>
 
+      {/* RAM - show confirmed value if provided, otherwise estimate */}
+      <div className="bg-primary-pale rounded-lg p-4 mb-8">
+        <div className="flex items-start gap-3">
+          <HardDrive className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+          <div>
+            <div className="text-xs text-muted mb-1">Memory (RAM)</div>
+            {displayRam ? (
+              <>
+                <div className="font-medium">{displayRam}GB</div>
+                {ramSource === "confirmed" ? (
+                  <p className="text-xs text-muted mt-1">
+                    You confirmed this on the previous page.{" "}
+                    <a href="/computers" className="text-primary underline">Change</a>
+                  </p>
+                ) : (
+                  <p className="text-xs text-muted mt-1">
+                    Estimated based on {hardware.suggestedRamReason?.toLowerCase()}.{" "}
+                    <a href="/computers" className="text-primary underline">Verify your RAM</a>
+                  </p>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="font-medium">Unknown</div>
+                <p className="text-xs text-muted mt-1">
+                  <a href="/computers" className="text-primary underline">Check your RAM</a> to see accurate recommendations.
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* What You Can Run */}
       <div className="border-t border-border pt-6">
-        <h4 className="font-medium mb-4">What You Can Run</h4>
+        <h4 className="font-medium mb-2">What You Can Run</h4>
+        <p className="text-sm text-muted mb-4">
+          Bigger models are smarter but need more memory and respond slower.
+        </p>
 
         <div className="space-y-3">
-          <ModelTier
-            name="Small Models (3-4B)"
-            examples="Llama 3.2 3B, Phi-3 Mini"
+          <ModelTierCard
+            name="Good"
+            description="Quick answers, simple questions, basic help"
+            examples="Like a helpful assistant for everyday tasks"
             canRun={recommendations.canRun4GB}
-            ramRequired="4GB RAM"
+            ramRequired="4GB"
+            speed="Fast responses"
           />
-          <ModelTier
-            name="Medium Models (7-8B)"
-            examples="Mistral 7B, Llama 3.2 8B"
+          <ModelTierCard
+            name="Better"
+            description="Writing help, coding assistance, deeper conversations"
+            examples="Like ChatGPT for most tasks"
             canRun={recommendations.canRun8GB}
-            ramRequired="8GB RAM"
+            ramRequired="8GB"
+            speed="Moderate speed"
           />
-          <ModelTier
-            name="Large Models (13B+)"
-            examples="Code Llama 13B, Llama 2 13B"
+          <ModelTierCard
+            name="Best"
+            description="Complex analysis, professional coding, detailed writing"
+            examples="For power users who need the best quality"
             canRun={recommendations.canRun16GB}
-            ramRequired="16GB RAM"
+            ramRequired="16GB"
+            speed="Slower but smarter"
           />
         </div>
       </div>
 
-      {/* Recommendations */}
-      {recommendations.recommendedModels.length > 0 && (
+      {/* Primary Recommendation */}
+      {displayRam && (
         <div className="border-t border-border pt-6 mt-6">
-          <h4 className="font-medium mb-4">Recommended For You</h4>
-          <div className="flex flex-wrap gap-2">
-            {recommendations.recommendedModels.map((model) => (
-              <span key={model} className="tag tag-green">
-                {model}
-              </span>
-            ))}
+          <h4 className="font-medium mb-3">Our Recommendation</h4>
+          <div className="bg-primary-pale rounded-lg p-4">
+            {displayRam >= 16 ? (
+              <>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-semibold">Llama 3.1 8B</span>
+                  <span className="tag tag-green">Best for {displayRam}GB RAM</span>
+                </div>
+                <p className="text-sm text-muted">
+                  Smart and capable — handles most tasks like writing, coding help, and conversations.
+                </p>
+              </>
+            ) : displayRam >= 8 ? (
+              <>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-semibold">Llama 3.2 3B</span>
+                  <span className="tag tag-green">Best for {displayRam}GB RAM</span>
+                </div>
+                <p className="text-sm text-muted">
+                  Fast and lightweight — great for quick questions and simple tasks.
+                </p>
+              </>
+            ) : (
+              <p className="text-sm text-muted">
+                We recommend at least 8GB RAM to run AI models locally.
+              </p>
+            )}
           </div>
-          <p className="text-sm text-muted mt-3">
-            Based on your hardware, you can run models up to{" "}
-            <strong>{recommendations.maxModelSize}</strong> parameters
-            comfortably.
+          <p className="text-xs text-muted mt-3">
+            You'll choose your model in the next step. This is just our suggestion based on your {displayRam}GB RAM.
           </p>
         </div>
       )}
-
-      {/* Note about detection */}
-      <div className="mt-6 pt-4 border-t border-border">
-        <p className="text-xs text-muted">
-          Note: Hardware detection via browser has limitations. Actual RAM may
-          be higher than detected. GPU detection works best in Chrome/Edge.
-        </p>
-      </div>
     </motion.div>
   );
 }
 
-function ModelTier({
+function ModelTierCard({
   name,
+  description,
   examples,
   canRun,
   ramRequired,
+  speed,
 }: {
   name: string;
+  description: string;
   examples: string;
   canRun: boolean;
   ramRequired: string;
+  speed: string;
 }) {
   return (
     <div
-      className={`flex items-center gap-4 p-4 rounded-lg ${
-        canRun ? "bg-primary-pale" : "bg-background-alt opacity-60"
+      className={`p-4 rounded-lg border ${
+        canRun
+          ? "bg-primary-pale border-primary/20"
+          : "bg-background-alt border-border opacity-60"
       }`}
     >
-      {canRun ? (
-        <Check className="w-5 h-5 text-primary flex-shrink-0" />
-      ) : (
-        <AlertCircle className="w-5 h-5 text-muted flex-shrink-0" />
-      )}
-      <div className="flex-1 min-w-0">
-        <div className="font-medium">{name}</div>
-        <div className="text-sm text-muted truncate">{examples}</div>
+      <div className="flex items-start justify-between gap-3 mb-2">
+        <div className="flex items-center gap-2">
+          {canRun ? (
+            <Check className="w-5 h-5 text-primary flex-shrink-0" />
+          ) : (
+            <AlertCircle className="w-5 h-5 text-muted flex-shrink-0" />
+          )}
+          <span className="font-semibold">{name}</span>
+        </div>
+        <div className="text-right">
+          <span className={`tag text-xs ${canRun ? "tag-green" : ""}`}>
+            {canRun ? `✓ You have ${ramRequired}+` : `Needs ${ramRequired}`}
+          </span>
+        </div>
       </div>
-      <span className={`tag ${canRun ? "tag-green" : ""}`}>{ramRequired}</span>
+      <p className="text-sm font-medium ml-7 mb-1">{description}</p>
+      <p className="text-xs text-muted ml-7">{examples}</p>
+      <p className="text-xs text-muted ml-7 mt-1">{speed}</p>
     </div>
   );
 }

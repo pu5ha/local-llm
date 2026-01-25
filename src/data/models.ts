@@ -32,8 +32,8 @@ export const models: Model[] = [
     featured: true,
   },
   {
-    id: "llama-3.2-8b",
-    name: "Llama 3.2",
+    id: "llama-3.1-8b",
+    name: "Llama 3.1",
     provider: "Meta",
     description:
       "Balanced model offering great performance across various tasks. The sweet spot for most users.",
@@ -43,8 +43,8 @@ export const models: Model[] = [
     bestFor: ["General chat", "Writing", "Analysis"],
     quality: "great",
     speed: "medium",
-    ollamaName: "llama3.2:8b",
-    lmStudioName: "llama-3.2-8b",
+    ollamaName: "llama3.1",
+    lmStudioName: "llama-3.1-8b",
     featured: true,
   },
   {

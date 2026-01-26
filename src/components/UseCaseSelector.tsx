@@ -9,6 +9,14 @@ import { getTierById } from "@/data/tiers";
 export default function UseCaseSelector() {
   const useCases = getAllUseCases();
 
+  const getHref = (useCaseId: string) => {
+    // Images use case links to its own setup page
+    if (useCaseId === "images") {
+      return "/images/setup";
+    }
+    return `/computers?use=${useCaseId}`;
+  };
+
   return (
     <div className="grid sm:grid-cols-2 gap-4">
       {useCases.map((useCase, i) => {
@@ -22,7 +30,7 @@ export default function UseCaseSelector() {
             transition={{ delay: i * 0.1 }}
           >
             <Link
-              href={`/computers?use=${useCase.id}`}
+              href={getHref(useCase.id)}
               className="block paper-card p-6 h-full group hover:border-primary transition-colors"
             >
               <div className="flex items-start gap-4">
@@ -34,7 +42,7 @@ export default function UseCaseSelector() {
                   <p className="text-sm text-muted mb-3">
                     {useCase.shortDescription}
                   </p>
-                  <div className="flex items-center gap-2 text-xs">
+                  <div className="flex items-center gap-2 text-xs flex-wrap">
                     <span
                       className={`tag ${
                         minTier.id === "entry"
@@ -46,6 +54,11 @@ export default function UseCaseSelector() {
                     >
                       {minTier.emoji} {minTier.name} tier+
                     </span>
+                    {useCase.id === "images" && (
+                      <span className="tag bg-purple-100 text-purple-700">
+                        Requires GPU
+                      </span>
+                    )}
                   </div>
                 </div>
                 <ArrowRight className="w-5 h-5 text-muted group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0" />

@@ -1,6 +1,6 @@
 import { TierId } from "./tiers";
 
-export type UseCaseId = "chat" | "coding" | "writing" | "creative";
+export type UseCaseId = "chat" | "coding" | "writing" | "creative" | "images";
 
 export interface UseCase {
   id: UseCaseId;
@@ -103,9 +103,31 @@ export const useCases: Record<UseCaseId, UseCase> = {
       "Unlimited brainstorming sessions",
     ],
   },
+  images: {
+    id: "images",
+    name: "Generate Images",
+    emoji: "🖼️",
+    shortDescription: "Create images from descriptions",
+    description:
+      "Turn text descriptions into images using AI. Create art, illustrations, concept designs, and more—all privately on your computer. No one sees what you make.",
+    minimumTier: "standard",
+    recommendedTier: "power",
+    examplePrompts: [
+      "A cozy coffee shop on a rainy day, watercolor style",
+      "Futuristic city skyline at sunset, cyberpunk aesthetic",
+      "Golden retriever puppy in autumn leaves, professional photo",
+      "Fantasy castle on a floating island, digital art",
+    ],
+    benefits: [
+      "Complete privacy—images never uploaded",
+      "No watermarks or usage restrictions",
+      "Unlimited generations, no credits needed",
+      "Works offline once set up",
+    ],
+  },
 };
 
-export const useCaseOrder: UseCaseId[] = ["chat", "coding", "writing", "creative"];
+export const useCaseOrder: UseCaseId[] = ["chat", "coding", "writing", "creative", "images"];
 
 export function getUseCaseById(id: UseCaseId): UseCase {
   return useCases[id];

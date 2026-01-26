@@ -16,6 +16,11 @@ export interface HardwareInfo {
   suggestedRam: number | null;
   suggestedRamReason: string | null;
   isAppleSilicon: boolean;
+  // GPU/VRAM info for image generation
+  gpuType: "nvidia" | "amd" | "apple" | "intel" | "unknown";
+  estimatedVram: number | null;
+  canRunImageGeneration: boolean;
+  imageGenerationTier: "basic" | "standard" | "high" | "power" | "none";
 }
 
 export interface ModelRecommendation {
@@ -118,6 +123,122 @@ interface RAMSuggestion {
   suggestedRam: number | null;
   reason: string | null;
   isAppleSilicon: boolean;
+}
+
+interface GPUInfo {
+  gpuType: "nvidia" | "amd" | "apple" | "intel" | "unknown";
+  estimatedVram: number | null;
+  canRunImageGeneration: boolean;
+  imageGenerationTier: "basic" | "standard" | "high" | "power" | "none";
+}
+
+/**
+ * Estimate VRAM from GPU string using heuristics.
+ * This is approximate since browsers can't directly detect VRAM.
+ */
+function estimateGPUInfo(gpu: string | null, isAppleSilicon: boolean, ram: number | null): GPUInfo {
+  if (!gpu) {
+    return {
+      gpuType: "unknown",
+      estimatedVram: null,
+      canRunImageGeneration: false,
+      imageGenerationTier: "none",
+    };
+  }
+
+  const gpuLower = gpu.toLowerCase();
+  let gpuType: GPUInfo["gpuType"] = "unknown";
+  let estimatedVram: number | null = null;
+
+  // Detect GPU type
+  if (gpuLower.includes("nvidia") || gpuLower.includes("geforce") || gpuLower.includes("rtx") || gpuLower.includes("gtx") || gpuLower.includes("quadro")) {
+    gpuType = "nvidia";
+  } else if (gpuLower.includes("radeon") || gpuLower.includes("amd") || gpuLower.includes("rx ")) {
+    gpuType = "amd";
+  } else if (gpuLower.includes("apple") || gpuLower.includes("m1") || gpuLower.includes("m2") || gpuLower.includes("m3") || gpuLower.includes("m4")) {
+    gpuType = "apple";
+  } else if (gpuLower.includes("intel") || gpuLower.includes("iris") || gpuLower.includes("uhd")) {
+    gpuType = "intel";
+  }
+
+  // Estimate VRAM based on GPU model
+  // NVIDIA RTX 40 series
+  if (gpuLower.includes("rtx 4090")) estimatedVram = 24;
+  else if (gpuLower.includes("rtx 4080")) estimatedVram = 16;
+  else if (gpuLower.includes("rtx 4070 ti")) estimatedVram = 12;
+  else if (gpuLower.includes("rtx 4070")) estimatedVram = 12;
+  else if (gpuLower.includes("rtx 4060 ti")) estimatedVram = 8;
+  else if (gpuLower.includes("rtx 4060")) estimatedVram = 8;
+  // NVIDIA RTX 30 series
+  else if (gpuLower.includes("rtx 3090")) estimatedVram = 24;
+  else if (gpuLower.includes("rtx 3080 ti")) estimatedVram = 12;
+  else if (gpuLower.includes("rtx 3080")) estimatedVram = 10;
+  else if (gpuLower.includes("rtx 3070 ti")) estimatedVram = 8;
+  else if (gpuLower.includes("rtx 3070")) estimatedVram = 8;
+  else if (gpuLower.includes("rtx 3060 ti")) estimatedVram = 8;
+  else if (gpuLower.includes("rtx 3060")) estimatedVram = 12;
+  else if (gpuLower.includes("rtx 3050")) estimatedVram = 8;
+  // NVIDIA RTX 20 series
+  else if (gpuLower.includes("rtx 2080 ti")) estimatedVram = 11;
+  else if (gpuLower.includes("rtx 2080")) estimatedVram = 8;
+  else if (gpuLower.includes("rtx 2070")) estimatedVram = 8;
+  else if (gpuLower.includes("rtx 2060")) estimatedVram = 6;
+  // NVIDIA GTX 16 series
+  else if (gpuLower.includes("gtx 1660")) estimatedVram = 6;
+  else if (gpuLower.includes("gtx 1650")) estimatedVram = 4;
+  // NVIDIA GTX 10 series
+  else if (gpuLower.includes("gtx 1080 ti")) estimatedVram = 11;
+  else if (gpuLower.includes("gtx 1080")) estimatedVram = 8;
+  else if (gpuLower.includes("gtx 1070")) estimatedVram = 8;
+  else if (gpuLower.includes("gtx 1060")) estimatedVram = 6;
+  else if (gpuLower.includes("gtx 1050")) estimatedVram = 4;
+  // AMD cards
+  else if (gpuLower.includes("rx 7900")) estimatedVram = 20;
+  else if (gpuLower.includes("rx 7800")) estimatedVram = 16;
+  else if (gpuLower.includes("rx 7700")) estimatedVram = 12;
+  else if (gpuLower.includes("rx 7600")) estimatedVram = 8;
+  else if (gpuLower.includes("rx 6900")) estimatedVram = 16;
+  else if (gpuLower.includes("rx 6800")) estimatedVram = 16;
+  else if (gpuLower.includes("rx 6700")) estimatedVram = 12;
+  else if (gpuLower.includes("rx 6600")) estimatedVram = 8;
+  // Apple Silicon - uses unified memory (shared with RAM)
+  else if (gpuType === "apple" && ram) {
+    // Apple Silicon shares RAM with GPU
+    // Typically can use about 75% of total RAM for GPU tasks
+    estimatedVram = Math.floor(ram * 0.75);
+  }
+
+  // Determine image generation tier based on VRAM
+  let imageGenerationTier: GPUInfo["imageGenerationTier"] = "none";
+  let canRunImageGeneration = false;
+
+  if (estimatedVram !== null) {
+    if (estimatedVram >= 24) {
+      imageGenerationTier = "power";
+      canRunImageGeneration = true;
+    } else if (estimatedVram >= 12) {
+      imageGenerationTier = "high";
+      canRunImageGeneration = true;
+    } else if (estimatedVram >= 8) {
+      imageGenerationTier = "standard";
+      canRunImageGeneration = true;
+    } else if (estimatedVram >= 4) {
+      imageGenerationTier = "basic";
+      canRunImageGeneration = true;
+    }
+  } else if (gpuType === "nvidia" || gpuType === "amd") {
+    // If we detected a discrete GPU but couldn't estimate VRAM, assume at least basic capability
+    imageGenerationTier = "basic";
+    canRunImageGeneration = true;
+    estimatedVram = 6; // Conservative estimate for unknown discrete GPU
+  }
+
+  return {
+    gpuType,
+    estimatedVram,
+    canRunImageGeneration,
+    imageGenerationTier,
+  };
 }
 
 /**
@@ -287,6 +408,10 @@ export default function useHardwareDetection() {
     suggestedRam: null,
     suggestedRamReason: null,
     isAppleSilicon: false,
+    gpuType: "unknown",
+    estimatedVram: null,
+    canRunImageGeneration: false,
+    imageGenerationTier: "none",
   });
 
   useEffect(() => {
@@ -311,6 +436,13 @@ export default function useHardwareDetection() {
           isSuspicious = true;
         }
 
+        // Get GPU info for image generation
+        const gpuInfo = estimateGPUInfo(
+          gpu,
+          ramSuggestion.isAppleSilicon,
+          ramSuggestion.suggestedRam || finalRam
+        );
+
         setHardware({
           os,
           osVersion,
@@ -324,6 +456,10 @@ export default function useHardwareDetection() {
           suggestedRam: ramSuggestion.suggestedRam,
           suggestedRamReason: ramSuggestion.reason,
           isAppleSilicon: ramSuggestion.isAppleSilicon,
+          gpuType: gpuInfo.gpuType,
+          estimatedVram: gpuInfo.estimatedVram,
+          canRunImageGeneration: gpuInfo.canRunImageGeneration,
+          imageGenerationTier: gpuInfo.imageGenerationTier,
         });
       } catch (err) {
         setHardware((prev) => ({
@@ -340,6 +476,102 @@ export default function useHardwareDetection() {
   }, []);
 
   const recommendations = getRecommendations(hardware);
+  const imageRecommendations = getImageRecommendations(hardware);
 
-  return { hardware, recommendations };
+  return { hardware, recommendations, imageRecommendations };
+}
+
+export interface ImageRecommendation {
+  canRun: boolean;
+  tier: "basic" | "standard" | "high" | "power" | "none";
+  tierDescription: string;
+  recommendedModels: string[];
+  recommendedTool: string;
+  limitations: string[];
+}
+
+export function getImageRecommendations(hardware: HardwareInfo): ImageRecommendation {
+  const vram = hardware.estimatedVram;
+
+  if (!vram) {
+    return {
+      canRun: false,
+      tier: "none",
+      tierDescription: "Unable to determine GPU capability",
+      recommendedModels: [],
+      recommendedTool: "fooocus",
+      limitations: [
+        "Could not detect a compatible GPU",
+        "Image generation requires a dedicated graphics card",
+      ],
+    };
+  }
+
+  // 24GB+ - Power tier
+  if (vram >= 24) {
+    return {
+      canRun: true,
+      tier: "power",
+      tierDescription: "Run any model at full quality - no compromises",
+      recommendedModels: ["FLUX.2 Klein", "FLUX.1 Dev", "FLUX.1 Schnell", "SD 3.5"],
+      recommendedTool: "comfyui",
+      limitations: [],
+    };
+  }
+
+  // 12-23GB - High tier
+  if (vram >= 12) {
+    return {
+      canRun: true,
+      tier: "high",
+      tierDescription: "Run most models at full quality with good speed",
+      recommendedModels: ["FLUX.1 Schnell", "FLUX.1 Dev", "SD 3.5 Medium", "SDXL"],
+      recommendedTool: "forge",
+      limitations: ["Largest models (FLUX.2 Dev 32B) need quantization"],
+    };
+  }
+
+  // 8-11GB - Standard tier
+  if (vram >= 8) {
+    return {
+      canRun: true,
+      tier: "standard",
+      tierDescription: "Great for most image creation - FLUX available with quantization",
+      recommendedModels: ["SDXL", "SDXL Lightning", "FLUX.1 (quantized)"],
+      recommendedTool: "forge",
+      limitations: [
+        "FLUX models need GGUF/Q8 quantized versions",
+        "May need to reduce image size for some models",
+      ],
+    };
+  }
+
+  // 4-7GB - Basic tier
+  if (vram >= 4) {
+    return {
+      canRun: true,
+      tier: "basic",
+      tierDescription: "You can create images with optimized models",
+      recommendedModels: ["Stable Diffusion 1.5", "SDXL Lightning"],
+      recommendedTool: "forge",
+      limitations: [
+        "Limited to SD 1.5 (512x512) for best results",
+        "SDXL Lightning for occasional 1024x1024",
+        "FLUX models won't work",
+      ],
+    };
+  }
+
+  // Below 4GB
+  return {
+    canRun: false,
+    tier: "none",
+    tierDescription: "GPU has insufficient memory for AI image generation",
+    recommendedModels: [],
+    recommendedTool: "fooocus",
+    limitations: [
+      "Minimum 4GB VRAM required",
+      "Consider upgrading your graphics card",
+    ],
+  };
 }

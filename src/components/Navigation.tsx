@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/why", label: "Why Local?" },
   { href: "/computers", label: "Can I Run It?" },
   { href: "/tools", label: "Tools" },
+  { href: "/images", label: "Images" },
   { href: "/setup", label: "Get Started" },
 ];
 

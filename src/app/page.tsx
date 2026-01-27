@@ -30,20 +30,20 @@ export default function Home() {
             </div>
 
             <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl leading-[1.15] mb-4">
-              Run AI on your computer.
+              Your AI conversations,
               <br />
-              <span className="text-primary">Private. Free. Forever.</span>
+              <span className="text-primary">seen by no one.</span>
             </h1>
 
             <p className="text-lg sm:text-xl text-muted leading-relaxed mb-8 max-w-2xl mx-auto">
-              ChatGPT works, but everything you type gets sent to OpenAI's servers.
-              Run AI locally instead - same experience, total privacy.
+              Everything you type in ChatGPT gets stored on their servers.
+              Keep the same experience—without anyone watching.
             </p>
 
             {/* Primary CTA - above the fold */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
               <Link href="/setup" className="btn-primary">
-                Start Your Private AI
+                Get Started Free
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -52,15 +52,15 @@ export default function Home() {
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted">
               <span className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-primary" />
-                No tech skills needed
+                Set up in under 10 minutes
               </span>
               <span className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-primary" />
-                Works just like ChatGPT
+                Same chat experience as ChatGPT
               </span>
               <span className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-primary" />
-                No subscriptions
+                $0/month, forever
               </span>
             </div>
           </motion.div>
@@ -153,10 +153,10 @@ export default function Home() {
           >
             <span className="tag tag-green mb-4">Simple Process</span>
             <h2 className="font-serif text-2xl sm:text-3xl">
-              How to get started
+              Set up private AI in 4 steps
             </h2>
             <p className="text-muted mt-3">
-              We'll walk you through every step
+              Most people finish in under 10 minutes
             </p>
           </motion.div>
 
@@ -175,7 +175,7 @@ export default function Home() {
               {
                 num: 3,
                 title: "Download an AI model",
-                desc: "Tell us how much memory your computer has, and we'll recommend the best AI for you.",
+                desc: "We'll match you with the right AI for your computer—takes 10 seconds.",
               },
               {
                 num: 4,
@@ -267,18 +267,18 @@ export default function Home() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl mb-6">
-              Ready to keep your AI conversations private?
+              Stop sending your thoughts to the cloud.
             </h2>
             <p className="text-lg text-gray-400 mb-8 max-w-xl mx-auto">
-              Let's check if your computer can run AI privately.
-              We'll walk you through every step - no tech skills needed.
+              Most computers made after 2018 work perfectly.
+              We'll guide you through setup.
             </p>
             <Link
               href="/setup"
               className="inline-flex items-center gap-2 px-6 py-3 bg-white text-foreground font-semibold rounded-lg hover:bg-primary-pale transition-colors"
             >
               <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse" />
-              Start Your Private AI
+              Get Started Free
               <ArrowRight className="w-4 h-4" />
             </Link>
             <div className="flex items-center justify-center gap-6 mt-8 text-sm text-gray-400">

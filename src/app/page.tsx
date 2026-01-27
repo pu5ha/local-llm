@@ -120,8 +120,8 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-primary" />
               <span className="text-sm">
-                <strong className="text-foreground">2,500+</strong>
-                <span className="text-muted"> people have made the switch</span>
+                <strong className="text-foreground">Free</strong>
+                <span className="text-muted"> forever, no subscriptions</span>
               </span>
             </div>
             <div className="flex items-center gap-2">

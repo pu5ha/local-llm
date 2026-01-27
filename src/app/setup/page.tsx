@@ -19,6 +19,9 @@ import {
   AlertCircle,
   Copy,
   Check,
+  ChevronDown,
+  RefreshCw,
+  Zap,
 } from "lucide-react";
 import { Button, Card, Badge, CodeBlock } from "@/components/ui";
 import HardwareDetector from "@/components/HardwareDetector";
@@ -835,6 +838,7 @@ function StepComplete({
   selectedTool: string | null;
   selectedModel: string | null;
 }) {
+  const [troubleshootingOpen, setTroubleshootingOpen] = useState(false);
   const tool = tools.find((t) => t.id === selectedTool);
   const model = getFeaturedModels().find((m) => m.id === selectedModel);
 
@@ -922,6 +926,211 @@ function StepComplete({
             </p>
           </div>
         )}
+      </Card>
+
+      {/* Start Tomorrow / Coming Back Later */}
+      <Card>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+            <RefreshCw className="w-5 h-5 text-green-600" />
+          </div>
+          <h3 className="text-lg font-semibold">Starting Your AI Tomorrow</h3>
+        </div>
+
+        {selectedTool === "ollama" ? (
+          <div className="space-y-4">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <p className="font-medium text-green-900 mb-2">Good news: Ollama runs automatically!</p>
+              <p className="text-sm text-green-800">
+                Ollama starts in the background whenever you turn on your computer.
+                Look for the llama icon in your menu bar (Mac) or system tray (Windows) -
+                if it's there, Ollama is ready to go.
+              </p>
+            </div>
+
+            <div className="border-t border-border pt-4">
+              <h4 className="font-medium mb-3">To start a new chat:</h4>
+              <ol className="space-y-3 text-sm">
+                <li className="flex items-start gap-3">
+                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
+                  <span className="text-muted">Open Terminal (Mac) or PowerShell (Windows)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
+                  <div className="flex-1">
+                    <span className="text-muted">Type this command and press Enter:</span>
+                    <div className="mt-2">
+                      <CodeBlock code={`ollama run ${model?.ollamaName || "llama3.2"}`} />
+                    </div>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
+                  <span className="text-muted">Start chatting! The AI is already downloaded, so it will start instantly.</span>
+                </li>
+              </ol>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <p className="font-medium text-green-900 mb-2">Just open the app like any other program!</p>
+              <p className="text-sm text-green-800">
+                Find <strong>{tool?.name}</strong> in your Applications folder (Mac) or Start menu (Windows)
+                and open it. Your AI model is already downloaded, so you can start chatting right away.
+              </p>
+            </div>
+          </div>
+        )}
+      </Card>
+
+      {/* Troubleshooting */}
+      <Card>
+        <button
+          onClick={() => setTroubleshootingOpen(!troubleshootingOpen)}
+          className="w-full flex items-center justify-between"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
+              <HelpCircle className="w-5 h-5 text-amber-600" />
+            </div>
+            <h3 className="text-lg font-semibold">Having Problems?</h3>
+          </div>
+          <ChevronDown
+            className={`w-5 h-5 text-muted transition-transform ${
+              troubleshootingOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        <AnimatePresence>
+          {troubleshootingOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <div className="pt-4 space-y-4">
+                {selectedTool === "ollama" ? (
+                  <>
+                    <div className="border border-border rounded-lg p-4">
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 text-amber-500" />
+                        "Ollama won't start" or "Command not found"
+                      </h4>
+                      <div className="text-sm text-muted space-y-2">
+                        <p>First, check if Ollama is running:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-2">
+                          <li>Look for the llama icon in your menu bar (Mac) or system tray (Windows)</li>
+                          <li>If you don't see it, try restarting your computer</li>
+                        </ul>
+                        <p className="mt-2">If it still doesn't work, Ollama may need to be reinstalled:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-2">
+                          <li>Go to <a href="https://ollama.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">ollama.ai</a> and download it again</li>
+                          <li>Follow the installation steps from the beginning</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="border border-border rounded-lg p-4">
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 text-amber-500" />
+                        "Download stuck" or "Connection error"
+                      </h4>
+                      <div className="text-sm text-muted space-y-2">
+                        <p>If the AI model download gets stuck:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-2">
+                          <li>Check your internet connection</li>
+                          <li>Press <kbd className="px-1.5 py-0.5 bg-background-alt rounded border text-xs">Ctrl+C</kbd> to cancel the download</li>
+                          <li>Try again with: <code className="bg-background-alt px-1.5 py-0.5 rounded text-xs">ollama pull {model?.ollamaName || "llama3.2"}</code></li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="border border-border rounded-lg p-4">
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-amber-500" />
+                        "Responses are very slow"
+                      </h4>
+                      <div className="text-sm text-muted space-y-2">
+                        <p>This is normal behavior in some cases:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-2">
+                          <li>The first response is always slower while the AI "warms up"</li>
+                          <li>Longer questions take more time to process</li>
+                          <li>If it's consistently slow, your computer may need more RAM</li>
+                        </ul>
+                        <p className="mt-2">
+                          Try a smaller model like <strong>Llama 3.2 3B</strong> - it's faster and uses less memory.
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="border border-border rounded-lg p-4">
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 text-amber-500" />
+                        "I closed the app, how do I get back?"
+                      </h4>
+                      <div className="text-sm text-muted">
+                        <p>
+                          Just open <strong>{tool?.name}</strong> again from your Applications folder (Mac)
+                          or Start menu (Windows). Your downloaded AI models will still be there.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="border border-border rounded-lg p-4">
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-amber-500" />
+                        "Responses are very slow"
+                      </h4>
+                      <div className="text-sm text-muted space-y-2">
+                        <p>This is normal in some cases:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-2">
+                          <li>The first response is always slower while the AI "warms up"</li>
+                          <li>Your computer may need more RAM for larger models</li>
+                        </ul>
+                        <p className="mt-2">
+                          Try downloading a smaller model - look for one with lower memory requirements.
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                <div className="border border-border rounded-lg p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <RefreshCw className="w-4 h-4 text-amber-500" />
+                    "I want to try a different AI model"
+                  </h4>
+                  <div className="text-sm text-muted">
+                    {selectedTool === "ollama" ? (
+                      <div className="space-y-2">
+                        <p>You can download and try any model! Here are some popular ones:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-2">
+                          <li><code className="bg-background-alt px-1.5 py-0.5 rounded text-xs">ollama run llama3.2</code> - Fast, lightweight</li>
+                          <li><code className="bg-background-alt px-1.5 py-0.5 rounded text-xs">ollama run llama3.1</code> - Smarter, best balance</li>
+                          <li><code className="bg-background-alt px-1.5 py-0.5 rounded text-xs">ollama run mistral</code> - Great for reasoning</li>
+                        </ul>
+                        <p className="mt-2">
+                          Each new model needs to download once, then it's saved on your computer.
+                        </p>
+                      </div>
+                    ) : (
+                      <p>
+                        Open the model browser in <strong>{tool?.name}</strong> to see all available models.
+                        You can download and switch between different ones anytime.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Card>
 
       {/* What's Next */}

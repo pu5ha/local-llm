@@ -11,7 +11,7 @@ const navLinks = [
   { href: "/why", label: "Why Private AI?" },
   { href: "/computers", label: "Can I Run It?" },
   { href: "/setup", label: "Get Started" },
-  { href: "/learn", label: "Learn More" },
+  { href: "/help", label: "Help" },
 ];
 
 export default function Navigation() {

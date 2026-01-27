@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -297,17 +298,11 @@ export default function WhyPage() {
                 { feature: "Data Ownership", cloud: "Theirs", local: "Yours" },
                 { feature: "Internet Required", cloud: "Always", local: "Never" },
               ].map((row, i) => (
-                <>
-                  <div
-                    key={`feature-${i}`}
-                    className="p-4 border-b border-border text-sm font-medium"
-                  >
+                <Fragment key={i}>
+                  <div className="p-4 border-b border-border text-sm font-medium">
                     {row.feature}
                   </div>
-                  <div
-                    key={`cloud-${i}`}
-                    className="p-4 border-b border-border text-sm"
-                  >
+                  <div className="p-4 border-b border-border text-sm">
                     {typeof row.cloud === "boolean" ? (
                       row.cloud ? (
                         <Check className="w-5 h-5 text-green-600 mx-auto" />
@@ -318,10 +313,7 @@ export default function WhyPage() {
                       <span className="text-red-600">{row.cloud}</span>
                     )}
                   </div>
-                  <div
-                    key={`local-${i}`}
-                    className="p-4 border-b border-border text-sm"
-                  >
+                  <div className="p-4 border-b border-border text-sm">
                     {typeof row.local === "boolean" ? (
                       row.local ? (
                         <Check className="w-5 h-5 text-primary mx-auto" />
@@ -332,7 +324,7 @@ export default function WhyPage() {
                       <span className="text-primary font-medium">{row.local}</span>
                     )}
                   </div>
-                </>
+                </Fragment>
               ))}
             </div>
           </motion.div>

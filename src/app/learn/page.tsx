@@ -465,7 +465,7 @@ export default function LearnPage() {
               />
               <FAQItem
                 question="Will it slow down my computer?"
-                answer="While generating a response, your computer will be working hard. But it only uses resources when you're actively chatting. When you're not using it, it doesn't affect your computer at all."
+                answer="While generating a response, your computer will be working hard. Even when idle, the model weights stay loaded in RAM, which means that memory isn't available for other apps. On computers with limited RAM, this can noticeably affect performance. You can quit the AI app when you're done to free up that memory."
               />
               <FAQItem
                 question="Do I need an expensive gaming computer?"

@@ -14,7 +14,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PrivateAI - Run AI on Your Computer, 100% Private",
+  title: "PrivateAI - Run AI on Your Computer. Private. Free. Forever.",
   description:
     "The easiest way to run AI privately on your own computer. No subscriptions, no data collection, complete privacy. Simple step-by-step guides for anyone.",
   keywords: [

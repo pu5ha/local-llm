@@ -29,7 +29,7 @@ export default function UseCaseSelector() {
             transition={{ delay: i * 0.1 }}
           >
             <Link
-              href={`/computers?use=${useCase.id}`}
+              href={`/setup?use=${useCase.id}`}
               className="block paper-card p-6 h-full group hover:border-primary transition-colors"
             >
               <div className="flex items-start gap-4">

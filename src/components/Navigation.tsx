@@ -8,9 +8,9 @@ import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "Home" },
+  { href: "/setup", label: "Start" },
   { href: "/why", label: "Why Private AI?" },
-  { href: "/computers", label: "Can I Run It?" },
-  { href: "/setup", label: "Get Started" },
+  { href: "/learn", label: "Learn" },
   { href: "/help", label: "Help" },
 ];
 
@@ -66,11 +66,11 @@ export default function Navigation() {
 
           {/* CTA Button */}
           <Link
-            href="/computers"
+            href="/setup"
             className="hidden md:flex items-center gap-2 px-4 py-2 bg-foreground text-background text-sm font-medium rounded-full hover:bg-primary transition-colors"
           >
             <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse" />
-            Check My Computer
+            Start Your Private AI
           </Link>
 
           {/* Mobile Menu Button */}

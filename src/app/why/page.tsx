@@ -413,7 +413,7 @@ export default function WhyPage() {
               guide to get started.
             </p>
             <Link
-              href="/computers"
+              href="/setup"
               className="inline-flex items-center gap-2 px-6 py-3 bg-white text-foreground font-semibold rounded-lg hover:bg-primary-pale transition-colors"
             >
               <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse" />

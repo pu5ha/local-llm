@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -8,8 +8,6 @@ import {
   ArrowRight,
   ArrowLeft,
   CheckCircle,
-  Circle,
-  Monitor,
   Download,
   Terminal,
   MessageSquare,
@@ -17,24 +15,22 @@ import {
   Cpu,
   HelpCircle,
   AlertCircle,
-  Copy,
   Check,
   ChevronDown,
   RefreshCw,
   Zap,
+  HardDrive,
 } from "lucide-react";
 import { Button, Card, Badge, CodeBlock } from "@/components/ui";
-import HardwareDetector from "@/components/HardwareDetector";
 import useHardwareDetection from "@/hooks/useHardwareDetection";
 import { tools } from "@/data/tools";
 import { getFeaturedModels } from "@/data/models";
 
-type Step = "hardware" | "tool" | "install" | "model" | "complete";
+type Step = "tool" | "install" | "model" | "complete";
 
-const stepOrder: Step[] = ["hardware", "tool", "install", "model", "complete"];
+const stepOrder: Step[] = ["tool", "install", "model", "complete"];
 
 const stepInfo = {
-  hardware: { title: "Your Computer", icon: Monitor },
   tool: { title: "Choose App", icon: Download },
   install: { title: "Install", icon: Terminal },
   model: { title: "Download AI", icon: Cpu },
@@ -46,7 +42,7 @@ function SetupPageContent() {
   const ramFromUrl = searchParams.get("ram");
   const confirmedRam = ramFromUrl ? parseInt(ramFromUrl, 10) : null;
 
-  const [currentStep, setCurrentStep] = useState<Step>("hardware");
+  const [currentStep, setCurrentStep] = useState<Step>("tool");
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [completedSteps, setCompletedSteps] = useState<Step[]>([]);
@@ -99,7 +95,7 @@ function SetupPageContent() {
           transition={{ delay: 0.1 }}
           className="mb-12"
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center">
             {stepOrder.map((step, index) => {
               const StepIcon = stepInfo[step].icon;
               const isActive = step === currentStep;
@@ -108,7 +104,7 @@ function SetupPageContent() {
                 index <= currentIndex || completedSteps.includes(step);
 
               return (
-                <div key={step} className="flex items-center">
+                <div key={step} className={`flex items-center ${index < stepOrder.length - 1 ? 'flex-1' : ''}`}>
                   <button
                     onClick={() => isClickable && goToStep(step)}
                     disabled={!isClickable}
@@ -145,7 +141,7 @@ function SetupPageContent() {
                   </button>
                   {index < stepOrder.length - 1 && (
                     <div
-                      className={`w-12 sm:w-24 h-0.5 mx-2 ${
+                      className={`flex-1 h-0.5 mx-3 ${
                         completedSteps.includes(step)
                           ? "bg-accent"
                           : "bg-border"
@@ -167,15 +163,11 @@ function SetupPageContent() {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            {currentStep === "hardware" && (
-              <StepHardware onNext={goNext} confirmedRam={confirmedRam} />
-            )}
             {currentStep === "tool" && (
               <StepTool
                 selectedTool={selectedTool}
                 onSelect={setSelectedTool}
                 onNext={goNext}
-                onPrev={goPrev}
               />
             )}
             {currentStep === "install" && (
@@ -209,136 +201,146 @@ function SetupPageContent() {
   );
 }
 
-function StepHardware({ onNext, confirmedRam }: { onNext: () => void; confirmedRam: number | null }) {
-  return (
-    <div>
-      <HardwareDetector confirmedRam={confirmedRam} />
-      <div className="mt-8 flex justify-end">
-        <Button onClick={onNext}>
-          Continue
-          <ArrowRight className="w-4 h-4" />
-        </Button>
-      </div>
-    </div>
-  );
-}
-
 function StepTool({
   selectedTool,
   onSelect,
   onNext,
-  onPrev,
 }: {
   selectedTool: string | null;
   onSelect: (tool: string) => void;
   onNext: () => void;
-  onPrev: () => void;
 }) {
+  const [showOtherOptions, setShowOtherOptions] = useState(false);
   const beginnerTools = tools.filter((t) => t.difficulty === "beginner");
+  const otherTools = beginnerTools.filter((t) => t.id !== "ollama");
 
-  const toolDetails: Record<string, { description: string; bestFor: string; interface: string; beginner: string }> = {
-    ollama: {
-      description: "The most popular way to run AI. You type in a text window and the AI responds.",
-      bestFor: "Most people - it's reliable and works great",
-      interface: "Text window (called Terminal or PowerShell)",
-      beginner: "We'll show you exactly how to use it, step by step",
-    },
+  // Auto-select Ollama on mount if nothing selected
+  useEffect(() => {
+    if (!selectedTool) {
+      onSelect("ollama");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const toolDetails: Record<string, { description: string; bestFor: string }> = {
     "lm-studio": {
       description: "A visual app that looks similar to ChatGPT. Point and click interface.",
       bestFor: "People who prefer clicking buttons over typing commands",
-      interface: "Desktop app that looks like ChatGPT",
-      beginner: "Very visual and easy to navigate",
     },
     "gpt4all": {
       description: "A simple app focused on privacy. Clean chat interface with basic features.",
       bestFor: "Simple needs and complete beginners",
-      interface: "Desktop app with chat interface",
-      beginner: "Designed to be as simple as possible",
     },
   };
+
+  // If Ollama is selected (default), show simplified view
+  const isOllamaSelected = selectedTool === "ollama" || !selectedTool;
 
   return (
     <div>
       <Card>
-        <h3 className="text-lg font-semibold mb-2">Which app would you like to use?</h3>
-        <p className="text-muted mb-4">
-          To run AI privately, you need an app on your computer. Think of it like
-          how you need a web browser to visit websites - you need one of these
-          apps to chat with AI.
+        <h3 className="text-lg font-semibold mb-2">We recommend Ollama</h3>
+        <p className="text-muted mb-6">
+          To run AI privately, you need an app on your computer. Ollama is the most
+          popular option - it works just like ChatGPT and saves your conversations.
         </p>
 
-        {/* Recommendation */}
-        <div className="bg-primary-pale rounded-lg p-4 mb-6">
-          <div className="flex items-start gap-3">
-            <HelpCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-            <div className="text-sm">
-              <p className="font-medium mb-1">Not sure which to pick?</p>
-              <p className="text-muted">
-                We recommend <strong className="text-primary">Ollama</strong> - it's
-                the most popular and reliable option. Don't worry about the "Terminal"
-                part - we'll show you exactly what to do!
-              </p>
+        {/* Ollama recommendation card */}
+        <div
+          className={`p-5 rounded-lg border-2 transition-colors ${
+            isOllamaSelected
+              ? "border-primary bg-primary/5"
+              : "border-border hover:border-primary/50 cursor-pointer"
+          }`}
+          onClick={() => !isOllamaSelected && onSelect("ollama")}
+        >
+          <div className="flex items-start gap-4">
+            <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
+              isOllamaSelected ? "bg-primary text-white" : "bg-background-alt"
+            }`}>
+              <Terminal className="w-6 h-6" />
             </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="font-semibold text-lg">Ollama</span>
+                <Badge variant="primary">Recommended</Badge>
+              </div>
+              <p className="text-muted mb-3">
+                The most popular way to run AI. Has a familiar chat interface just like
+                ChatGPT - with saved conversations.
+              </p>
+              <ul className="space-y-1 text-sm text-muted">
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-primary" />
+                  Works just like ChatGPT
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-primary" />
+                  Saves your conversation history
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-primary" />
+                  Easy to use from menu bar
+                </li>
+              </ul>
+            </div>
+            {isOllamaSelected && (
+              <CheckCircle className="w-6 h-6 text-primary flex-shrink-0" />
+            )}
           </div>
         </div>
 
-        <div className="space-y-4">
-          {beginnerTools.map((tool) => {
-            const details = toolDetails[tool.id];
-            return (
-              <button
-                key={tool.id}
-                onClick={() => onSelect(tool.id)}
-                className={`w-full text-left p-5 rounded-lg border-2 transition-colors ${
-                  selectedTool === tool.id
-                    ? "border-primary bg-primary/5"
-                    : tool.id === "ollama"
-                    ? "border-primary/30 bg-primary/5 hover:border-primary"
-                    : "border-border hover:border-primary/50"
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div
-                    className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                      selectedTool === tool.id
-                        ? "bg-primary text-white"
-                        : "bg-background-alt"
+        {/* Other options toggle */}
+        {!showOtherOptions ? (
+          <button
+            onClick={() => setShowOtherOptions(true)}
+            className="mt-4 text-sm text-muted hover:text-foreground transition-colors flex items-center gap-1"
+          >
+            <ChevronDown className="w-4 h-4" />
+            See other options
+          </button>
+        ) : (
+          <div className="mt-4 pt-4 border-t border-border">
+            <p className="text-sm text-muted mb-3">Other options:</p>
+            <div className="space-y-3">
+              {otherTools.map((tool) => {
+                const details = toolDetails[tool.id];
+                const isSelected = selectedTool === tool.id;
+                return (
+                  <button
+                    key={tool.id}
+                    onClick={() => onSelect(tool.id)}
+                    className={`w-full text-left p-4 rounded-lg border-2 transition-colors ${
+                      isSelected
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/50"
                     }`}
                   >
-                    <Terminal className="w-6 h-6" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="font-semibold text-lg">{tool.name}</span>
-                      {tool.id === "ollama" && (
-                        <Badge variant="primary">Recommended</Badge>
+                    <div className="flex items-start gap-3">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                        isSelected ? "bg-primary text-white" : "bg-background-alt"
+                      }`}>
+                        <Terminal className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <span className="font-semibold">{tool.name}</span>
+                        <p className="text-sm text-muted mt-1">{details?.description || tool.tagline}</p>
+                      </div>
+                      {isSelected && (
+                        <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
                       )}
                     </div>
-                    <p className="text-muted mb-3">{details?.description || tool.tagline}</p>
-                    <div className="space-y-1 text-sm">
-                      <p className="text-muted">
-                        <span className="font-medium text-foreground">Best for:</span> {details?.bestFor}
-                      </p>
-                      <p className="text-primary text-xs">{details?.beginner}</p>
-                    </div>
-                  </div>
-                  {selectedTool === tool.id && (
-                    <CheckCircle className="w-6 h-6 text-primary flex-shrink-0" />
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </Card>
 
-      <div className="mt-8 flex justify-between">
-        <Button variant="ghost" onClick={onPrev}>
-          <ArrowLeft className="w-4 h-4" />
-          Back
-        </Button>
+      <div className="mt-8 flex justify-end">
         <Button onClick={onNext} disabled={!selectedTool}>
-          Continue
+          Use {selectedTool === "ollama" || !selectedTool ? "Ollama" : tools.find(t => t.id === selectedTool)?.name}
           <ArrowRight className="w-4 h-4" />
         </Button>
       </div>
@@ -365,33 +367,21 @@ function StepInstall({
       if (os === "mac") {
         return {
           title: "Installing Ollama on your Mac",
-          intro: "This will only take a few minutes. We'll go through each step together.",
+          intro: "Just like installing any other app - download, install, done!",
           steps: [
             {
               title: "Download Ollama",
-              description: "Click the green button below to go to the Ollama website. On that page, click the big \"Download for macOS\" button.",
+              description: "Click below to download Ollama. It will save a file to your Downloads folder.",
               action: "download",
               downloadUrl: "https://ollama.ai/download/mac",
             },
             {
-              title: "Find the downloaded file",
-              description: "Open Finder (the blue smiley face icon in your dock). Click \"Downloads\" on the left side. You should see a file called \"Ollama-darwin.zip\".",
-            },
-            {
-              title: "Open the file",
-              description: "Double-click on \"Ollama-darwin.zip\". This will unzip it and show you the Ollama app.",
-            },
-            {
-              title: "Move Ollama to Applications",
-              description: "Drag the Ollama app icon onto the \"Applications\" folder. If you see a window asking you to do this, just drag it there.",
-            },
-            {
-              title: "Open Ollama",
-              description: "Open Finder, click \"Applications\" on the left, and double-click \"Ollama\". If you see a warning about opening an app from the internet, click \"Open\" to continue.",
+              title: "Install it",
+              description: "Open the downloaded file and drag Ollama to your Applications folder. Then open it from Applications. If you see a security warning, click \"Open\" to continue.",
             },
             {
               title: "Look for the llama icon",
-              description: "You'll see a small llama icon appear in your menu bar (the top-right area of your screen). This means Ollama is running!",
+              description: "You'll see a small llama icon appear in your menu bar (top-right of your screen). That means it's running!",
               success: true,
             },
           ],
@@ -399,25 +389,21 @@ function StepInstall({
       } else if (os === "windows") {
         return {
           title: "Installing Ollama on Windows",
-          intro: "This will only take a few minutes. We'll go through each step together.",
+          intro: "Just like installing any other app - download, install, done!",
           steps: [
             {
               title: "Download Ollama",
-              description: "Click the green button below to go to the Ollama website. On that page, click the big \"Download for Windows\" button.",
+              description: "Click below to download the Ollama installer.",
               action: "download",
               downloadUrl: "https://ollama.ai/download/windows",
             },
             {
               title: "Run the installer",
-              description: "Find the downloaded file (usually in your Downloads folder) called \"OllamaSetup.exe\". Double-click it to start the installation.",
+              description: "Open the downloaded file (OllamaSetup.exe) and click through the installer. It takes about a minute.",
             },
             {
-              title: "Follow the installer",
-              description: "Click \"Next\" through the installer screens, then click \"Install\". Wait for it to finish, then click \"Finish\".",
-            },
-            {
-              title: "Ollama is now running",
-              description: "Ollama starts automatically after installation. You might see a llama icon in your system tray (bottom-right of your screen).",
+              title: "Look for the llama icon",
+              description: "After installation, you'll see a llama icon in your system tray (bottom-right). That means it's running!",
               success: true,
             },
           ],
@@ -425,7 +411,7 @@ function StepInstall({
       } else {
         return {
           title: "Installing Ollama on Linux",
-          intro: "Run this command in your terminal to install Ollama:",
+          intro: "One command installs everything:",
           steps: [
             {
               title: "Open Terminal",
@@ -604,26 +590,31 @@ function StepModel({
   confirmedRam?: number | null;
 }) {
   const [downloaded, setDownloaded] = useState(false);
+  const [showOtherModels, setShowOtherModels] = useState(false);
+  const [selectedRam, setSelectedRam] = useState<number | null>(confirmedRam ?? null);
+  const [showRamHelp, setShowRamHelp] = useState(false);
   const models = getFeaturedModels();
+  const { hardware } = useHardwareDetection();
+  const userRam = selectedRam || 16;
 
-  const getDownloadCommand = (ollamaName: string | undefined) => {
-    if (selectedTool === "ollama" && ollamaName) {
-      return `ollama run ${ollamaName}`;
-    }
-    return null;
+  // Determine the recommended model based on RAM
+  const getRecommendedModelId = () => {
+    if (userRam >= 16) return "llama-3.1-8b";
+    return "llama-3.2-3b";
   };
+
+  const recommendedModelId = getRecommendedModelId();
+  const recommendedModel = models.find((m) => m.id === recommendedModelId);
+
+  // Auto-select recommended model on mount
+  useEffect(() => {
+    if (!selectedModel) {
+      onSelect(recommendedModelId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const selectedModelData = models.find((m) => m.id === selectedModel);
-  const userRam = confirmedRam || 16;
-
-  const getModelRecommendation = (modelId: string): { recommended: boolean; reason: string } => {
-    if (userRam >= 16) {
-      if (modelId === "llama-3.1-8b") return { recommended: true, reason: "Best for your computer" };
-    } else if (userRam >= 8) {
-      if (modelId === "llama-3.2-3b") return { recommended: true, reason: "Best for your computer" };
-    }
-    return { recommended: false, reason: "" };
-  };
 
   const modelInfo: Record<string, { simple: string; goodFor: string; size: string }> = {
     "llama-3.2-3b": {
@@ -648,128 +639,331 @@ function StepModel({
     },
   };
 
+  const otherModels = models.slice(0, 4).filter((m) => m.id !== recommendedModelId);
+
+  // If RAM isn't selected yet, show RAM selection first
+  if (!selectedRam) {
+    return (
+      <div>
+        <Card>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-lg bg-primary-pale flex items-center justify-center">
+              <HardDrive className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">How much RAM does your computer have?</h3>
+              <p className="text-sm text-muted">This helps us recommend the right AI model for you</p>
+            </div>
+          </div>
+
+          {/* RAM Buttons */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            {[8, 16, 32, 64].map((ram) => {
+              const isSuggested = ram === hardware.suggestedRam;
+              return (
+                <button
+                  key={ram}
+                  onClick={() => setSelectedRam(ram)}
+                  className={`relative py-4 px-3 rounded-xl border-2 font-semibold text-lg transition-all cursor-pointer hover:scale-[1.02] ${
+                    isSuggested
+                      ? "border-primary bg-primary text-white hover:bg-primary/90 shadow-md"
+                      : "border-border bg-white hover:border-primary hover:shadow-sm"
+                  }`}
+                >
+                  {ram}GB
+                  {isSuggested && (
+                    <span className="absolute -top-2 left-1/2 -translate-x-1/2 text-[10px] bg-secondary text-white px-2 py-0.5 rounded-full whitespace-nowrap">
+                      likely yours
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Help toggle */}
+          <button
+            onClick={() => setShowRamHelp(!showRamHelp)}
+            className="w-full flex items-center justify-center gap-2 py-3 text-sm text-muted hover:text-foreground transition-colors rounded-lg border border-border hover:border-primary/30 bg-background-alt"
+          >
+            <HelpCircle className="w-4 h-4" />
+            Not sure? Here's how to check
+            <ChevronDown className={`w-4 h-4 transition-transform ${showRamHelp ? 'rotate-180' : ''}`} />
+          </button>
+
+          {/* Collapsible Instructions */}
+          {showRamHelp && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              className="mt-4 bg-background-alt rounded-xl p-4 border border-border"
+            >
+              {hardware.os === "mac" ? (
+                <div>
+                  <p className="font-medium mb-3 text-sm">Find your RAM on Mac:</p>
+                  <ol className="space-y-2 text-sm">
+                    <li className="flex gap-3">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">1</span>
+                      <span>Click the <strong>Apple logo </strong> in the top-left corner</span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">2</span>
+                      <span>Click <strong>"About This Mac"</strong></span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">3</span>
+                      <span>Look for <strong>"Memory"</strong> — it shows your RAM (8GB, 16GB, etc.)</span>
+                    </li>
+                  </ol>
+                </div>
+              ) : hardware.os === "windows" ? (
+                <div>
+                  <p className="font-medium mb-3 text-sm">Find your RAM on Windows:</p>
+                  <ol className="space-y-2 text-sm">
+                    <li className="flex gap-3">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">1</span>
+                      <span>Press <strong>Windows key + I</strong> to open Settings</span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">2</span>
+                      <span>Click <strong>System</strong> → <strong>About</strong></span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">3</span>
+                      <span>Look for <strong>"Installed RAM"</strong> (ignore decimals: 15.8GB = 16GB)</span>
+                    </li>
+                  </ol>
+                </div>
+              ) : (
+                <div>
+                  <p className="font-medium mb-3 text-sm">Find your RAM:</p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex gap-2">
+                      <span className="font-medium">Mac:</span>
+                      <span className="text-muted">Apple menu → About This Mac → Memory</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="font-medium">Windows:</span>
+                      <span className="text-muted">Settings → System → About → Installed RAM</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="font-medium">Linux:</span>
+                      <span className="text-muted">Run <code className="bg-white px-1 rounded">free -h</code> in terminal</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </Card>
+
+        <div className="mt-8 flex justify-between">
+          <Button variant="ghost" onClick={onPrev}>
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </Button>
+          <div />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Card>
-        <h3 className="text-lg font-semibold mb-2">Download an AI</h3>
-        <p className="text-muted mb-4">
-          Now we need to download an AI that will run on your computer.
-          Think of this like downloading an app - you do it once and then
-          it's yours forever.
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-lg font-semibold">
+            We recommend {recommendedModel?.name} for your computer
+          </h3>
+          <button
+            onClick={() => setSelectedRam(null)}
+            className="text-sm text-muted hover:text-primary transition-colors"
+          >
+            Change RAM ({userRam}GB)
+          </button>
+        </div>
+        <p className="text-muted mb-6">
+          Based on your {userRam}GB RAM, this AI will run smoothly on your computer.
+          Download it once and it's yours forever.
         </p>
 
-        {/* Explanation */}
-        <div className="bg-background-alt rounded-lg p-4 mb-6">
-          <div className="flex items-start gap-3">
-            <HelpCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-            <div className="text-sm">
-              <p className="font-medium mb-1">What does "{userRam}GB memory required" mean?</p>
-              <p className="text-muted">
-                Your computer needs at least that much memory to run the AI smoothly.
-                Based on your computer ({userRam}GB), you can run any AI marked "{userRam}GB or less".
-              </p>
+        {/* Recommended model card */}
+        {recommendedModel && (
+          <div
+            className={`p-5 rounded-lg border-2 transition-colors ${
+              selectedModel === recommendedModelId
+                ? "border-primary bg-primary/5"
+                : "border-border hover:border-primary/50 cursor-pointer"
+            }`}
+            onClick={() => selectedModel !== recommendedModelId && onSelect(recommendedModelId)}
+          >
+            <div className="flex items-start gap-4">
+              <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                selectedModel === recommendedModelId ? "bg-primary text-white" : "bg-background-alt"
+              }`}>
+                <Cpu className="w-6 h-6" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-semibold text-lg">{recommendedModel.name}</span>
+                  <Badge variant="primary">Best for your computer</Badge>
+                </div>
+                <p className="text-muted mb-3">
+                  {modelInfo[recommendedModelId]?.simple || recommendedModel.description}
+                </p>
+                <ul className="space-y-1 text-sm text-muted">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-primary" />
+                    {modelInfo[recommendedModelId]?.goodFor}
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-primary" />
+                    {modelInfo[recommendedModelId]?.size}
+                  </li>
+                </ul>
+              </div>
+              {selectedModel === recommendedModelId && (
+                <CheckCircle className="w-6 h-6 text-primary flex-shrink-0" />
+              )}
             </div>
           </div>
-        </div>
+        )}
 
-        <div className="space-y-3">
-          {models.slice(0, 4).map((model) => {
-            const info = modelInfo[model.id];
-            const rec = getModelRecommendation(model.id);
-            const ramNumber = parseInt(model.ramRequired.replace(/[^0-9]/g, '')) || 8;
-            const canRun = userRam >= ramNumber;
+        {/* Other models toggle */}
+        {!showOtherModels ? (
+          <button
+            onClick={() => setShowOtherModels(true)}
+            className="mt-4 text-sm text-muted hover:text-foreground transition-colors flex items-center gap-1"
+          >
+            <ChevronDown className="w-4 h-4" />
+            Choose a different model
+          </button>
+        ) : (
+          <div className="mt-4 pt-4 border-t border-border">
+            <p className="text-sm text-muted mb-3">Other options:</p>
+            <div className="space-y-3">
+              {otherModels.map((model) => {
+                const info = modelInfo[model.id];
+                const ramNumber = parseInt(model.ramRequired.replace(/[^0-9]/g, '')) || 8;
+                const canRun = userRam >= ramNumber;
+                const isSelected = selectedModel === model.id;
 
-            return (
-              <button
-                key={model.id}
-                onClick={() => canRun && onSelect(model.id)}
-                disabled={!canRun}
-                className={`w-full text-left p-4 rounded-lg border-2 transition-colors ${
-                  !canRun
-                    ? "border-border bg-gray-50 opacity-60 cursor-not-allowed"
-                    : selectedModel === model.id
-                    ? "border-primary bg-primary/5"
-                    : rec.recommended
-                    ? "border-primary/50 bg-primary/5 hover:border-primary"
-                    : "border-border hover:border-primary/50"
-                }`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className="font-semibold">{model.name}</span>
-                      <Badge variant="default">{model.ramRequired} memory</Badge>
-                      {rec.recommended && (
-                        <Badge variant="primary">{rec.reason}</Badge>
-                      )}
-                      {!canRun && (
-                        <Badge variant="default">Too big for your computer</Badge>
+                return (
+                  <button
+                    key={model.id}
+                    onClick={() => canRun && onSelect(model.id)}
+                    disabled={!canRun}
+                    className={`w-full text-left p-4 rounded-lg border-2 transition-colors ${
+                      !canRun
+                        ? "border-border bg-gray-50 opacity-60 cursor-not-allowed"
+                        : isSelected
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/50"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                        isSelected ? "bg-primary text-white" : "bg-background-alt"
+                      }`}>
+                        <Cpu className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <span className="font-semibold">{model.name}</span>
+                          <Badge variant="default">{model.ramRequired} memory</Badge>
+                          {!canRun && (
+                            <Badge variant="default">Too big for your computer</Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-muted">{info?.simple || model.description}</p>
+                      </div>
+                      {isSelected && (
+                        <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
                       )}
                     </div>
-                    <p className="text-sm font-medium text-foreground mb-1">
-                      {info?.simple || model.description}
-                    </p>
-                    <p className="text-xs text-muted">
-                      {info?.goodFor && <><strong>Good for:</strong> {info.goodFor}</>}
-                    </p>
-                    {info?.size && (
-                      <p className="text-xs text-muted mt-1">{info.size}</p>
-                    )}
-                  </div>
-                  {selectedModel === model.id ? (
-                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                  ) : (
-                    <Circle className="w-5 h-5 text-border flex-shrink-0" />
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
+        {/* Download instructions - show when model is selected */}
         {selectedModel && selectedModelData && selectedTool === "ollama" && (
           <div className="mt-6 pt-6 border-t border-border">
-            <h4 className="font-medium mb-4">How to download the AI</h4>
+            <h4 className="font-medium mb-4">Download {selectedModelData.name} to your computer</h4>
 
-            {/* Terminal instructions */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-              <h5 className="font-medium text-blue-900 mb-3 flex items-center gap-2">
-                <Terminal className="w-4 h-4" />
-                Step 1: Open Terminal (or PowerShell on Windows)
-              </h5>
-              <div className="text-sm text-blue-800 space-y-2">
-                <p><strong>On Mac:</strong></p>
-                <ol className="list-decimal list-inside space-y-1 ml-2">
-                  <li>Press <kbd className="px-1.5 py-0.5 bg-white rounded border text-xs">Command ⌘</kbd> + <kbd className="px-1.5 py-0.5 bg-white rounded border text-xs">Space</kbd></li>
-                  <li>Type "Terminal" and press Enter</li>
-                  <li>A window with a text cursor will open - that's Terminal!</li>
-                </ol>
-                <p className="mt-3"><strong>On Windows:</strong></p>
-                <ol className="list-decimal list-inside space-y-1 ml-2">
-                  <li>Press the <kbd className="px-1.5 py-0.5 bg-white rounded border text-xs">Windows</kbd> key</li>
-                  <li>Type "PowerShell" and click on it</li>
-                  <li>A blue window will open - that's PowerShell!</li>
-                </ol>
+            {/* Simple 2-step process */}
+            <div className="space-y-4">
+              {/* Step 1: Open Ollama */}
+              <div className="bg-background-alt rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary text-white text-sm flex items-center justify-center font-bold">1</span>
+                  <div className="flex-1">
+                    <p className="font-medium mb-2">Open Ollama</p>
+                    <p className="text-sm text-muted mb-3">
+                      Click the <strong>llama icon</strong> in your menu bar (Mac) or system tray (Windows), then click <strong>"Open Ollama"</strong>.
+                    </p>
+                    {/* Visual representation of menu bar */}
+                    <div className="bg-white border border-border rounded-lg p-3 inline-block">
+                      <div className="flex items-center gap-3 text-xs text-muted">
+                        <span>Menu bar:</span>
+                        <div className="flex items-center gap-1.5 bg-gray-100 px-2 py-1 rounded">
+                          <span>📶</span>
+                          <span>🔋</span>
+                          <span className="bg-primary/20 px-1.5 py-0.5 rounded font-medium text-primary">🦙 ← click this</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="bg-background-alt rounded-lg p-4 mb-4">
-              <h5 className="font-medium mb-3 flex items-center gap-2">
-                <Copy className="w-4 h-4" />
-                Step 2: Copy and paste this command
-              </h5>
-              <p className="text-sm text-muted mb-3">
-                Click the copy button, then paste it into Terminal/PowerShell and press Enter:
-              </p>
-              <CodeBlock code={getDownloadCommand(selectedModelData.ollamaName)!} />
-            </div>
+              {/* Step 2: Type model name */}
+              <div className="bg-primary-pale rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary text-white text-sm flex items-center justify-center font-bold">2</span>
+                  <div className="flex-1">
+                    <p className="font-medium mb-2">Type the model name and press Enter</p>
+                    <p className="text-sm text-muted mb-3">
+                      In the Ollama chat window, type exactly this:
+                    </p>
+                    <CodeBlock code={selectedModelData.ollamaName || "llama3.2"} />
+                    {/* Visual representation of chat */}
+                    <div className="mt-3 bg-white border border-border rounded-lg p-3">
+                      <div className="text-xs text-muted mb-2 pb-2 border-b border-border flex items-center gap-2">
+                        <MessageSquare className="w-3 h-3" />
+                        Ollama Chat Preview
+                      </div>
+                      <div className="space-y-2 text-sm">
+                        <div className="bg-primary/10 rounded-lg p-2 text-primary font-mono text-xs">
+                          {selectedModelData.ollamaName || "llama3.2"}
+                        </div>
+                        <div className="bg-background-alt rounded-lg p-2 text-muted text-xs">
+                          ⏳ Downloading {selectedModelData.name}... 45%
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted mt-3">
+                      The download will start automatically. It may take a few minutes depending on your internet speed.
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <h5 className="font-medium text-green-900 mb-2">Step 3: Wait for the download</h5>
-              <p className="text-sm text-green-800">
-                You'll see a progress bar as the AI downloads. This might take a few minutes
-                depending on your internet speed. When it's done, you'll be able to start chatting!
-              </p>
+              {/* Success indicator */}
+              <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-green-900 mb-1">When the download finishes</p>
+                    <p className="text-sm text-green-800">
+                      You'll see a response from the AI. That means you're ready to chat!
+                      Your conversations are saved automatically.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="mt-6">
@@ -785,7 +979,7 @@ function StepModel({
                   {downloaded && <Check className="w-4 h-4 text-white" />}
                 </button>
                 <span className="font-medium">
-                  The AI has downloaded and I can see a chat prompt
+                  The AI is downloaded and I can chat with it
                 </span>
               </label>
             </div>
@@ -839,6 +1033,7 @@ function StepComplete({
   selectedModel: string | null;
 }) {
   const [troubleshootingOpen, setTroubleshootingOpen] = useState(false);
+  const [tomorrowOpen, setTomorrowOpen] = useState(false);
   const tool = tools.find((t) => t.id === selectedTool);
   const model = getFeaturedModels().find((m) => m.id === selectedModel);
 
@@ -856,10 +1051,22 @@ function StepComplete({
         </motion.div>
 
         <h2 className="text-2xl font-bold mb-2">You Did It!</h2>
-        <p className="text-muted max-w-md mx-auto">
+        <p className="text-muted max-w-md mx-auto mb-6">
           Your private AI is ready to use. Your conversations will never
           leave your computer - they're completely private.
         </p>
+
+        {/* Prominent Open Ollama button */}
+        {selectedTool === "ollama" && (
+          <div className="bg-primary-pale rounded-xl p-4 max-w-sm mx-auto">
+            <p className="text-sm text-muted mb-3">Ready to chat? Open Ollama now:</p>
+            <div className="flex items-center justify-center gap-2 text-sm">
+              <span className="text-muted">Click the</span>
+              <span className="bg-white border border-border px-2 py-1 rounded font-medium">🦙 llama icon</span>
+              <span className="text-muted">in your menu bar</span>
+            </div>
+          </div>
+        )}
       </Card>
 
       {/* How to Use */}
@@ -874,15 +1081,32 @@ function StepComplete({
         {selectedTool === "ollama" ? (
           <div className="space-y-4">
             <div className="bg-background-alt rounded-lg p-4">
-              <p className="font-medium mb-2">You're already in a chat!</p>
+              <p className="font-medium mb-2">Just like ChatGPT - but private!</p>
               <p className="text-sm text-muted mb-3">
-                After running the download command, you should see a prompt waiting
-                for your message. Just type your question and press <strong>Enter</strong>.
+                The Ollama chat window works just like ChatGPT. Type your message
+                at the bottom and press <strong>Enter</strong> to send.
               </p>
-              <div className="font-mono text-sm bg-foreground text-background rounded-lg p-4">
-                <div className="text-gray-400 mb-2">{">>>"} <span className="text-white">What's the capital of France?</span></div>
-                <div className="text-gray-300">The capital of France is Paris...</div>
+              <div className="bg-white border border-border rounded-lg p-4">
+                <div className="flex items-center gap-2 text-xs text-muted mb-3 pb-2 border-b border-border">
+                  <MessageSquare className="w-3 h-3" />
+                  <span>Ollama Chat</span>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="bg-primary/10 rounded-lg p-2 ml-8">What's the capital of France?</div>
+                  <div className="bg-background-alt rounded-lg p-2 mr-8">The capital of France is Paris...</div>
+                </div>
               </div>
+            </div>
+
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <h4 className="font-medium text-green-900 mb-2 flex items-center gap-2">
+                <CheckCircle className="w-4 h-4" />
+                Your chats are saved!
+              </h4>
+              <p className="text-sm text-green-800">
+                Unlike the old terminal method, Ollama's chat window saves your conversation history.
+                Come back anytime and pick up where you left off.
+              </p>
             </div>
 
             <div className="border-t border-border pt-4">
@@ -903,20 +1127,6 @@ function StepComplete({
                 ))}
               </div>
             </div>
-
-            <div className="border-t border-border pt-4">
-              <h4 className="font-medium mb-2">Useful tips:</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-start gap-3">
-                  <span className="font-mono bg-foreground/10 px-2 py-1 rounded text-xs flex-shrink-0">/bye</span>
-                  <span className="text-muted">Type this to exit the chat</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="font-mono bg-foreground/10 px-2 py-1 rounded text-xs flex-shrink-0">ollama run {model?.ollamaName || "llama3.2"}</span>
-                  <span className="text-muted">Run this command anytime to start a new chat</span>
-                </div>
-              </div>
-            </div>
           </div>
         ) : (
           <div className="space-y-4">
@@ -928,60 +1138,79 @@ function StepComplete({
         )}
       </Card>
 
-      {/* Start Tomorrow / Coming Back Later */}
+      {/* Start Tomorrow / Coming Back Later - Collapsible */}
       <Card>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-            <RefreshCw className="w-5 h-5 text-green-600" />
-          </div>
-          <h3 className="text-lg font-semibold">Starting Your AI Tomorrow</h3>
-        </div>
-
-        {selectedTool === "ollama" ? (
-          <div className="space-y-4">
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <p className="font-medium text-green-900 mb-2">Good news: Ollama runs automatically!</p>
-              <p className="text-sm text-green-800">
-                Ollama starts in the background whenever you turn on your computer.
-                Look for the llama icon in your menu bar (Mac) or system tray (Windows) -
-                if it's there, Ollama is ready to go.
-              </p>
+        <button
+          onClick={() => setTomorrowOpen(!tomorrowOpen)}
+          className="w-full flex items-center justify-between"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+              <RefreshCw className="w-5 h-5 text-green-600" />
             </div>
+            <h3 className="text-lg font-semibold">Coming Back Tomorrow?</h3>
+          </div>
+          <ChevronDown
+            className={`w-5 h-5 text-muted transition-transform ${
+              tomorrowOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
 
-            <div className="border-t border-border pt-4">
-              <h4 className="font-medium mb-3">To start a new chat:</h4>
-              <ol className="space-y-3 text-sm">
-                <li className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
-                  <span className="text-muted">Open Terminal (Mac) or PowerShell (Windows)</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
-                  <div className="flex-1">
-                    <span className="text-muted">Type this command and press Enter:</span>
-                    <div className="mt-2">
-                      <CodeBlock code={`ollama run ${model?.ollamaName || "llama3.2"}`} />
+        <AnimatePresence>
+          {tomorrowOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <div className="pt-4">
+                {selectedTool === "ollama" ? (
+                  <div className="space-y-4">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <p className="font-medium text-green-900 mb-2">Good news: Ollama runs automatically!</p>
+                      <p className="text-sm text-green-800">
+                        Ollama starts in the background whenever you turn on your computer.
+                        Look for the llama icon in your menu bar (Mac) or system tray (Windows) -
+                        if it's there, Ollama is ready to go.
+                      </p>
+                    </div>
+
+                    <div className="border-t border-border pt-4">
+                      <h4 className="font-medium mb-3">To open your chats:</h4>
+                      <ol className="space-y-3 text-sm">
+                        <li className="flex items-start gap-3">
+                          <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
+                          <span className="text-muted">Click the <strong>llama icon</strong> in your menu bar (Mac) or system tray (Windows)</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
+                          <span className="text-muted">Click <strong>"Open Ollama"</strong></span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
+                          <span className="text-muted">Your previous chats will be there - just continue where you left off!</span>
+                        </li>
+                      </ol>
                     </div>
                   </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
-                  <span className="text-muted">Start chatting! The AI is already downloaded, so it will start instantly.</span>
-                </li>
-              </ol>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <p className="font-medium text-green-900 mb-2">Just open the app like any other program!</p>
-              <p className="text-sm text-green-800">
-                Find <strong>{tool?.name}</strong> in your Applications folder (Mac) or Start menu (Windows)
-                and open it. Your AI model is already downloaded, so you can start chatting right away.
-              </p>
-            </div>
-          </div>
-        )}
+                ) : (
+                  <div className="space-y-4">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <p className="font-medium text-green-900 mb-2">Just open the app like any other program!</p>
+                      <p className="text-sm text-green-800">
+                        Find <strong>{tool?.name}</strong> in your Applications folder (Mac) or Start menu (Windows)
+                        and open it. Your AI model is already downloaded, so you can start chatting right away.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Card>
 
       {/* Troubleshooting */}
@@ -1018,7 +1247,7 @@ function StepComplete({
                     <div className="border border-border rounded-lg p-4">
                       <h4 className="font-medium mb-2 flex items-center gap-2">
                         <AlertCircle className="w-4 h-4 text-amber-500" />
-                        "Ollama won't start" or "Command not found"
+                        "I can't find the llama icon"
                       </h4>
                       <div className="text-sm text-muted space-y-2">
                         <p>First, check if Ollama is running:</p>
@@ -1026,7 +1255,7 @@ function StepComplete({
                           <li>Look for the llama icon in your menu bar (Mac) or system tray (Windows)</li>
                           <li>If you don't see it, try restarting your computer</li>
                         </ul>
-                        <p className="mt-2">If it still doesn't work, Ollama may need to be reinstalled:</p>
+                        <p className="mt-2">If it still doesn't appear, Ollama may need to be reinstalled:</p>
                         <ul className="list-disc list-inside space-y-1 ml-2">
                           <li>Go to <a href="https://ollama.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">ollama.ai</a> and download it again</li>
                           <li>Follow the installation steps from the beginning</li>
@@ -1043,8 +1272,8 @@ function StepComplete({
                         <p>If the AI model download gets stuck:</p>
                         <ul className="list-disc list-inside space-y-1 ml-2">
                           <li>Check your internet connection</li>
-                          <li>Press <kbd className="px-1.5 py-0.5 bg-background-alt rounded border text-xs">Ctrl+C</kbd> to cancel the download</li>
-                          <li>Try again with: <code className="bg-background-alt px-1.5 py-0.5 rounded text-xs">ollama pull {model?.ollamaName || "llama3.2"}</code></li>
+                          <li>Close the Ollama chat window and open it again</li>
+                          <li>Try downloading the model again by typing its name</li>
                         </ul>
                       </div>
                     </div>
@@ -1109,14 +1338,14 @@ function StepComplete({
                   <div className="text-sm text-muted">
                     {selectedTool === "ollama" ? (
                       <div className="space-y-2">
-                        <p>You can download and try any model! Here are some popular ones:</p>
+                        <p>You can download and try any model! In the Ollama chat window, just type the model name:</p>
                         <ul className="list-disc list-inside space-y-1 ml-2">
-                          <li><code className="bg-background-alt px-1.5 py-0.5 rounded text-xs">ollama run llama3.2</code> - Fast, lightweight</li>
-                          <li><code className="bg-background-alt px-1.5 py-0.5 rounded text-xs">ollama run llama3.1</code> - Smarter, best balance</li>
-                          <li><code className="bg-background-alt px-1.5 py-0.5 rounded text-xs">ollama run mistral</code> - Great for reasoning</li>
+                          <li><code className="bg-background-alt px-1.5 py-0.5 rounded text-xs">llama3.2</code> - Fast, lightweight</li>
+                          <li><code className="bg-background-alt px-1.5 py-0.5 rounded text-xs">llama3.1</code> - Smarter, best balance</li>
+                          <li><code className="bg-background-alt px-1.5 py-0.5 rounded text-xs">mistral</code> - Great for reasoning</li>
                         </ul>
                         <p className="mt-2">
-                          Each new model needs to download once, then it's saved on your computer.
+                          Each new model downloads once, then it's saved on your computer. You can switch between models anytime.
                         </p>
                       </div>
                     ) : (
@@ -1133,35 +1362,22 @@ function StepComplete({
         </AnimatePresence>
       </Card>
 
-      {/* What's Next */}
-      <Card>
-        <h3 className="font-semibold mb-3">What's Next?</h3>
-        <div className="space-y-3 text-sm text-muted">
-          <p>
-            <strong>Try different questions</strong> - The AI can help with writing,
-            brainstorming, explanations, and much more.
-          </p>
-          <p>
-            <strong>It learns your style</strong> - The more context you give in your
-            questions, the better the responses will be.
-          </p>
-          <p>
-            <strong>It's private</strong> - Feel free to ask about sensitive topics.
-            Nothing leaves your computer.
-          </p>
+      {/* What's Next - Compact footer */}
+      <div className="bg-background-alt rounded-xl p-4 text-center">
+        <p className="text-sm text-muted mb-3">
+          <strong>Tip:</strong> The more context you give, the better the responses.
+          Feel free to ask about sensitive topics - nothing leaves your computer.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Link href="/">
+            <Button variant="secondary" className="text-sm">Back to Home</Button>
+          </Link>
+          <Link href="/help">
+            <Button variant="ghost" className="text-sm">
+              Need Help?
+            </Button>
+          </Link>
         </div>
-      </Card>
-
-      <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-        <Link href="/">
-          <Button variant="secondary">Back to Home</Button>
-        </Link>
-        <Link href="/learn">
-          <Button>
-            Learn More About How This Works
-            <ArrowRight className="w-4 h-4" />
-          </Button>
-        </Link>
       </div>
     </div>
   );

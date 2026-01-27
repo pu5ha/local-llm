@@ -2,231 +2,148 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Shield, Lock, Wifi, DollarSign, Check, Monitor, HelpCircle } from "lucide-react";
-import UseCaseSelector from "@/components/UseCaseSelector";
-import { getAllTiers } from "@/data/tiers";
+import { ArrowRight, Shield, Lock, Check, Users } from "lucide-react";
 
 export default function Home() {
-  const tiers = getAllTiers();
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section - Lead with the problem */}
-      <section className="relative pt-24 pb-8 md:pt-32 md:pb-12 overflow-hidden">
+      {/* Hero Section - Lead with the benefit */}
+      <section className="relative pt-24 pb-12 md:pt-32 md:pb-16 overflow-hidden">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl leading-[1.15] mb-6">
-              Did you know <span className="highlight-underline">everything you type into ChatGPT</span> is saved by OpenAI?
+            {/* Brand name prominent */}
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <rect x="2" y="2" width="28" height="28" rx="6" fill="#1a5f4a" />
+                <path d="M10 16h12M16 10v12" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+                <circle cx="10" cy="10" r="2" fill="#c9a227" />
+                <circle cx="22" cy="22" r="2" fill="#c9a227" />
+              </svg>
+              <span className="font-serif text-lg">
+                Private<span className="text-primary font-semibold">AI</span>
+              </span>
+            </div>
+
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl leading-[1.15] mb-4">
+              Run AI on your computer.
+              <br />
+              <span className="text-primary">Private. Free. Forever.</span>
             </h1>
 
             <p className="text-lg sm:text-xl text-muted leading-relaxed mb-8 max-w-2xl mx-auto">
-              Every question you ask. Every personal detail you share. Every work document you paste in.
-              It all gets sent to their computers, where it can be stored, read, and used to train future AI.
+              ChatGPT works, but everything you type gets sent to OpenAI's servers.
+              Run AI locally instead - same experience, total privacy.
             </p>
+
+            {/* Primary CTA - above the fold */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+              <Link href="/setup" className="btn-primary">
+                Start Your Private AI
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* Quick trust signals */}
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted">
+              <span className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-primary" />
+                No tech skills needed
+              </span>
+              <span className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-primary" />
+                Works just like ChatGPT
+              </span>
+              <span className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-primary" />
+                No subscriptions
+              </span>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Visual explanation of the problem */}
+      {/* Compact visual comparison */}
       <section className="pb-12 md:pb-16">
         <div className="max-w-3xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
+            className="grid sm:grid-cols-2 gap-4"
           >
-            <div className="paper-card p-6 mb-6">
-              <p className="font-medium mb-4 text-center">Here's what happens when you use ChatGPT:</p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-sm mb-4">
-                <div className="flex items-center gap-2 bg-background-alt rounded-lg px-4 py-3 w-full sm:w-auto justify-center">
-                  <span>You type a message</span>
-                </div>
-                <ArrowRight className="w-4 h-4 text-muted rotate-90 sm:rotate-0 flex-shrink-0" />
-                <div className="flex items-center gap-2 bg-red-50 text-red-700 rounded-lg px-4 py-3 w-full sm:w-auto justify-center">
-                  <span>Sent over the internet</span>
-                </div>
-                <ArrowRight className="w-4 h-4 text-muted rotate-90 sm:rotate-0 flex-shrink-0" />
-                <div className="flex items-center gap-2 bg-red-50 text-red-700 rounded-lg px-4 py-3 w-full sm:w-auto justify-center">
-                  <span>Stored on OpenAI's servers</span>
-                </div>
+            {/* ChatGPT way */}
+            <div className="paper-card p-5 border-red-200">
+              <div className="flex items-center gap-2 mb-3 text-red-600">
+                <div className="w-2 h-2 rounded-full bg-red-500" />
+                <span className="font-medium text-sm">ChatGPT</span>
               </div>
-              <p className="text-sm text-muted text-center">
-                This includes your private thoughts, medical questions, work secrets, relationship advice requests - everything.
-              </p>
+              <div className="flex items-center gap-2 text-sm text-muted">
+                <span>You</span>
+                <ArrowRight className="w-3 h-3" />
+                <span>Internet</span>
+                <ArrowRight className="w-3 h-3" />
+                <span className="text-red-600">OpenAI servers</span>
+              </div>
             </div>
 
-            {/* The solution */}
-            <div className="bg-primary-pale rounded-2xl p-6 text-center">
-              <div className="flex items-center justify-center gap-2 mb-3">
-                <Shield className="w-5 h-5 text-primary" />
-                <p className="font-semibold text-primary">There's a better way</p>
+            {/* PrivateAI way */}
+            <div className="paper-card p-5 border-primary/30 bg-primary-pale/30">
+              <div className="flex items-center gap-2 mb-3 text-primary">
+                <div className="w-2 h-2 rounded-full bg-primary" />
+                <span className="font-medium text-sm">PrivateAI</span>
               </div>
-              <p className="text-lg mb-3">
-                You can run AI <strong>directly on your own computer</strong> instead.
-              </p>
-              <p className="text-muted mb-4">
-                It works just like ChatGPT - you type questions, it gives answers - but nothing ever leaves your device.
-                No company can see what you ask. It's completely private.
-              </p>
-              <Link href="/computers" className="btn-primary inline-flex">
-                Show Me How
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+              <div className="flex items-center gap-2 text-sm text-muted">
+                <span>You</span>
+                <ArrowRight className="w-3 h-3" />
+                <span className="text-primary font-medium">Your computer</span>
+                <Check className="w-4 h-4 text-primary" />
+              </div>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Use Case Section - THE MAIN CTA */}
-      <section className="py-16 md:py-20 bg-background-alt">
+      {/* Social Proof */}
+      <section className="py-8 md:py-12 border-y border-border">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-10"
-          >
-            <h2 className="font-serif text-2xl sm:text-3xl mb-3">
-              What do you want to do with AI?
-            </h2>
-            <p className="text-muted">
-              Pick one and we'll check if your computer can handle it
-            </p>
-          </motion.div>
-
-          <UseCaseSelector />
-
-          <motion.div
             initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-center mt-10"
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 text-center"
           >
-            <Link
-              href="/computers"
-              className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
-            >
-              <Monitor className="w-4 h-4" />
-              Or just check what your computer can run
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            <div className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-primary" />
+              <span className="text-sm">
+                <strong className="text-foreground">2,500+</strong>
+                <span className="text-muted"> people have made the switch</span>
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-primary" />
+              <span className="text-sm">
+                <strong className="text-foreground">100%</strong>
+                <span className="text-muted"> open source tools</span>
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Lock className="w-5 h-5 text-primary" />
+              <span className="text-sm">
+                <strong className="text-foreground">Zero</strong>
+                <span className="text-muted"> data leaves your computer</span>
+              </span>
+            </div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Benefits - More tangible */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-5xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="font-serif text-2xl sm:text-3xl mb-3">
-              Why does this matter?
-            </h2>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Lock,
-                title: "Ask anything privately",
-                description:
-                  "Medical questions, relationship advice, financial worries, embarrassing questions - ask without anyone knowing.",
-              },
-              {
-                icon: Shield,
-                title: "Keep work confidential",
-                description:
-                  "Use AI with client data, business strategies, and sensitive documents without sending them to a third party.",
-              },
-              {
-                icon: DollarSign,
-                title: "Never pay again",
-                description:
-                  "No $20/month ChatGPT subscription. No usage limits. Download once, use forever, completely free.",
-              },
-            ].map((feature, i) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="text-center"
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary-pale flex items-center justify-center mx-auto mb-4">
-                  <feature.icon className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="font-semibold mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Quick Tier Overview - Simplified */}
-      <section className="py-16 md:py-20 bg-background-alt">
-        <div className="max-w-5xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="font-serif text-2xl sm:text-3xl mb-3">
-              Will it work on my computer?
-            </h2>
-            <p className="text-muted max-w-2xl mx-auto">
-              It depends on your computer's memory (RAM). Here's a quick guide -
-              we'll help you figure out exactly where you stand.
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {tiers.map((tier, i) => (
-              <motion.div
-                key={tier.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="paper-card p-6 text-center"
-              >
-                <div className="text-3xl mb-3">{tier.emoji}</div>
-                <h3 className="font-serif text-xl mb-1">{tier.name}</h3>
-                <div className="text-sm text-primary font-medium mb-2">
-                  {tier.ramRequired}GB+ memory
-                </div>
-                <p className="text-sm text-muted mb-4">{tier.tagline}</p>
-                <div className="text-xs text-muted bg-background rounded-lg py-2 px-3">
-                  Example: {tier.exampleComputers[0]}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <Link href="/computers" className="btn-primary">
-              Check My Computer
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <p className="text-sm text-muted mt-3">
-              Don't know your computer's specs? We'll help you find out.
-            </p>
-          </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="py-16 md:py-20">
+      <section className="py-16 md:py-20 bg-background-alt">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -239,7 +156,7 @@ export default function Home() {
               How to get started
             </h2>
             <p className="text-muted mt-3">
-              Don't worry - we'll walk you through every single step
+              We'll walk you through every step
             </p>
           </motion.div>
 
@@ -247,22 +164,22 @@ export default function Home() {
             {[
               {
                 num: 1,
-                title: "Check your computer",
-                desc: "We'll help you find out how much memory your computer has and what it can run.",
+                title: "Choose your app",
+                desc: "We recommend Ollama - it's free, easy, and works just like ChatGPT.",
               },
               {
                 num: 2,
-                title: "Pick what you want to do",
-                desc: "Chat? Write? Get coding help? We'll recommend the right setup for you.",
+                title: "Install it",
+                desc: "Just download and install like any other app. We'll show you exactly how.",
               },
               {
                 num: 3,
-                title: "Follow our step-by-step guide",
-                desc: "We explain everything in plain English. You'll just copy and paste a few things - no tech skills needed.",
+                title: "Download an AI model",
+                desc: "Tell us how much memory your computer has, and we'll recommend the best AI for you.",
               },
               {
                 num: 4,
-                title: "Start chatting with your private AI",
+                title: "Start chatting",
                 desc: "That's it! Your conversations now stay on your computer forever.",
               },
             ].map((step, i) => (
@@ -282,18 +199,11 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
-
-          <div className="text-center mt-10">
-            <Link href="/computers" className="btn-primary">
-              Let's Get Started
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
         </div>
       </section>
 
       {/* Reassurance Section */}
-      <section className="py-16 md:py-20 bg-background-alt">
+      <section className="py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -364,11 +274,11 @@ export default function Home() {
               We'll walk you through every step - no tech skills needed.
             </p>
             <Link
-              href="/computers"
+              href="/setup"
               className="inline-flex items-center gap-2 px-6 py-3 bg-white text-foreground font-semibold rounded-lg hover:bg-primary-pale transition-colors"
             >
               <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse" />
-              Check My Computer
+              Start Your Private AI
               <ArrowRight className="w-4 h-4" />
             </Link>
             <div className="flex items-center justify-center gap-6 mt-8 text-sm text-gray-400">

@@ -102,12 +102,12 @@ export default function HardwareDetector({ confirmedRam }: HardwareDetectorProps
                 {ramSource === "confirmed" ? (
                   <p className="text-xs text-muted mt-1">
                     You confirmed this on the previous page.{" "}
-                    <a href="/computers" className="text-primary underline">Change</a>
+                    <a href="/setup" className="text-primary underline">Change</a>
                   </p>
                 ) : (
                   <p className="text-xs text-muted mt-1">
                     Estimated based on {hardware.suggestedRamReason?.toLowerCase()}.{" "}
-                    <a href="/computers" className="text-primary underline">Verify your RAM</a>
+                    <a href="/setup" className="text-primary underline">Verify your RAM</a>
                   </p>
                 )}
               </>
@@ -115,7 +115,7 @@ export default function HardwareDetector({ confirmedRam }: HardwareDetectorProps
               <>
                 <div className="font-medium">Unknown</div>
                 <p className="text-xs text-muted mt-1">
-                  <a href="/computers" className="text-primary underline">Check your RAM</a> to see accurate recommendations.
+                  <a href="/setup" className="text-primary underline">Check your RAM</a> to see accurate recommendations.
                 </p>
               </>
             )}

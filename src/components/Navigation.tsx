@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/setup", label: "Start" },
   { href: "/why", label: "Why Private AI?" },
   { href: "/learn", label: "Learn" },
+  { href: "/images", label: "Images" },
   { href: "/help", label: "Help" },
 ];
 

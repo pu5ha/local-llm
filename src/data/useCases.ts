@@ -127,7 +127,8 @@ export const useCases: Record<UseCaseId, UseCase> = {
   },
 };
 
-export const useCaseOrder: UseCaseId[] = ["chat", "coding", "writing", "creative", "images"];
+// Images removed from main flow - too complex for initial release
+export const useCaseOrder: UseCaseId[] = ["chat", "coding", "writing", "creative"];
 
 export function getUseCaseById(id: UseCaseId): UseCase {
   return useCases[id];

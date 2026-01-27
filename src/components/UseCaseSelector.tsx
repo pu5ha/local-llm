@@ -2,25 +2,24 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Monitor, Zap } from "lucide-react";
 import { getAllUseCases } from "@/data/useCases";
-import { getTierById } from "@/data/tiers";
 
 export default function UseCaseSelector() {
   const useCases = getAllUseCases();
 
-  const getHref = (useCaseId: string) => {
-    // Images use case links to its own setup page
-    if (useCaseId === "images") {
-      return "/images/setup";
+  // User-friendly computer requirement labels
+  const getRequirementLabel = (minimumTier: string) => {
+    if (minimumTier === "entry") {
+      return { text: "Works on most computers", color: "text-primary", bg: "bg-primary-pale" };
     }
-    return `/computers?use=${useCaseId}`;
+    return { text: "Needs a newer computer", color: "text-amber-700", bg: "bg-amber-50" };
   };
 
   return (
     <div className="grid sm:grid-cols-2 gap-4">
       {useCases.map((useCase, i) => {
-        const minTier = getTierById(useCase.minimumTier);
+        const requirement = getRequirementLabel(useCase.minimumTier);
 
         return (
           <motion.div
@@ -30,7 +29,7 @@ export default function UseCaseSelector() {
             transition={{ delay: i * 0.1 }}
           >
             <Link
-              href={getHref(useCase.id)}
+              href={`/computers?use=${useCase.id}`}
               className="block paper-card p-6 h-full group hover:border-primary transition-colors"
             >
               <div className="flex items-start gap-4">
@@ -39,26 +38,16 @@ export default function UseCaseSelector() {
                   <h3 className="font-serif text-lg mb-1 group-hover:text-primary transition-colors">
                     {useCase.name}
                   </h3>
-                  <p className="text-sm text-muted mb-3">
+                  <p className="text-sm text-muted mb-2">
                     {useCase.shortDescription}
                   </p>
-                  <div className="flex items-center gap-2 text-xs flex-wrap">
-                    <span
-                      className={`tag ${
-                        minTier.id === "entry"
-                          ? "tag-green"
-                          : minTier.id === "standard"
-                          ? "tag-amber"
-                          : "bg-blue-100 text-blue-700"
-                      }`}
-                    >
-                      {minTier.emoji} {minTier.name} tier+
-                    </span>
-                    {useCase.id === "images" && (
-                      <span className="tag bg-purple-100 text-purple-700">
-                        Requires GPU
-                      </span>
+                  <div className={`inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded-full ${requirement.bg} ${requirement.color}`}>
+                    {useCase.minimumTier === "entry" ? (
+                      <Monitor className="w-3 h-3" />
+                    ) : (
+                      <Zap className="w-3 h-3" />
                     )}
+                    {requirement.text}
                   </div>
                 </div>
                 <ArrowRight className="w-5 h-5 text-muted group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0" />

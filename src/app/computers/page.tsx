@@ -66,6 +66,12 @@ function ComputersPageContent() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
+            {/* Step indicator */}
+            <div className="inline-flex items-center gap-2 text-sm text-primary font-medium mb-4 bg-primary-pale px-4 py-2 rounded-full">
+              <span className="w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center">1</span>
+              Step 1 of 2: Check Your Computer
+            </div>
+
             {useCase ? (
               <>
                 <div className="inline-flex items-center gap-2 text-sm text-muted mb-4">
@@ -73,24 +79,21 @@ function ComputersPageContent() {
                   You want to: <strong>{useCase.name}</strong>
                 </div>
                 <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl mb-4">
-                  Can your computer handle it?
+                  Let's make sure your computer can run private AI
                 </h1>
                 <p className="text-lg text-muted max-w-2xl mx-auto">
-                  {useCase.name} requires at least a{" "}
-                  <span className="font-medium text-foreground">
-                    {getTierById(useCase.minimumTier).emoji} {getTierById(useCase.minimumTier).name} tier
-                  </span>{" "}
-                  computer. Let's see what you've got.
+                  First, we need to know a bit about your computer.
+                  Then we'll set everything up for you.
                 </p>
               </>
             ) : (
               <>
                 <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl mb-4">
-                  What can your computer run?
+                  Let's set up private AI on your computer
                 </h1>
                 <p className="text-lg text-muted max-w-2xl mx-auto">
-                  Different computers can handle different AI capabilities.
-                  Let's find out what yours can do.
+                  First, we need to know a bit about your computer.
+                  Then we'll walk you through the setup step by step.
                 </p>
               </>
             )}
@@ -262,7 +265,7 @@ function ComputersPageContent() {
                                   setManualRamSelected(ram);
                                   setUserTier(getTierForRam(ram));
                                 }}
-                                className={`px-5 py-2.5 rounded-lg border-2 font-medium transition-colors ${
+                                className={`px-5 py-2.5 rounded-lg border-2 font-medium transition-colors cursor-pointer ${
                                   isSuggested
                                     ? "border-primary bg-primary text-white hover:bg-primary/90"
                                     : "border-border bg-white hover:border-primary"
@@ -361,7 +364,8 @@ function ComputersPageContent() {
                           className="btn-primary justify-center"
                         >
                           <Sparkles className="w-4 h-4" />
-                          Get Started with {detectedTier.name} Tier
+                          Continue to Setup
+                          <ArrowRight className="w-4 h-4" />
                         </Link>
                         {detectedTier.id !== "power" && (
                           <button

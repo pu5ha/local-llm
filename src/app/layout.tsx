@@ -14,17 +14,16 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LocalLLM - Run AI Models Privately on Your Machine",
+  title: "PrivateAI - Run AI on Your Computer, 100% Private",
   description:
-    "The easiest way to run LLMs locally. Keep your conversations private with step-by-step guides for Ollama, LM Studio, and more.",
+    "The easiest way to run AI privately on your own computer. No subscriptions, no data collection, complete privacy. Simple step-by-step guides for anyone.",
   keywords: [
-    "local LLM",
     "private AI",
-    "Ollama",
-    "LM Studio",
-    "llama.cpp",
+    "AI privacy",
     "run AI locally",
-    "privacy",
+    "ChatGPT alternative",
+    "offline AI",
+    "free AI",
   ],
 };
 

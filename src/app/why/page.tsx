@@ -125,7 +125,7 @@ export default function WhyPage() {
             className="text-center mb-12"
           >
             <h2 className="font-serif text-2xl sm:text-3xl mb-3">
-              The local AI difference
+              The private AI difference
             </h2>
             <p className="text-muted">
               When you run AI on your own computer:
@@ -190,7 +190,7 @@ export default function WhyPage() {
             className="text-center mb-12"
           >
             <h2 className="font-serif text-2xl sm:text-3xl mb-3">
-              The benefits of local AI
+              The benefits of private AI
             </h2>
           </motion.div>
 
@@ -266,7 +266,7 @@ export default function WhyPage() {
             className="text-center mb-12"
           >
             <h2 className="font-serif text-2xl sm:text-3xl mb-3">
-              Cloud AI vs Local AI
+              Cloud AI vs Private AI
             </h2>
           </motion.div>
 
@@ -286,7 +286,7 @@ export default function WhyPage() {
               </div>
               <div className="p-4 bg-primary-pale font-medium border-b border-border text-primary">
                 <Laptop className="w-5 h-5 inline mr-2" />
-                Local AI
+                Private AI
               </div>
 
               {[
@@ -349,7 +349,7 @@ export default function WhyPage() {
             className="text-center mb-12"
           >
             <h2 className="font-serif text-2xl sm:text-3xl mb-3">
-              Who should run local AI?
+              Who should run private AI?
             </h2>
           </motion.div>
 
@@ -417,7 +417,7 @@ export default function WhyPage() {
               Ready to take back your privacy?
             </h2>
             <p className="text-lg text-gray-400 mb-8 max-w-xl mx-auto">
-              Find out if your computer can run local AI, then follow our simple
+              Find out if your computer can run private AI, then follow our simple
               guide to get started.
             </p>
             <Link

@@ -8,11 +8,10 @@ import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/why", label: "Why Local?" },
+  { href: "/why", label: "Why Private AI?" },
   { href: "/computers", label: "Can I Run It?" },
-  { href: "/tools", label: "Tools" },
-  { href: "/images", label: "Images" },
   { href: "/setup", label: "Get Started" },
+  { href: "/learn", label: "Learn More" },
 ];
 
 export default function Navigation() {
@@ -34,7 +33,7 @@ export default function Navigation() {
               </svg>
             </div>
             <span className="font-serif text-xl">
-              Local<span className="text-primary font-semibold">LLM</span>
+              Private<span className="text-primary font-semibold">AI</span>
             </span>
           </Link>
 

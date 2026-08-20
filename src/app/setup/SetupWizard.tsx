@@ -887,7 +887,7 @@ function StepModel({
           <div className="mt-6 pt-6 border-t border-border">
             <h4 className="font-medium mb-4">Download {selectedModelData.name} to your computer</h4>
 
-            {/* Simple 2-step process */}
+            {/* Simple 3-step process */}
             <div className="space-y-4">
               {/* Step 1: Open Ollama */}
               <div className="bg-background-alt rounded-xl p-4">
@@ -913,33 +913,71 @@ function StepModel({
                 </div>
               </div>
 
-              {/* Step 2: Type model name */}
+              {/* Step 2: Select model from dropdown */}
               <div className="bg-primary-pale rounded-xl p-4">
                 <div className="flex items-start gap-3">
                   <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary text-white text-sm flex items-center justify-center font-bold">2</span>
                   <div className="flex-1">
-                    <p className="font-medium mb-2">Type the model name and press Enter</p>
+                    <p className="font-medium mb-2">Select the model from the dropdown</p>
                     <p className="text-sm text-muted mb-3">
-                      In the Ollama chat window, type exactly this:
+                      Below the message box, in the row of small icons just to the left of the send button, click the <strong>model dropdown</strong> (it may show a different model name by default). Type or select it from the list:
                     </p>
                     <CodeBlock code={selectedModelData.ollamaName || "llama3.2"} />
-                    {/* Visual representation of chat */}
+                    {/* Visual representation of the input bar + model dropdown */}
                     <div className="mt-3 bg-white border border-border rounded-lg p-3">
+                      <div className="text-xs text-muted mb-2 pb-2 border-b border-border flex items-center gap-2">
+                        <MessageSquare className="w-3 h-3" />
+                        Ollama input bar
+                      </div>
+                      <div className="bg-background-alt rounded-2xl p-3">
+                        <p className="text-muted text-xs mb-3">Send a message</p>
+                        <div className="flex items-center justify-end gap-1.5">
+                          <span className="w-6 h-6 rounded-full bg-white border border-border flex items-center justify-center text-muted text-xs">+</span>
+                          <span className="w-6 h-6 rounded-full bg-white border border-border flex items-center justify-center text-muted text-xs">🌐</span>
+                          <span className="bg-primary/10 border border-primary/30 rounded-full px-2 py-1 text-primary font-mono text-xs flex items-center gap-1 ring-2 ring-primary">
+                            {selectedModelData.ollamaName || "llama3.2"} <span>▾</span>
+                          </span>
+                          <span className="w-6 h-6 rounded-full bg-primary/40 flex items-center justify-center text-white text-xs">↑</span>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted mt-3">
+                      It'll show a small download icon next to it in the list since it isn't on your computer yet — that's expected.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 3: Send a message to trigger the download */}
+              <div className="bg-primary-pale rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary text-white text-sm flex items-center justify-center font-bold">3</span>
+                  <div className="flex-1">
+                    <p className="font-medium mb-2">Send a message to start the download</p>
+                    <p className="text-sm text-muted mb-3">
+                      Type anything — even just <strong>"hi"</strong> — and press Enter. The model will start downloading, and you'll see a progress bar right in the chat.
+                    </p>
+                    {/* Visual representation of the download progress in chat */}
+                    <div className="bg-white border border-border rounded-lg p-3">
                       <div className="text-xs text-muted mb-2 pb-2 border-b border-border flex items-center gap-2">
                         <MessageSquare className="w-3 h-3" />
                         Ollama Chat Preview
                       </div>
                       <div className="space-y-2 text-sm">
-                        <div className="bg-primary/10 rounded-lg p-2 text-primary font-mono text-xs">
-                          {selectedModelData.ollamaName || "llama3.2"}
+                        <div className="flex justify-end">
+                          <div className="bg-background-alt rounded-lg px-3 py-1.5 text-xs">hi</div>
                         </div>
-                        <div className="bg-background-alt rounded-lg p-2 text-muted text-xs">
-                          ⏳ Downloading {selectedModelData.name}... 45%
+                        <div className="bg-background-alt rounded-lg p-2 text-xs">
+                          <p className="font-medium mb-1">⬇ Downloading model</p>
+                          <p className="text-muted mb-1.5">2.6 GB / 16.8 GB (15%)</p>
+                          <div className="h-1.5 bg-border rounded-full overflow-hidden">
+                            <div className="h-full bg-primary rounded-full" style={{ width: "15%" }} />
+                          </div>
                         </div>
                       </div>
                     </div>
                     <p className="text-xs text-muted mt-3">
-                      The download will start automatically. It may take a few minutes depending on your internet speed.
+                      Once the download finishes, {selectedModelData.name} will respond to your message automatically. It may take a few minutes depending on your internet speed.
                     </p>
                   </div>
                 </div>

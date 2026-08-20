@@ -1,4 +1,4 @@
-import { computeCurrentGap } from "@/lib/gap/computeGap";
+import { computeCurrentGap, buildLeaderboard } from "@/lib/gap/computeGap";
 import type { ClassifiedModel } from "@/lib/gap/types";
 
 function model(overrides: Partial<ClassifiedModel>): ClassifiedModel {
@@ -43,5 +43,34 @@ describe("computeCurrentGap", () => {
       model({ slug: "c", openness: "closed", intelligenceIndex: 60 }),
     ];
     expect(computeCurrentGap(models)?.gapPoints).toBe(-10);
+  });
+});
+
+describe("buildLeaderboard", () => {
+  it("sorts descending by intelligenceIndex, mixing open and closed", () => {
+    const models = [
+      model({ slug: "a", openness: "open", intelligenceIndex: 40 }),
+      model({ slug: "b", openness: "closed", intelligenceIndex: 60 }),
+      model({ slug: "c", openness: "open", intelligenceIndex: 55 }),
+    ];
+    const board = buildLeaderboard(models);
+    expect(board.map((m) => m.slug)).toEqual(["b", "c", "a"]);
+  });
+
+  it("respects the limit", () => {
+    const models = Array.from({ length: 20 }, (_, i) =>
+      model({ slug: `m${i}`, intelligenceIndex: i })
+    );
+    expect(buildLeaderboard(models, 5)).toHaveLength(5);
+    expect(buildLeaderboard(models)).toHaveLength(15);
+  });
+
+  it("does not mutate the input array", () => {
+    const models = [
+      model({ slug: "a", intelligenceIndex: 10 }),
+      model({ slug: "b", intelligenceIndex: 20 }),
+    ];
+    buildLeaderboard(models);
+    expect(models.map((m) => m.slug)).toEqual(["a", "b"]);
   });
 });

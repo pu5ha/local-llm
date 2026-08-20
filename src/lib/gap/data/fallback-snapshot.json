@@ -1,6 +1,38 @@
 {
-  "generatedAt": "2026-04-30T00:00:00.000Z",
+  "generatedAt": "2026-08-01T00:00:00.000Z",
   "models": [
+    {
+      "slug": "gpt-5.5",
+      "name": "GPT-5.5",
+      "creatorSlug": "openai",
+      "creatorName": "OpenAI",
+      "intelligenceIndex": 60,
+      "openness": "closed"
+    },
+    {
+      "slug": "kimi-k3",
+      "name": "Kimi K3",
+      "creatorSlug": "moonshot",
+      "creatorName": "Moonshot AI",
+      "intelligenceIndex": 60,
+      "openness": "open"
+    },
+    {
+      "slug": "claude-opus-4.7",
+      "name": "Claude Opus 4.7",
+      "creatorSlug": "anthropic",
+      "creatorName": "Anthropic",
+      "intelligenceIndex": 57,
+      "openness": "closed"
+    },
+    {
+      "slug": "gemini-3.1-pro-preview",
+      "name": "Gemini 3.1 Pro Preview",
+      "creatorSlug": "google",
+      "creatorName": "Google",
+      "intelligenceIndex": 57,
+      "openness": "closed"
+    },
     {
       "slug": "kimi-k2.6",
       "name": "Kimi K2.6",
@@ -18,36 +50,44 @@
       "openness": "open"
     },
     {
+      "slug": "claude-opus-4.6",
+      "name": "Claude Opus 4.6",
+      "creatorSlug": "anthropic",
+      "creatorName": "Anthropic",
+      "intelligenceIndex": 53,
+      "openness": "closed"
+    },
+    {
+      "slug": "deepseek-v4-pro",
+      "name": "DeepSeek V4 Pro",
+      "creatorSlug": "deepseek",
+      "creatorName": "DeepSeek",
+      "intelligenceIndex": 53,
+      "openness": "open"
+    },
+    {
+      "slug": "glm-5",
+      "name": "GLM-5",
+      "creatorSlug": "z-ai",
+      "creatorName": "Zhipu (Z.ai)",
+      "intelligenceIndex": 50,
+      "openness": "open"
+    },
+    {
+      "slug": "claude-3.7-sonnet",
+      "name": "Claude 3.7 Sonnet",
+      "creatorSlug": "anthropic",
+      "creatorName": "Anthropic",
+      "intelligenceIndex": 35,
+      "openness": "closed"
+    },
+    {
       "slug": "deepseek-v3",
       "name": "DeepSeek V3",
       "creatorSlug": "deepseek",
       "creatorName": "DeepSeek",
       "intelligenceIndex": 22,
       "openness": "open"
-    },
-    {
-      "slug": "gpt-5.5",
-      "name": "GPT-5.5",
-      "creatorSlug": "openai",
-      "creatorName": "OpenAI",
-      "intelligenceIndex": 60,
-      "openness": "closed"
-    },
-    {
-      "slug": "gemini-3.1-pro-preview",
-      "name": "Gemini 3.1 Pro Preview",
-      "creatorSlug": "google",
-      "creatorName": "Google",
-      "intelligenceIndex": 57,
-      "openness": "closed"
-    },
-    {
-      "slug": "claude-opus-4.7",
-      "name": "Claude Opus 4.7",
-      "creatorSlug": "anthropic",
-      "creatorName": "Anthropic",
-      "intelligenceIndex": 57,
-      "openness": "closed"
     }
   ],
   "unclassified": []

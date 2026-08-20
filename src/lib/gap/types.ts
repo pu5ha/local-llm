@@ -96,4 +96,5 @@ export interface GapData {
   unclassified: UnclassifiedModel[];
   epochFindings: EpochFinding[]; // ascending by asOf
   history: GapHistoryPoint[]; // ascending by date
+  leaderboard: ClassifiedModel[]; // descending by intelligenceIndex, open+closed mixed
 }

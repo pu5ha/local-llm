@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Clock, TrendingDown, ExternalLink } from "lucide-react";
-import { Card, Badge } from "@/components/ui";
+import { Clock, ExternalLink } from "lucide-react";
 import type { GapData } from "@/lib/gap/types";
 import TrendChart from "./TrendChart";
+import Leaderboard from "./Leaderboard";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
@@ -43,44 +43,30 @@ function formatMonthDate(isoDate: string) {
 }
 
 export default function OpenVsClosedView({ data }: { data: GapData }) {
-  const { current, meta, epochFindings, history } = data;
+  const { current, meta, epochFindings, history, leaderboard } = data;
   const latestEpoch = epochFindings[epochFindings.length - 1];
 
-  const aaChartPoints = history.map((h) => ({
+  const chartPoints = history.map((h) => ({
     date: formatMonthDate(h.date),
-    value: h.date,
     y: h.gapPoints,
     sourceUrl: h.sourceUrl,
     sourceLabel: h.sourceLabel,
     tooltip: `${formatMonthDate(h.date)}: ${h.gapPoints}pt gap (${h.openLeader} vs ${h.closedLeader}) — ${h.sourceLabel}`,
   }));
 
-  const epochChartPoints = epochFindings.map((f) => ({
-    date: formatMonthDate(f.asOf),
-    value: f.asOf,
-    y: f.monthsBehind,
-    sourceUrl: f.sourceUrl,
-    sourceLabel: f.sourceLabel,
-    tooltip: `${formatMonthDate(f.asOf)}: ${f.monthsBehind} months behind — ${f.sourceLabel}`,
-  }));
-
   return (
-    <div className="min-h-screen py-12">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Hero */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
-        >
-          <h1 className="font-serif text-4xl sm:text-5xl mb-4">
+    <div className="min-h-screen py-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+          <h1 className="font-serif text-3xl sm:text-4xl mb-2">
             Open <span className="text-primary">vs</span> Closed
           </h1>
-          <p className="text-muted max-w-2xl mx-auto mb-4">
-            How far behind open-source models really are on benchmarks — and
-            how fast that gap is closing.
+          <p className="text-muted mb-3">
+            Where open-source models rank against closed models on
+            benchmarks — and how fast that gap is closing.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="tag tag-green inline-flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
               Last updated {formatDate(meta.fetchedAt)}
@@ -93,105 +79,95 @@ export default function OpenVsClosedView({ data }: { data: GapData }) {
           </div>
         </motion.div>
 
-        {/* Stat callouts */}
-        <div className="grid sm:grid-cols-2 gap-6 mb-12">
-          <Card>
-            <p className="text-sm text-muted mb-2">Current gap (Intelligence Index)</p>
-            <p className="font-serif text-5xl mb-3">
+        {/* Headline stat row */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="grid sm:grid-cols-2 gap-3 mb-8"
+        >
+          <div className="paper-card p-4">
+            <p className="text-xs text-muted mb-1">Current gap (Intelligence Index)</p>
+            <p className="text-2xl font-semibold mb-1 font-mono">
               {current.gapPoints >= 0 ? current.gapPoints : Math.abs(current.gapPoints)}
-              <span className="text-xl text-muted"> pts</span>
+              <span className="text-sm font-normal text-muted font-sans"> pts</span>
               {current.gapPoints < 0 && (
-                <span className="block text-base text-primary mt-1">Open models are ahead</span>
+                <span className="ml-2 text-sm text-primary font-normal">Open is ahead</span>
               )}
             </p>
-            <p className="text-sm text-muted mb-1">
-              Leading open: <strong className="text-foreground">{current.openLeader.name}</strong>{" "}
-              ({current.openLeader.intelligenceIndex})
+            <p className="text-xs text-muted">
+              {current.openLeader.name} ({current.openLeader.intelligenceIndex}) vs.{" "}
+              {current.closedLeader.name} ({current.closedLeader.intelligenceIndex})
             </p>
-            <p className="text-sm text-muted mb-4">
-              Leading closed:{" "}
-              <strong className="text-foreground">{current.closedLeader.name}</strong> (
-              {current.closedLeader.intelligenceIndex})
-            </p>
-            <a
-              href="https://artificialanalysis.ai/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-primary inline-flex items-center gap-1 hover:underline"
-            >
-              Source: Artificial Analysis <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </Card>
+          </div>
 
-          <Card>
-            <p className="text-sm text-muted mb-2">Epoch AI: months behind frontier</p>
-            <p className="font-serif text-5xl mb-3">
+          <div className="paper-card p-4">
+            <p className="text-xs text-muted mb-1">Epoch AI: months behind frontier</p>
+            <p className="text-2xl font-semibold mb-1 font-mono">
               {latestEpoch.monthsBehind}
-              <span className="text-xl text-muted"> months</span>
+              <span className="text-sm font-normal text-muted font-sans"> months</span>
             </p>
-            {latestEpoch.confidenceNote && (
-              <p className="text-sm text-muted mb-1">{latestEpoch.confidenceNote}</p>
-            )}
-            <p className="text-sm text-muted mb-4">As of {formatCalendarDate(latestEpoch.asOf)}</p>
-            <a
-              href={latestEpoch.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-primary inline-flex items-center gap-1 hover:underline"
-            >
-              Source: Epoch AI <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </Card>
-        </div>
+            <p className="text-xs text-muted">As of {formatCalendarDate(latestEpoch.asOf)}</p>
+          </div>
+        </motion.div>
+
+        {/* Leaderboard */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-10"
+        >
+          <h2 className="font-serif text-2xl mb-1">Where models rank</h2>
+          <p className="text-sm text-muted mb-4">
+            Top {leaderboard.length} models by Artificial Analysis Intelligence
+            Index, open and closed side by side.
+          </p>
+          <div className="paper-card p-4 sm:p-6">
+            <Leaderboard models={leaderboard} />
+          </div>
+          <a
+            href="https://artificialanalysis.ai/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-primary inline-flex items-center gap-1 hover:underline mt-3"
+          >
+            Source: Artificial Analysis <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </motion.div>
 
         {/* Trend */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-12"
+          className="mb-10"
         >
-          <div className="flex items-center gap-2 mb-6">
-            <TrendingDown className="w-5 h-5 text-primary" />
-            <h2 className="font-serif text-2xl">The gap is closing</h2>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-6">
-            <Card hover={false}>
-              <p className="text-sm font-medium mb-1">Intelligence Index gap, over time</p>
-              <p className="text-xs text-muted mb-4">Leading open model vs. leading closed model</p>
-              <TrendChart points={aaChartPoints} unitLabel="pt" />
-            </Card>
-            <Card hover={false}>
-              <p className="text-sm font-medium mb-1">Months behind frontier, over time</p>
-              <p className="text-xs text-muted mb-4">Epoch AI Capabilities Index research</p>
-              <TrendChart points={epochChartPoints} unitLabel="mo" color="var(--secondary)" />
-            </Card>
-          </div>
-          <p className="text-xs text-muted mt-3">
-            Each point links to its cited source. Points marked from before this
-            site started tracking live data are hand-cited historical
-            checkpoints, not automatically recomputed.
+          <h2 className="font-serif text-2xl mb-1">The gap is closing</h2>
+          <p className="text-sm text-muted mb-4">
+            Leading open model vs. leading closed model, over time. Each
+            point links to its cited source.
           </p>
+          <div className="paper-card p-4 sm:p-6">
+            <TrendChart points={chartPoints} unitLabel="pt" />
+          </div>
         </motion.div>
 
         {/* Methodology & sources */}
-        <Card className="text-sm text-muted space-y-3" hover={false}>
+        <div className="text-xs text-muted space-y-2 border-t border-border pt-6">
           <p>
             <strong className="text-foreground">How &ldquo;open&rdquo; vs &ldquo;closed&rdquo; is decided:</strong>{" "}
             models are classified by creator (Meta, Mistral, Alibaba/Qwen,
             DeepSeek, Moonshot, and similar labs count as open; OpenAI,
             Anthropic, Google, Microsoft, xAI, and Amazon count as closed by
             default), with per-model overrides for creators that ship both
-            (e.g. Google&apos;s Gemma is open, Gemini is closed). This is a
-            hand-maintained list, reviewed periodically — the same approach
-            this site uses to curate its recommended local models.
+            (e.g. Google&apos;s Gemma is open, Gemini is closed).
           </p>
           <p>
-            <strong className="text-foreground">Not to be confused with:</strong>{" "}
-            Artificial Analysis also publishes a separate &quot;Openness
-            Index&quot; that scores license/transparency rather than
-            benchmark performance. The numbers on this page are about
-            capability, not licensing.
+            Artificial Analysis also publishes a separate &ldquo;Openness
+            Index&rdquo; scoring license/transparency rather than benchmark
+            performance — the numbers on this page are about capability, not
+            licensing.
           </p>
           <p>
             Data from{" "}
@@ -205,16 +181,16 @@ export default function OpenVsClosedView({ data }: { data: GapData }) {
             </a>{" "}
             and{" "}
             <a
-              href="https://epoch.ai/"
+              href={latestEpoch.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
               Epoch AI
             </a>
-            . <Badge variant="default">Refreshed automatically</Badge>
+            , refreshed automatically.
           </p>
-        </Card>
+        </div>
       </div>
     </div>
   );

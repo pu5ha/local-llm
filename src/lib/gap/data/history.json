@@ -29,11 +29,11 @@
     },
     {
       "date": "2026-08-01",
-      "gapPoints": 4,
+      "gapPoints": 0,
       "openLeader": "Kimi K3",
-      "closedLeader": "Leading closed model",
-      "sourceUrl": "https://x.com/ArtificialAnlys/status/2081926991788626011",
-      "sourceLabel": "Artificial Analysis on X: Kimi K3 release",
+      "closedLeader": "GPT-5.5",
+      "sourceUrl": "https://artificialanalysis.ai/models/open-source",
+      "sourceLabel": "Artificial Analysis: Open source models comparison",
       "seeded": true
     }
   ]

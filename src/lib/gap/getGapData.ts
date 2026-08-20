@@ -2,7 +2,7 @@ import "server-only";
 import { fetchAaModels } from "./fetchAaModels";
 import { getFallbackGapSnapshot } from "./fallbackSnapshot";
 import { getGapHistory } from "./history";
-import { computeCurrentGap } from "./computeGap";
+import { computeCurrentGap, buildLeaderboard } from "./computeGap";
 import { epochFindings } from "./epochFindings";
 import type { GapData } from "./types";
 
@@ -22,6 +22,7 @@ export async function getGapData(): Promise<GapData> {
       unclassified,
       epochFindings,
       history: getGapHistory(),
+      leaderboard: buildLeaderboard(classified),
     };
   } catch (err) {
     console.warn("[gap] live fetch failed, using fallback snapshot:", err);
@@ -42,6 +43,7 @@ export async function getGapData(): Promise<GapData> {
       unclassified: snapshot.unclassified,
       epochFindings,
       history: getGapHistory(),
+      leaderboard: buildLeaderboard(snapshot.models),
     };
   }
 }

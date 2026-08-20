@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 
-export default function RefreshButton({ adminKey }: { adminKey: string }) {
+export default function RefreshButton({
+  adminKey,
+  endpoint = "/api/catalog",
+}: {
+  adminKey: string;
+  endpoint?: string;
+}) {
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">(
     "idle"
   );
@@ -10,7 +16,7 @@ export default function RefreshButton({ adminKey }: { adminKey: string }) {
   const refresh = async () => {
     setStatus("loading");
     try {
-      const res = await fetch("/api/catalog", {
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "x-admin-key": adminKey },
       });

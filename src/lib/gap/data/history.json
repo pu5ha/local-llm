@@ -1,0 +1,40 @@
+{
+  "points": [
+    {
+      "date": "2025-04-30",
+      "gapPoints": 13,
+      "openLeader": "DeepSeek V3-0324",
+      "closedLeader": "Claude 3.7 Sonnet",
+      "sourceUrl": "https://artificialanalysis.ai/articles/recent-open-weights-model-launches",
+      "sourceLabel": "Artificial Analysis: Recent open weights model launches",
+      "seeded": true
+    },
+    {
+      "date": "2026-02-11",
+      "gapPoints": 3,
+      "openLeader": "GLM-5",
+      "closedLeader": "Claude Opus 4.6",
+      "sourceUrl": "https://artificialanalysis.ai/articles/glm-5-everything-you-need-to-know",
+      "sourceLabel": "Artificial Analysis: GLM-5, everything you need to know",
+      "seeded": true
+    },
+    {
+      "date": "2026-04-30",
+      "gapPoints": 6,
+      "openLeader": "Leading open-weight model",
+      "closedLeader": "GPT-5.5",
+      "sourceUrl": "https://artificialanalysis.ai/articles/recent-open-weights-model-launches",
+      "sourceLabel": "Artificial Analysis: Recent open weights model launches",
+      "seeded": true
+    },
+    {
+      "date": "2026-08-01",
+      "gapPoints": 4,
+      "openLeader": "Kimi K3",
+      "closedLeader": "Leading closed model",
+      "sourceUrl": "https://x.com/ArtificialAnlys/status/2081926991788626011",
+      "sourceLabel": "Artificial Analysis on X: Kimi K3 release",
+      "seeded": true
+    }
+  ]
+}

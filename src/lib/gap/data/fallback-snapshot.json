@@ -1,0 +1,54 @@
+{
+  "generatedAt": "2026-04-30T00:00:00.000Z",
+  "models": [
+    {
+      "slug": "kimi-k2.6",
+      "name": "Kimi K2.6",
+      "creatorSlug": "moonshot",
+      "creatorName": "Moonshot AI",
+      "intelligenceIndex": 54,
+      "openness": "open"
+    },
+    {
+      "slug": "mimo-v2.5-pro",
+      "name": "MiMo V2.5 Pro",
+      "creatorSlug": "xiaomi",
+      "creatorName": "Xiaomi",
+      "intelligenceIndex": 54,
+      "openness": "open"
+    },
+    {
+      "slug": "deepseek-v3",
+      "name": "DeepSeek V3",
+      "creatorSlug": "deepseek",
+      "creatorName": "DeepSeek",
+      "intelligenceIndex": 22,
+      "openness": "open"
+    },
+    {
+      "slug": "gpt-5.5",
+      "name": "GPT-5.5",
+      "creatorSlug": "openai",
+      "creatorName": "OpenAI",
+      "intelligenceIndex": 60,
+      "openness": "closed"
+    },
+    {
+      "slug": "gemini-3.1-pro-preview",
+      "name": "Gemini 3.1 Pro Preview",
+      "creatorSlug": "google",
+      "creatorName": "Google",
+      "intelligenceIndex": 57,
+      "openness": "closed"
+    },
+    {
+      "slug": "claude-opus-4.7",
+      "name": "Claude Opus 4.7",
+      "creatorSlug": "anthropic",
+      "creatorName": "Anthropic",
+      "intelligenceIndex": 57,
+      "openness": "closed"
+    }
+  ],
+  "unclassified": []
+}

@@ -29,10 +29,10 @@ export default function Navigation() {
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative">
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="transition-transform group-hover:rotate-12">
-                <rect x="2" y="2" width="28" height="28" rx="6" fill="#1a5f4a" />
+                <rect x="2" y="2" width="28" height="28" rx="6" style={{ fill: "var(--primary)" }} />
                 <path d="M10 16h12M16 10v12" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                <circle cx="10" cy="10" r="2" fill="#c9a227" />
-                <circle cx="22" cy="22" r="2" fill="#c9a227" />
+                <circle cx="10" cy="10" r="2" style={{ fill: "var(--foreground)" }} />
+                <circle cx="22" cy="22" r="2" style={{ fill: "var(--foreground)" }} />
               </svg>
             </div>
             <span className="font-serif text-xl">
@@ -72,7 +72,7 @@ export default function Navigation() {
             <ThemeToggle />
             <Link
               href="/setup"
-              className="flex items-center gap-2 px-4 py-2 bg-foreground text-background text-sm font-medium rounded-full hover:bg-primary transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-foreground text-background text-sm font-medium rounded-md hover:bg-primary transition-colors"
             >
               <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse" />
               Start Your Private AI

@@ -12,7 +12,7 @@ describe('Homepage', () => {
   it('has CTA buttons linking to /setup (not /computers)', () => {
     render(<Home />);
 
-    const ctaButtons = screen.getAllByText('Get Started Free');
+    const ctaButtons = screen.getAllByText('Show Me How');
     expect(ctaButtons.length).toBeGreaterThan(0);
     ctaButtons.forEach(button => {
       const link = button.closest('a');
@@ -43,8 +43,8 @@ describe('Homepage', () => {
   it('displays truthful value propositions', () => {
     render(<Home />);
 
-    expect(screen.getByText('Free')).toBeInTheDocument();
-    expect(screen.getByText(/forever, no subscriptions/)).toBeInTheDocument();
+    expect(screen.getByText('Not a company')).toBeInTheDocument();
+    expect(screen.getAllByText(/just a setup guide/).length).toBeGreaterThan(0);
     expect(screen.getByText('100%')).toBeInTheDocument();
     expect(screen.getByText(/open source tools/)).toBeInTheDocument();
     expect(screen.getByText('Zero')).toBeInTheDocument();

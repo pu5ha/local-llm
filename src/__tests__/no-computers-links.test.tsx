@@ -56,7 +56,7 @@ describe('No /computers links exist anywhere', () => {
   it('All CTA buttons link to /setup', () => {
     render(<Home />);
 
-    const ctaTexts = ['Get Started Free'];
+    const ctaTexts = ['Show Me How'];
     ctaTexts.forEach(text => {
       const buttons = screen.queryAllByText(text);
       buttons.forEach(button => {
@@ -82,7 +82,7 @@ describe('Setup flow starts directly at /setup', () => {
   it('Homepage CTA goes directly to /setup', () => {
     render(<Home />);
 
-    const ctaButtons = screen.getAllByText('Get Started Free');
+    const ctaButtons = screen.getAllByText('Show Me How');
     const firstCta = ctaButtons[0].closest('a');
 
     expect(firstCta).toHaveAttribute('href', '/setup');

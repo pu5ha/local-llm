@@ -1,0 +1,201 @@
+.wrapper {
+  --home-bg: #ffffff;
+  --home-surface: #f5f5f6;
+  --home-fg: #0b0b0c;
+  --home-muted: #68686c;
+  --home-border: #e7e7e9;
+  --home-accent: #0f6b4f;
+  background: var(--home-bg);
+  color: var(--home-fg);
+  font-family: var(--font-sans);
+}
+
+:global([data-theme="dark"]) .wrapper {
+  --home-bg: #08090a;
+  --home-surface: #131315;
+  --home-fg: #f5f5f5;
+  --home-muted: #9a9a9e;
+  --home-border: #232326;
+  --home-accent: #33d6a0;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--home-muted);
+}
+
+.h1 {
+  font-family: var(--font-serif);
+  font-weight: 650;
+  font-size: clamp(3rem, 9vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--home-fg);
+}
+
+.h2 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--home-fg);
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.75rem;
+  background: var(--home-fg);
+  color: var(--home-bg);
+  border-radius: 6px;
+  font-weight: 600;
+  border: 1.5px solid var(--home-fg);
+  transition: background 150ms ease, color 150ms ease;
+}
+.ctaButton:hover {
+  background: var(--home-bg);
+  color: var(--home-fg);
+}
+
+.ctaButtonInverse {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.75rem;
+  background: var(--home-bg);
+  color: var(--home-fg);
+  border-radius: 6px;
+  font-weight: 600;
+  border: 1.5px solid var(--home-bg);
+  transition: background 150ms ease, color 150ms ease;
+}
+.ctaButtonInverse:hover {
+  background: var(--home-fg);
+  color: var(--home-bg);
+}
+
+.vsBadge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--home-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+  color: var(--home-muted);
+}
+
+.terminalCard {
+  background: #0d0d0e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.terminalCardHeader {
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.terminalDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.terminalDot[data-color="red"] {
+  background: #ff5f56;
+}
+.terminalDot[data-color="yellow"] {
+  background: #ffbd2e;
+}
+.terminalDot[data-color="green"] {
+  background: #27ca40;
+}
+
+.terminalCardBody {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #e5e5e5;
+  padding: 16px;
+}
+
+.stepNumeral {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  color: var(--home-accent);
+  opacity: 0.35;
+  line-height: 1;
+}
+
+.faqCell {
+  border: 1px solid var(--home-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: border-color 150ms ease;
+}
+.faqCell:hover {
+  border-color: var(--home-fg);
+}
+
+.textLink {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--home-fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.marqueeBanner {
+  background: var(--home-fg);
+  color: var(--home-bg);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 0.9rem 0;
+}
+
+.marqueeContent {
+  display: inline-flex;
+  gap: 3rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  animation: home-marquee 30s linear infinite;
+}
+
+@keyframes home-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.finalCta {
+  background: var(--home-fg);
+  color: var(--home-bg);
+  padding: 5rem 0 6rem;
+}
+
+.ctaHeadline {
+  font-family: var(--font-serif);
+  font-weight: 650;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  color: var(--home-bg);
+}

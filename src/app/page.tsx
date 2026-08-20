@@ -44,7 +44,7 @@ export default function Home() {
             {/* Primary CTA - above the fold */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
               <Link href="/setup" className="btn-primary">
-                Get Started Free
+                Show Me How
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -61,7 +61,7 @@ export default function Home() {
               </span>
               <span className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-primary" />
-                $0/month, forever
+                Nothing to buy, ever
               </span>
             </div>
           </motion.div>
@@ -126,8 +126,8 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-primary" />
               <span className="text-sm">
-                <strong className="text-foreground">Free</strong>
-                <span className="text-muted"> forever, no subscriptions</span>
+                <strong className="text-foreground">Not a company</strong>
+                <span className="text-muted"> — just a setup guide</span>
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -267,13 +267,13 @@ export default function Home() {
         <div className="marquee-content font-mono text-xs tracking-wider">
           {Array.from({ length: 2 }).map((_, i) => (
             <span key={i} className="flex items-center gap-12">
-              <span>NO SUBSCRIPTIONS</span>
+              <span>NOT A COMPANY</span>
               <span>•</span>
               <span>NO DATA COLLECTION</span>
               <span>•</span>
               <span>RUNS OFFLINE</span>
               <span>•</span>
-              <span>FREE FOREVER</span>
+              <span>OPEN SOURCE</span>
               <span>•</span>
             </span>
           ))}
@@ -300,7 +300,7 @@ export default function Home() {
               className="inline-flex items-center gap-2 px-6 py-3 bg-white text-foreground font-semibold rounded-lg hover:bg-primary-pale transition-colors"
             >
               <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse" />
-              Get Started Free
+              Show Me How
               <ArrowRight className="w-4 h-4" />
             </Link>
             <div className="flex items-center justify-center gap-6 mt-8 text-sm text-gray-400">
@@ -310,7 +310,7 @@ export default function Home() {
               </span>
               <span className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-terminal-green" />
-                Completely free
+                Nothing to buy
               </span>
             </div>
           </motion.div>

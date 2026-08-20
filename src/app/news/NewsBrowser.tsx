@@ -10,10 +10,12 @@ import {
   Wrench,
   Newspaper,
   ExternalLink,
+  Send,
 } from "lucide-react";
 import { Button } from "@/components/ui";
 import type { NewsItem, NewsCategory, NewsMeta } from "@/lib/news/types";
 import { formatRelativeTime } from "@/lib/news/formatRelativeTime";
+import { TELEGRAM_CHANNEL_URL } from "@/lib/telegram/channel";
 
 const CATEGORY_LABELS: Record<NewsCategory, string> = {
   models: "Models",
@@ -86,11 +88,20 @@ export default function NewsBrowser({
           <h1 className="font-serif text-4xl sm:text-5xl mb-4">
             Latest in <span className="text-primary">Local AI</span>
           </h1>
-          <p className="text-muted max-w-2xl mx-auto">
+          <p className="text-muted max-w-2xl mx-auto mb-6">
             New models, tools, research, and hardware for running AI on your
             own machine — pulled automatically from Hugging Face, GitHub,
             Hacker News, and a few trusted blogs.
           </p>
+          <a
+            href={TELEGRAM_CHANNEL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary"
+          >
+            <Send className="w-4 h-4" />
+            Get news on Telegram
+          </a>
         </motion.div>
 
         {meta.source === "fallback-snapshot" && (

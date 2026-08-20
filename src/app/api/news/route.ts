@@ -1,5 +1,6 @@
 import { revalidateTag } from "next/cache";
 import { getNews } from "@/lib/news/getNews";
+import { clearCachedFeed } from "@/lib/news/cache";
 import { NEWS_TAG, NEWS_REVALIDATE_SECONDS } from "@/lib/news/constants";
 
 export async function GET() {
@@ -13,5 +14,8 @@ export async function POST(req: Request) {
     return new Response("unauthorized", { status: 401 });
   }
   revalidateTag(NEWS_TAG, { expire: NEWS_REVALIDATE_SECONDS });
+  // Also clear the Redis feed cache in front of getNews() — without this,
+  // "refresh now" would keep serving the cached feed until its TTL expires.
+  await clearCachedFeed();
   return Response.json({ revalidated: true });
 }

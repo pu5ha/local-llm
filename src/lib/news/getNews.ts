@@ -4,6 +4,7 @@ import { getFallbackNewsItems } from "./fallbackSnapshot";
 import { dedupeAndSort, capAndFilterRecent } from "./dedupeAndSort";
 import { cleanRawSummary } from "./plainLanguage/cleanRawSummary";
 import { rewriteNewsItems } from "./plainLanguage/rewriteNewsItems";
+import { getCachedFeed, setCachedFeed } from "./cache";
 import type { NewsFeed, NewsItem } from "./types";
 
 const MAX_AGE_DAYS = 30;
@@ -14,21 +15,27 @@ function withCleanedSummaries(items: NewsItem[]): NewsItem[] {
 }
 
 /**
- * Orchestrates: try a live fetch, fall back to the committed snapshot on any
- * failure. Never throws — the site must never show blank/broken data because
- * a third-party API had a bad day.
+ * Orchestrates: serve a cached live feed if we have one, otherwise try a
+ * live fetch, falling back to the committed snapshot on any failure. Never
+ * throws — the site must never show blank/broken data because a third-party
+ * API had a bad day.
  */
 export async function getNews(): Promise<NewsFeed> {
+  const cached = await getCachedFeed();
+  if (cached) return cached;
+
   try {
     const items = await fetchLiveNews();
     const capped = capAndFilterRecent(dedupeAndSort(items), new Date(), MAX_AGE_DAYS, MAX_ITEMS);
-    return {
+    const feed: NewsFeed = {
       // Plain-language rewrite only runs on the live path — the fallback
       // snapshot already has it baked in by scripts/refresh-news-snapshot.ts,
       // so that path never depends on a live LLM call either.
       items: await rewriteNewsItems(withCleanedSummaries(capped)),
       meta: { fetchedAt: new Date().toISOString(), source: "live" },
     };
+    await setCachedFeed(feed);
+    return feed;
   } catch (err) {
     console.warn("[news] live fetch failed, using fallback snapshot:", err);
     return {

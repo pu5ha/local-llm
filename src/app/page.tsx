@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Shield, Lock, Check, Users } from "lucide-react";
+import { ArrowRight, Shield, Lock, Check, Users, Send } from "lucide-react";
+import { TELEGRAM_CHANNEL_URL } from "@/lib/telegram/channel";
 
 export default function Home() {
 
@@ -334,6 +335,15 @@ export default function Home() {
             <p className="text-sm text-muted">
               AI that stays on your computer. Your privacy matters.
             </p>
+            <a
+              href={TELEGRAM_CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-sm text-muted hover:text-primary transition-colors"
+            >
+              <Send className="w-4 h-4" />
+              Get news on Telegram
+            </a>
           </div>
         </div>
       </footer>

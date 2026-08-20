@@ -16,6 +16,11 @@ export interface NewsItem {
   category: NewsCategory;
   publishedAt: string; // ISO 8601
   points?: number; // Hacker News score only
+  // LLM-rewritten, plain-language versions of title/summary. Set only on the
+  // live path (and baked into the fallback snapshot ahead of time) — the UI
+  // falls back to title/summary when these are absent.
+  plainTitle?: string;
+  plainSummary?: string;
 }
 
 export type NewsMetaSource = "live" | "fallback-snapshot";

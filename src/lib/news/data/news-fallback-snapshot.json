@@ -1,4 +1,875 @@
 {
-  "generatedAt": "2026-08-19T00:00:00.000Z",
-  "items": []
+  "generatedAt": "2026-08-20T03:43:17.336Z",
+  "items": [
+    {
+      "title": "llama.cpp b10507",
+      "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b10507",
+      "summary": "mtmd: add mtmd_bitmap_set_mergeable (#27348)",
+      "source": "GitHub — llama.cpp",
+      "sourceKind": "github-releases",
+      "category": "tools",
+      "publishedAt": "2026-08-20T03:21:28Z"
+    },
+    {
+      "title": "llama.cpp b10506",
+      "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b10506",
+      "summary": "metal : dequantize q8_0 using packed types (#27370)",
+      "source": "GitHub — llama.cpp",
+      "sourceKind": "github-releases",
+      "category": "tools",
+      "publishedAt": "2026-08-20T02:57:39Z"
+    },
+    {
+      "title": "llama.cpp b10505",
+      "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b10505",
+      "summary": "server: add dedup-cache-models preset option (#27346)",
+      "source": "GitHub — llama.cpp",
+      "sourceKind": "github-releases",
+      "category": "tools",
+      "publishedAt": "2026-08-20T02:36:34Z"
+    },
+    {
+      "title": "smolmachines / smolvm as a sandbox for untrusted Python & JavaScript",
+      "url": "https://simonwillison.net/2026/Aug/19/smolmachines-untrusted-sandbox/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-19T23:16:00.000Z"
+    },
+    {
+      "title": "Quoting Jeremy Morrell",
+      "url": "https://simonwillison.net/2026/Aug/19/jeremy-morrell/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-19T22:56:31.000Z"
+    },
+    {
+      "title": "Conceptual integrity and counting lines of code",
+      "url": "https://simonwillison.net/2026/Aug/19/conceptual-integrity-and-counting-lines-of-code/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-19T22:46:07.000Z"
+    },
+    {
+      "title": "Flight attendants freaked out that Google is buying tons of Spirit employee data",
+      "url": "https://arstechnica.com/tech-policy/2026/08/flight-attendants-freaked-out-that-google-to-buy-tons-of-spirit-employee-data/",
+      "summary": "Bankrupt Spirit accused of selling out workers in massive data sale to Google.",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-19T20:04:41.000Z"
+    },
+    {
+      "title": "Ollama v0.32.15",
+      "url": "https://github.com/ollama/ollama/releases/tag/v0.32.15",
+      "summary": "What's Changed Add a model metadata cache to reduce Ollama’s per-request overhead",
+      "source": "GitHub — Ollama",
+      "sourceKind": "github-releases",
+      "category": "tools",
+      "publishedAt": "2026-08-19T17:25:16Z"
+    },
+    {
+      "title": "unsloth/Qwen3.8-27B-GGUF",
+      "url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF",
+      "summary": "4,318,134 downloads, 2,109 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-19T16:39:23.000Z"
+    },
+    {
+      "title": "froggeric/Qwen-Fixed-Chat-Templates",
+      "url": "https://huggingface.co/froggeric/Qwen-Fixed-Chat-Templates",
+      "summary": "0 downloads, 1,295 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-19T16:07:26.000Z"
+    },
+    {
+      "title": "Meta ran ads for an app promising to nudify female politicians",
+      "url": "https://arstechnica.com/ai/2026/08/meta-ran-ads-for-an-app-promising-to-nudify-female-politicians/",
+      "summary": "One ad featured a pornographic video with deepfake closely resembling a US politician.",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-19T15:45:29.000Z"
+    },
+    {
+      "title": "LFM2.5 Q4\\_0 Checkpoints from Quantization-Aware Distillation",
+      "url": "https://huggingface.co/blog/LiquidAI/qad",
+      "source": "Hugging Face Blog",
+      "sourceKind": "rss",
+      "category": "models",
+      "publishedAt": "2026-08-19T13:48:49.000Z"
+    },
+    {
+      "title": "llama.cpp b10502",
+      "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b10502",
+      "summary": "ci : add attestation for signed release artifacts (#25933)",
+      "source": "GitHub — llama.cpp",
+      "sourceKind": "github-releases",
+      "category": "tools",
+      "publishedAt": "2026-08-19T13:26:32Z"
+    },
+    {
+      "title": "orcarouter/Qwen3.8-27B-Uncensored-MLX",
+      "url": "https://huggingface.co/orcarouter/Qwen3.8-27B-Uncensored-MLX",
+      "summary": "27 downloads, 611 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-19T03:31:30.000Z"
+    },
+    {
+      "title": "SoftVTBench: A Deformation-Aware Visuo-Tactile Dataset and Benchmark for Deformable-Object Manipulation",
+      "url": "https://huggingface.co/papers/2608.18701",
+      "summary": "Physical interaction quality is central to deformable-object manipulation, yet most benchmarks evaluate task success alone. A policy may complete the task while allowing slip or causing excessive compression. A primary bottleneck is the absence of visuo-tactile datasets that pair",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-19T00:00:00.000Z"
+    },
+    {
+      "title": "Training Chemical Plausibility-Aware Large Language Models for Single-Step Retrosynthesis",
+      "url": "https://huggingface.co/papers/2608.18940",
+      "summary": "Single-step retrosynthesis is a central component of computer-aided synthesis planning, yet its intrinsically one-to-many nature is poorly captured by single-answer evaluation and benchmarking protocols. To address this, we introduce Top-K prompting as a robust training and infer",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-19T00:00:00.000Z"
+    },
+    {
+      "title": "SemaPLC: A Project-Grounded, Verification-Gated Agent Harness for PLC Code Generation",
+      "url": "https://huggingface.co/papers/2608.18565",
+      "summary": "Programmable logic controllers (PLCs) run industrial plants, and large language models can already generate independent program organization units (POUs) for them. Whether such logic integrates into an existing PLC project and then runs correctly has been checked only in limited",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-19T00:00:00.000Z"
+    },
+    {
+      "title": "SPADE: Self-Play in Adaptive Synthetic Executable Environments",
+      "url": "https://huggingface.co/papers/2608.19197",
+      "summary": "Continuous self-improvement requires an ever-expanding pool of self-generated, diverse, adaptive goals. For language agents, existing training environment pools (hand-curated, statically synthesized, or frozen-verifier) keep the goal distribution fixed as the learner scales. We i",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-19T00:00:00.000Z"
+    },
+    {
+      "title": "FM-Bench: A Benchmark for Long-Horizon Management with Competing Agents",
+      "url": "https://huggingface.co/papers/2608.18423",
+      "summary": "Language model agents now execute bounded tasks reliably. Whether they can sustain effective decision-making over long horizons, where actions have cumulative consequences and the environment responds to their choices, remains largely unmeasured. FM-Bench (Football Management Ben",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-19T00:00:00.000Z"
+    },
+    {
+      "title": "SkillForge: Self-Distilling Agents for Project-Specific Issue Resolution",
+      "url": "https://huggingface.co/papers/2608.18933",
+      "summary": "Large language model (LLM) based agents have demonstrated remarkable proficiency in automated software issue resolution, yet they often struggle to resolve issues in a specific repository because they lack project-specific knowledge. Existing self-evolving approaches acquire such",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-19T00:00:00.000Z"
+    },
+    {
+      "title": "FACET: Preserving Source Intent and Executable State in Terminal Task Synthesis",
+      "url": "https://huggingface.co/papers/2608.18580",
+      "summary": "Training terminal agents requires scalable executable supervision, yet synthesizing high-quality terminal tasks remains challenging. Each task couples an instruction, an initialized environment, a reference solution, and an executable verifier; if these artifacts are generated fr",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-19T00:00:00.000Z"
+    },
+    {
+      "title": "Mojo🔥 is now open source",
+      "url": "https://simonwillison.net/2026/Aug/18/mojo-is-now-open-source/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-18T21:39:20.000Z"
+    },
+    {
+      "title": "How Much Memory Does Your Agent Actually Need?",
+      "url": "https://huggingface.co/blog/ibm-research/altk-evolve-hmm",
+      "source": "Hugging Face Blog",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-18T18:09:38.000Z"
+    },
+    {
+      "title": "Launch HN: machine0 (YC S26) – Persistent CPU and GPU VMs from the CLI",
+      "url": "https://machine0.io",
+      "source": "Hacker News",
+      "sourceKind": "hacker-news",
+      "category": "hardware",
+      "publishedAt": "2026-08-18T16:26:42Z",
+      "points": 80
+    },
+    {
+      "title": "Microsoft Copilot reveals secret input that allowed it to be hacked",
+      "url": "https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/",
+      "summary": "Secret parameter allowed hackers to steal passwords when a target clicked on a link.",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-18T13:00:04.000Z"
+    },
+    {
+      "title": "llama.cpp v0.1.2",
+      "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v0.1.2",
+      "summary": "> [!NOTE] > Semantic versioning is still work in progress. > More info can be found in **Nightly build:** b10485 Change log since v0.1.1 1511ce3bc sync : ggml da78",
+      "source": "GitHub — llama.cpp",
+      "sourceKind": "github-releases",
+      "category": "tools",
+      "publishedAt": "2026-08-18T10:23:10Z"
+    },
+    {
+      "title": "SemComp-Bench: Benchmarking Semantic Task Completion in Video Generation",
+      "url": "https://huggingface.co/papers/2608.17426",
+      "summary": "We introduce Semantic Task Completion Video Generation, an outcome-oriented video generation task. Under this formulation, success requires both achievement of the intended outcome and semantic grounding. Semantic grounding characterizes the correspondence between the reference i",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-18T00:00:00.000Z"
+    },
+    {
+      "title": "LEGO-RL: Harness-Native Reinforcement Learning for Coding Agents",
+      "url": "https://huggingface.co/papers/2608.17393",
+      "summary": "Reinforcement learning for coding agents increasingly relies on long-running agent harnesses to manage tool integration, repository contexts, and execution feedback. However, the native execution environments of these harnesses are inherently misaligned with policy-gradient train",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-18T00:00:00.000Z"
+    },
+    {
+      "title": "PTXBench: Benchmark and Adapt LLMs for GPU Kernel Optimization with Architecture-specific PTX",
+      "url": "https://huggingface.co/papers/2608.17379",
+      "summary": "We introduce PTXBench, a benchmark for evaluating and adapting large language models (LLMs) to use architecture-specific PTX for GPU kernel optimization. PTXBench measures functional correctness, whether selected target instructions execute at runtime, and speedup over frontier l",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-18T00:00:00.000Z"
+    },
+    {
+      "title": "MoE-ViE: Mixture of Experts Vision Encoder for Efficient Image and Video Understanding",
+      "url": "https://huggingface.co/papers/2608.17402",
+      "summary": "Vision encoders are a critical component of vision-language models, and scaling their capacity effectively improves performance. However, dense scaling increases compute cost and inference latency. Mixture-of-Experts (MoE) architectures offer a compelling alternative, having enab",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-18T00:00:00.000Z"
+    },
+    {
+      "title": "Multi-Vector (Late Interaction) Embedding Models with Sentence Transformers",
+      "url": "https://huggingface.co/blog/multi-vector-encoder",
+      "source": "Hugging Face Blog",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-18T00:00:00.000Z"
+    },
+    {
+      "title": "Qwen 3.8 27B scores 52 on the Artificial Analysis Intelligence Index",
+      "url": "https://simonwillison.net/2026/Aug/17/qwen-38-27b-scores-52/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "models",
+      "publishedAt": "2026-08-17T23:58:14.000Z"
+    },
+    {
+      "title": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
+      "url": "https://huggingface.co/HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
+      "summary": "131,113 downloads, 295 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-17T22:02:10.000Z"
+    },
+    {
+      "title": "Former SpaceX engineers are building a robotic factory for making steel parts",
+      "url": "https://arstechnica.com/ai/2026/08/former-spacex-engineers-are-building-a-robotic-factory-for-making-steel-parts/",
+      "summary": "“We're not necessarily building in a dogmatic fashion towards full autonomy.”",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-17T21:18:49.000Z"
+    },
+    {
+      "title": "Same Cluster, 33 Points More Utilization: What Changed Was the Order",
+      "url": "https://huggingface.co/blog/Dharma-AI/gpu-management-pt2",
+      "source": "Hugging Face Blog",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-17T19:46:21.000Z"
+    },
+    {
+      "title": "Hidden Airtag reveals Amazon is trashing rare books to train AI",
+      "url": "https://arstechnica.com/tech-policy/2026/08/hidden-airtag-reveals-amazon-is-trashing-rare-books-to-train-ai/",
+      "summary": "Amazon’s team uses a T. rex preparing to devour a book as its logo.",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-17T18:13:47.000Z"
+    },
+    {
+      "title": "GPU Offload in Rust: Portable, Safe, and Fast",
+      "url": "https://arxiv.org/abs/2608.13759",
+      "source": "Hacker News",
+      "sourceKind": "hacker-news",
+      "category": "hardware",
+      "publishedAt": "2026-08-17T17:54:59Z",
+      "points": 240
+    },
+    {
+      "title": "We Tracked a Shipment of Rare Books. It Ended at an Amazon AI Training Facility",
+      "url": "https://simonwillison.net/2026/Aug/17/we-tracked-a-shipment-of-rare-books-it-ended-at-an-amazon-ai-tra/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-17T15:21:29.000Z"
+    },
+    {
+      "title": "Lightricks/LTX-2.5",
+      "url": "https://huggingface.co/Lightricks/LTX-2.5",
+      "summary": "555,993 downloads, 1,334 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-17T13:54:21.000Z"
+    },
+    {
+      "title": "Comfy-Org/MiniMax-Music-3",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-Music-3",
+      "summary": "325,083 downloads, 196 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-17T06:04:31.000Z"
+    },
+    {
+      "title": "unsloth/Qwen3.8-27B-NVFP4",
+      "url": "https://huggingface.co/unsloth/Qwen3.8-27B-NVFP4",
+      "summary": "653,042 downloads, 290 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-17T02:05:56.000Z"
+    },
+    {
+      "title": "Looped Language Models Improve Compositional Tool Calling",
+      "url": "https://huggingface.co/papers/2608.18171",
+      "summary": "Looped language models have shown promising results on reasoning benchmarks, yet their potential for agentic tool use remains largely unexplored. We study this question in compositional tool-calling settings, where models must coordinate multiple API calls, maintain intermediate",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-17T00:00:00.000Z"
+    },
+    {
+      "title": "The Problem Is the Problem: Towards Scalable Mathematical Discovery",
+      "url": "https://huggingface.co/papers/2608.16977",
+      "summary": "AI systems are increasingly capable of contributing to mathematical research. In research practice, frontier-model reasoning is a limited resource, and expert mathematical review is even more sharply constrained. Allocating these scarce resources well is therefore central to maki",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-17T00:00:00.000Z"
+    },
+    {
+      "title": "DiSCO: Defending text-to-image generation through distribution-guided contrastive prompt optimization",
+      "url": "https://huggingface.co/papers/2608.17067",
+      "summary": "As text-to-image generative models advance, they raise critical safety concerns, particularly the generation of Not-Safe-For-Work (NSFW) content such as violence and nudity, further exacerbated by red-teaming adversarial attacks. Existing defenses predominantly operate under whit",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-17T00:00:00.000Z"
+    },
+    {
+      "title": "PixRestore: Unified Image Restoration via Pixel Diffusion Transformer",
+      "url": "https://huggingface.co/papers/2608.16793",
+      "summary": "Unified image restoration (UIR) aims to recover high-quality (HQ) content from low-quality (LQ) images with different degradations using a single model. Most recent methods adapt large pretrained text-to-image (T2I) latent diffusion models for their strong capacity and generative",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-17T00:00:00.000Z"
+    },
+    {
+      "title": "Cross-Model Memory Transfer via Target-Side Reader Adaptation",
+      "url": "https://huggingface.co/papers/2608.17050",
+      "summary": "Methods for improving knowledge use in large language models typically fall into two regimes. Non-parametric retrieval offers flexible access to external knowledge, but adds retrieval latency, context overhead, and only shallow integration with the backbone. Parametric adaptation",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-17T00:00:00.000Z"
+    },
+    {
+      "title": "Markdown SVG upgrades",
+      "url": "https://simonwillison.net/2026/Aug/16/markdown-svg-upgrades/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-16T23:59:37.000Z"
+    },
+    {
+      "title": "Qwen 3.8 27B is excellent, but it defaults to wildly overthinking things",
+      "url": "https://simonwillison.net/2026/Aug/16/qwen-38-27b/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "models",
+      "publishedAt": "2026-08-16T22:00:39.000Z"
+    },
+    {
+      "title": "Show HN: I shrank DeepSeek V4 Flash to 57GB and it wrote a compiler on my Mac",
+      "url": "https://huggingface.co/steadfastgaze/DeepSeek-V4-Flash-0731-Coder-56.8GB-MoEspressoV2",
+      "source": "Hacker News",
+      "sourceKind": "hacker-news",
+      "category": "models",
+      "publishedAt": "2026-08-16T17:13:22Z",
+      "points": 21
+    },
+    {
+      "title": "orcarouter/Qwen3.8-27B-Uncensored-FP8",
+      "url": "https://huggingface.co/orcarouter/Qwen3.8-27B-Uncensored-FP8",
+      "summary": "60,078 downloads, 618 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-16T15:43:21.000Z"
+    },
+    {
+      "title": "Quoting Dario Amodei",
+      "url": "https://simonwillison.net/2026/Aug/16/dario-amodei/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-16T15:05:36.000Z"
+    },
+    {
+      "title": "KoboldCpp v1.119",
+      "url": "https://github.com/LostRuins/koboldcpp/releases/tag/v1.119",
+      "summary": "# koboldcpp-1.119 **NEW**: Added support for Video generation and I2V with Minimax H3. Requires 4 files as described in [this docs](",
+      "source": "GitHub — KoboldCpp",
+      "sourceKind": "github-releases",
+      "category": "tools",
+      "publishedAt": "2026-08-16T13:23:10Z"
+    },
+    {
+      "title": "JonathanColetti/Qwen3.8-27B-Uncensored-GGUF",
+      "url": "https://huggingface.co/JonathanColetti/Qwen3.8-27B-Uncensored-GGUF",
+      "summary": "766,812 downloads, 467 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-16T03:48:32.000Z"
+    },
+    {
+      "title": "empero-ai/Qwen3.8-27B-Ridge-GGUF",
+      "url": "https://huggingface.co/empero-ai/Qwen3.8-27B-Ridge-GGUF",
+      "summary": "32,454 downloads, 200 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-15T23:51:41.000Z"
+    },
+    {
+      "title": "Ollama v0.32.14",
+      "url": "https://github.com/ollama/ollama/releases/tag/v0.32.14",
+      "summary": "What's Changed llm: transcode WebP images for llama-server renderers/qwen: tolerate non-leading system messages",
+      "source": "GitHub — Ollama",
+      "sourceKind": "github-releases",
+      "category": "tools",
+      "publishedAt": "2026-08-15T19:41:23Z"
+    },
+    {
+      "title": "CORS Chat",
+      "url": "https://simonwillison.net/2026/Aug/15/cors-chat/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-15T14:49:54.000Z"
+    },
+    {
+      "title": "dots-studio/dots3-note-prev",
+      "url": "https://huggingface.co/dots-studio/dots3-note-prev",
+      "summary": "1,239 downloads, 233 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-15T08:00:55.000Z"
+    },
+    {
+      "title": "Northern Gannet",
+      "url": "https://simonwillison.net/2026/Aug/15/sighting-391300422/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-15T03:22:00.000Z"
+    },
+    {
+      "title": "Don't classify. Hallucinate!",
+      "url": "https://simonwillison.net/2026/Aug/14/dont-classify-hallucinate/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-14T21:54:35.000Z"
+    },
+    {
+      "title": "Ollama v0.32.13",
+      "url": "https://github.com/ollama/ollama/releases/tag/v0.32.13",
+      "summary": "What's Changed qwen3.8: support developer instructions",
+      "source": "GitHub — Ollama",
+      "sourceKind": "github-releases",
+      "category": "tools",
+      "publishedAt": "2026-08-14T19:16:07Z"
+    },
+    {
+      "title": "Show HN: Mole – Deep research agent for your terminal",
+      "url": "https://github.com/lajosdeme/mole",
+      "source": "Hacker News",
+      "sourceKind": "hacker-news",
+      "category": "research",
+      "publishedAt": "2026-08-14T18:52:48Z",
+      "points": 100
+    },
+    {
+      "title": "Suspecting court of using AI, man injected prompts in filings to try to win case",
+      "url": "https://arstechnica.com/tech-policy/2026/08/suspecting-court-of-using-ai-man-injected-prompts-in-filings-to-try-to-win-case/",
+      "summary": "Judge warns pro se litigants are using chatbots wrong and getting desperate.",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-14T17:26:53.000Z"
+    },
+    {
+      "title": "Ollama v0.32.12",
+      "url": "https://github.com/ollama/ollama/releases/tag/v0.32.12",
+      "summary": "<img width=\"600\" alt=\"ollama and qwen capybara\" src=\" /> Qwen 3.8 27B This release adds the support of Qwen 3.8 27B. Qwen3.8 delivers substantial gains a",
+      "source": "GitHub — Ollama",
+      "sourceKind": "github-releases",
+      "category": "tools",
+      "publishedAt": "2026-08-14T16:37:00Z"
+    },
+    {
+      "title": "Qwen/Qwen3.8-27B",
+      "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
+      "summary": "1,006,235 downloads, 11,512 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-14T15:00:01.000Z"
+    },
+    {
+      "title": "Qwen/Qwen3.8-27B-FP8",
+      "url": "https://huggingface.co/Qwen/Qwen3.8-27B-FP8",
+      "summary": "1,063,646 downloads, 602 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-14T14:44:41.000Z"
+    },
+    {
+      "title": "OpenAI and Anthropic in price war as Chinese AI rivals gain ground",
+      "url": "https://arstechnica.com/ai/2026/08/openai-and-anthropic-in-price-war-as-chinese-ai-rivals-gain-ground/",
+      "summary": "US groups release cheaper models after new challenges to their trillion-dollar ambitions.",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "tools",
+      "publishedAt": "2026-08-14T14:27:14.000Z"
+    },
+    {
+      "title": "MiniMaxAI/MiniMax-Music3",
+      "url": "https://huggingface.co/MiniMaxAI/MiniMax-Music3",
+      "summary": "13,138 downloads, 1,050 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-14T10:51:40.000Z"
+    },
+    {
+      "title": "Ollama v0.32.11",
+      "url": "https://github.com/ollama/ollama/releases/tag/v0.32.11",
+      "summary": "What's Changed `ollama launch dsh` now supports DeepSeek Harness, DeepSeek's open-source agent harness `ollama launch muse` now supports Muse Code, Meta's agentic coding CLI The O",
+      "source": "GitHub — Ollama",
+      "sourceKind": "github-releases",
+      "category": "tools",
+      "publishedAt": "2026-08-14T01:22:12Z"
+    },
+    {
+      "title": "Training Leaves Traces: Centered Residual Signatures for Language Model Lineage Verification",
+      "url": "https://huggingface.co/papers/2608.14929",
+      "summary": "Open-weight language models are fine-tuned, quantized, pruned, and merged, yet their provenance is often undocumented. We study data-free white-box lineage verification: can weights alone reveal whether two compatible model checkpoints share ancestry? Residual training produces",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-14T00:00:00.000Z"
+    },
+    {
+      "title": "Demystifying Agent Skills: Why They Work-Until They Don't",
+      "url": "https://huggingface.co/papers/2608.14036",
+      "summary": "Skills have emerged as a practical and effective approach for enhancing LLM agents at inference time through structured packages of knowledge. However, existing evaluations largely measure whether skills improve aggregated task success, leaving a more fundamental question underex",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-14T00:00:00.000Z"
+    },
+    {
+      "title": "State of Open Models: Summer 2026 Observations",
+      "url": "https://huggingface.co/blog/state-of-open-models-summer-2026",
+      "source": "Hugging Face Blog",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-14T00:00:00.000Z"
+    },
+    {
+      "title": "sqlite-utils 4.2.1",
+      "url": "https://simonwillison.net/2026/Aug/13/sqlite-utils-2/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-13T23:53:47.000Z"
+    },
+    {
+      "title": "sqlite-utils 4.2",
+      "url": "https://simonwillison.net/2026/Aug/13/sqlite-utils/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-13T20:11:29.000Z"
+    },
+    {
+      "title": "llm-gemini 0.33",
+      "url": "https://simonwillison.net/2026/Aug/13/llm-gemini/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "models",
+      "publishedAt": "2026-08-13T19:37:34.000Z"
+    },
+    {
+      "title": "The new Instagram logo is the perfect embodiment of AI slop",
+      "url": "https://arstechnica.com/ai/2026/08/the-new-instagram-logo-is-the-perfect-embodiment-of-ai-slop/",
+      "summary": "Opinion: Some remarks about the new wordmark accidentally being perfectly awful.",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-13T17:32:10.000Z"
+    },
+    {
+      "title": "Record, train, and deploy from one place with Strands Agents, LeRobot, and Hugging Face Storage Buckets",
+      "url": "https://huggingface.co/blog/amazon/strands-lerobot-streaming-data-loop",
+      "source": "Hugging Face Blog",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-13T17:16:04.000Z"
+    },
+    {
+      "title": "Google announces Gemini 3.7 Flash just three weeks after previous release",
+      "url": "https://arstechnica.com/ai/2026/08/google-announces-gemini-3-7-flash-just-three-weeks-after-previous-release/",
+      "summary": "Gemini 3.6 Flash debuted just 3 weeks ago, but Google says 3.7 has \"substantial improvements.\"",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "tools",
+      "publishedAt": "2026-08-13T17:00:13.000Z"
+    },
+    {
+      "title": "deepseek-ai/DeepSeek-V4-Pro-0813",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813",
+      "summary": "37,583 downloads, 642 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-13T16:28:28.000Z"
+    },
+    {
+      "title": "Anthropic could be worth $2 trillion when it goes public",
+      "url": "https://arstechnica.com/ai/2026/08/anthropic-could-be-worth-2-trillion-when-it-goes-public/",
+      "summary": "Rapid revenue growth fuels hope Claude maker's IPO is the biggest listing in history",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-13T13:58:56.000Z"
+    },
+    {
+      "title": "Claude's new Scarlet Letter watermark is invisible—for now",
+      "url": "https://arstechnica.com/tech-policy/2026/08/claudes-new-scarlet-letter-watermark-is-invisible-for-now/",
+      "summary": "The mark flags anything Claude processed, even human writing it only edited.",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-13T11:10:18.000Z"
+    },
+    {
+      "title": "alchemy-utils 0.1a1",
+      "url": "https://simonwillison.net/2026/Aug/13/alchemy-utils/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-13T03:03:17.000Z"
+    },
+    {
+      "title": "MiniMaxAI/MiniMax-H3",
+      "url": "https://huggingface.co/MiniMaxAI/MiniMax-H3",
+      "summary": "3,055,205 downloads, 4,188 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-13T01:46:29.000Z"
+    },
+    {
+      "title": "CardioState-JEPA: Delay-Aware Cross-Modal Learning of a Shared Cardiac Representation",
+      "url": "https://huggingface.co/papers/2608.12944",
+      "summary": "Electrocardiography (ECG), photoplethysmography (PPG), and phonocardiography (PCG) provide complementary views of the same cardiac cycle, yet existing cardiac foundation models are trained for a single sensing modality, leaving the shared physiology across sensors unexploited. We",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-13T00:00:00.000Z"
+    },
+    {
+      "title": "V-RAE: Rethinking Video Latent Spaces for Generation",
+      "url": "https://huggingface.co/papers/2608.13556",
+      "summary": "Latent video generation relies on autoencoders to define a compact space in which generative models operate. Although video autoencoder architectures have evolved substantially, their latent spaces are still optimized primarily for pixel-level reconstruction and provide limited h",
+      "source": "Hugging Face Papers",
+      "sourceKind": "hf-papers",
+      "category": "research",
+      "publishedAt": "2026-08-13T00:00:00.000Z"
+    },
+    {
+      "title": "What We Learned by Reproducing 2,200 papers from ICML",
+      "url": "https://huggingface.co/blog/icml-2026-open-reproductions",
+      "source": "Hugging Face Blog",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-13T00:00:00.000Z"
+    },
+    {
+      "title": "DeepSeek V4 Pro 0813 (on OpenRouter)",
+      "url": "https://simonwillison.net/2026/Aug/12/deepseek-v4-pro-0813/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "models",
+      "publishedAt": "2026-08-12T23:59:23.000Z"
+    },
+    {
+      "title": "The web’s newest weapon against AI scrapers is a font",
+      "url": "https://arstechnica.com/ai/2026/08/new-font-turns-ordinary-webpages-into-nonsense-for-ai-scrapers/",
+      "summary": "“ShieldFont” aims to poison AI training data without making pages unreadable for people.",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-12T22:02:25.000Z"
+    },
+    {
+      "title": "Terabytes of credentials leaked in massive supply-chain attack",
+      "url": "https://arstechnica.com/security/2026/08/terabytes-of-credentials-leaked-in-massive-supply-chain-attack/",
+      "summary": "The data was scraped and exfiltrated from 2,500 users of a compromised AI package.",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-12T21:43:21.000Z"
+    },
+    {
+      "title": "Twitch content has trained Amazon AI for years, but users can opt out now",
+      "url": "https://arstechnica.com/ai/2026/08/twitch-content-has-trained-amazon-ai-for-years-but-users-can-opt-out-now/",
+      "summary": "Streaming platform says user-generated content \"may be used for future Gen AI model improvements.\"",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "models",
+      "publishedAt": "2026-08-12T21:00:30.000Z"
+    },
+    {
+      "title": "alchemy-utils 0.1a0",
+      "url": "https://simonwillison.net/2026/Aug/12/alchemy-utils/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-12T19:51:30.000Z"
+    },
+    {
+      "title": "Introducing OlmoEarth embeddings: Custom embedding exports from OlmoEarth Studio for downstream analysis",
+      "url": "https://huggingface.co/blog/allenai/olmoearth-embeddings",
+      "source": "Hugging Face Blog",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-12T16:14:36.000Z"
+    },
+    {
+      "title": "Booksellers suspect AI firms are buying and then destroying rare books",
+      "url": "https://arstechnica.com/tech-policy/2026/08/heres-a-balm-if-the-idea-of-destroying-books-to-train-ai-breaks-your-heart/",
+      "summary": "AI firms quietly bulk buying rare books face resistance from booksellers.",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-12T15:19:17.000Z"
+    },
+    {
+      "title": "Quoting Florian Herrengt",
+      "url": "https://simonwillison.net/2026/Aug/12/florian-herrengt/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-12T15:08:47.000Z"
+    },
+    {
+      "title": "Qwen/Qwen3.8-2.4T-A95B",
+      "url": "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B",
+      "summary": "12,699 downloads, 1,103 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-12T10:24:04.000Z"
+    },
+    {
+      "title": "llama.cpp",
+      "url": "https://llama.app",
+      "source": "Hacker News",
+      "sourceKind": "hacker-news",
+      "category": "models",
+      "publishedAt": "2026-08-12T04:51:59Z",
+      "points": 364
+    },
+    {
+      "title": "There are no lossless transformations of natural-language text",
+      "url": "https://simonwillison.net/2026/Aug/11/there-are-no-lossless-transformations-of-natural-language-text/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-11T23:48:35.000Z"
+    },
+    {
+      "title": "Stealing Reasoning Traces from Proprietary LLM APIs",
+      "url": "https://simonwillison.net/2026/Aug/11/stealing-reasoning-traces/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "models",
+      "publishedAt": "2026-08-11T22:40:45.000Z"
+    },
+    {
+      "title": "datasette-upload-dbs 0.5a0",
+      "url": "https://simonwillison.net/2026/Aug/11/datasette-upload-dbs/",
+      "source": "Simon Willison",
+      "sourceKind": "rss",
+      "category": "general",
+      "publishedAt": "2026-08-11T20:35:13.000Z"
+    },
+    {
+      "title": "Gemini becomes Google's fastest-growing product ever as it hits 1B users",
+      "url": "https://arstechnica.com/ai/2026/08/google-says-gemini-has-reached-1b-users-faster-than-any-other-google-product/",
+      "summary": "But will Gemini's surge survive slowing model releases?",
+      "source": "Ars Technica",
+      "sourceKind": "rss",
+      "category": "models",
+      "publishedAt": "2026-08-11T19:48:12.000Z"
+    },
+    {
+      "title": "meta-models/Muse-Glimmer-30B",
+      "url": "https://huggingface.co/meta-models/Muse-Glimmer-30B",
+      "summary": "430,313 downloads, 1,702 likes",
+      "source": "Hugging Face",
+      "sourceKind": "hf-models",
+      "category": "models",
+      "publishedAt": "2026-08-11T19:23:35.000Z"
+    }
+  ]
 }

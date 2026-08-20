@@ -35,6 +35,11 @@ async function fetchOneQuery(query: string): Promise<NewsItem[]> {
     if (!res.ok) return [];
     const json = (await res.json()) as { hits?: HnHit[] };
     const hits = Array.isArray(json.hits) ? json.hits : [];
+    // Algolia's search_by_date sorts strictly by recency among fuzzy/loose
+    // text matches, so multi-word queries like "consumer GPU AI" surface
+    // plenty of unrelated recent stories. Drop anything that doesn't land in
+    // a real category — a title with no local-AI-relevant keyword at all is
+    // almost certainly noise, not a story we want in the feed.
     return hits
       .filter((h) => h.title && h.created_at)
       .map((h) => ({
@@ -45,7 +50,8 @@ async function fetchOneQuery(query: string): Promise<NewsItem[]> {
         category: categorizeByKeyword(h.title as string),
         publishedAt: h.created_at as string,
         points: h.points,
-      }));
+      }))
+      .filter((item) => item.category !== "general");
   } catch {
     return [];
   }

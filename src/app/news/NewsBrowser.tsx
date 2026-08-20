@@ -53,10 +53,13 @@ export default function NewsBrowser({
 
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
+      const query = search.toLowerCase();
       const matchesSearch =
-        item.title.toLowerCase().includes(search.toLowerCase()) ||
-        item.source.toLowerCase().includes(search.toLowerCase()) ||
-        (item.summary?.toLowerCase().includes(search.toLowerCase()) ?? false);
+        item.title.toLowerCase().includes(query) ||
+        (item.plainTitle?.toLowerCase().includes(query) ?? false) ||
+        item.source.toLowerCase().includes(query) ||
+        (item.summary?.toLowerCase().includes(query) ?? false) ||
+        (item.plainSummary?.toLowerCase().includes(query) ?? false);
 
       const matchesCategory = !selectedCategory || item.category === selectedCategory;
 
@@ -203,15 +206,17 @@ function NewsRow({ item, index }: { item: NewsItem; index: number }) {
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3">
             <h3 className="text-base font-semibold group-hover:text-primary transition-colors">
-              {item.title}
+              {item.plainTitle ?? item.title}
             </h3>
             <ExternalLink className="w-4 h-4 text-muted shrink-0 mt-1" />
           </div>
           <div className="text-xs text-muted mt-1">
             {item.source} · {formatRelativeTime(item.publishedAt)}
           </div>
-          {item.summary && (
-            <p className="text-sm text-muted mt-2 line-clamp-2">{item.summary}</p>
+          {(item.plainSummary ?? item.summary) && (
+            <p className="text-sm text-muted mt-2 line-clamp-2">
+              {item.plainSummary ?? item.summary}
+            </p>
           )}
           <div className="mt-3">
             <span className={`tag ${tagClass}`}>{CATEGORY_LABELS[item.category]}</span>

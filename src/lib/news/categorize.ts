@@ -13,7 +13,7 @@ const KEYWORD_RULES: Array<{ category: NewsCategory; pattern: RegExp }> = [
   {
     category: "models",
     pattern:
-      /\b(model|llm|gguf|quantiz\w*|fine-?tun\w*|checkpoint|weights|llama|qwen|mistral|gemma|phi-\d)\b/i,
+      /\b(model|llm|gguf|quantiz\w*|fine-?tun\w*|checkpoint|weights|llama|qwen|mistral|mixtral|gemma|phi-\d|deepseek|kimi|minimax)\b/i,
   },
   {
     category: "research",

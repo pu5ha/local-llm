@@ -9,7 +9,6 @@ import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/news", label: "News" },
   { href: "/setup", label: "Start" },
   { href: "/why", label: "Why Private AI?" },
   { href: "/learn", label: "Learn" },

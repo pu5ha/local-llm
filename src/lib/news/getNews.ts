@@ -2,10 +2,16 @@ import "server-only";
 import { fetchLiveNews } from "./fetchLiveNews";
 import { getFallbackNewsItems } from "./fallbackSnapshot";
 import { dedupeAndSort, capAndFilterRecent } from "./dedupeAndSort";
-import type { NewsFeed } from "./types";
+import { cleanRawSummary } from "./plainLanguage/cleanRawSummary";
+import { rewriteNewsItems } from "./plainLanguage/rewriteNewsItems";
+import type { NewsFeed, NewsItem } from "./types";
 
 const MAX_AGE_DAYS = 30;
 const MAX_ITEMS = 100;
+
+function withCleanedSummaries(items: NewsItem[]): NewsItem[] {
+  return items.map((item) => ({ ...item, summary: cleanRawSummary(item.summary) }));
+}
 
 /**
  * Orchestrates: try a live fetch, fall back to the committed snapshot on any
@@ -15,8 +21,12 @@ const MAX_ITEMS = 100;
 export async function getNews(): Promise<NewsFeed> {
   try {
     const items = await fetchLiveNews();
+    const capped = capAndFilterRecent(dedupeAndSort(items), new Date(), MAX_AGE_DAYS, MAX_ITEMS);
     return {
-      items: capAndFilterRecent(dedupeAndSort(items), new Date(), MAX_AGE_DAYS, MAX_ITEMS),
+      // Plain-language rewrite only runs on the live path — the fallback
+      // snapshot already has it baked in by scripts/refresh-news-snapshot.ts,
+      // so that path never depends on a live LLM call either.
+      items: await rewriteNewsItems(withCleanedSummaries(capped)),
       meta: { fetchedAt: new Date().toISOString(), source: "live" },
     };
   } catch (err) {

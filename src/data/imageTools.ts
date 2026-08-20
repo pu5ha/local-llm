@@ -28,13 +28,52 @@ export interface ImageTool {
 export const imageTools: ImageTool[] = [
   // Mac-native apps (best for Apple Silicon)
   {
+    id: "draw-things",
+    name: "Draw Things",
+    tagline: "Best for Mac - widest model support, in-app downloads",
+    description:
+      "A polished Mac app that runs AI models locally with its own Metal-accelerated engine. Supports SDXL, SD 3.5, and FLUX with automatic quantization, and downloads models directly in the app - no manual file wrangling.",
+    simpleDescription:
+      "Mac App Store app - easy model switching, supports the newest models",
+    difficulty: "beginner",
+    interface: "Native Mac app (polished UI)",
+    platforms: ["mac"],
+    features: [
+      "Metal-accelerated native engine",
+      "In-app model downloads with automatic quantization",
+      "Supports SDXL, SD 3.5, and FLUX.1/2",
+      "ControlNet and LoRA support",
+      "Clean, intuitive interface",
+    ],
+    pros: [
+      "Widest model support of any Mac app (SDXL, SD 3.5, FLUX)",
+      "Download and quantize models inside the app - no manual setup",
+      "Well optimized for M-series chips",
+      "Regular updates with new model support",
+    ],
+    cons: [
+      "Mac only",
+      "Newest/experimental models can lag a few weeks behind release",
+    ],
+    website: "https://drawthings.ai",
+    downloadUrl: {
+      mac: "https://apps.apple.com/app/draw-things-ai-generation/id6444050820",
+    },
+    modelIncluded: false,
+    supportsFlux: true,
+    supportsSD3: true,
+    vramEfficiency: "best",
+    recommended: true,
+    recommendedFor: ["mac-users", "apple-silicon"],
+  },
+  {
     id: "mochi-diffusion",
     name: "Mochi Diffusion",
-    tagline: "Best for Mac - native Core ML app",
+    tagline: "Pure Core ML app for Apple Silicon",
     description:
-      "A native macOS app that uses Core ML to run models efficiently on Apple Silicon. Much faster and more efficient than Python-based tools on Mac.",
+      "A native macOS app that uses Apple's Core ML format to run models on Apple Silicon. A good option if you specifically want a Core ML-only, non-App-Store app, though model installs are manual and model support is narrower than Draw Things.",
     simpleDescription:
-      "Native Mac app - fastest option for Apple Silicon, uses Neural Engine",
+      "Native Core ML app - lightweight, but models must be installed manually",
     difficulty: "beginner",
     interface: "Native Mac app (simple and clean)",
     platforms: ["mac"],
@@ -47,15 +86,14 @@ export const imageTools: ImageTool[] = [
       "No Python setup required",
     ],
     pros: [
-      "Fastest on Apple Silicon",
-      "Most efficient memory usage",
+      "Efficient memory usage on Apple Silicon",
       "Native macOS experience",
-      "Just download and run",
+      "Fully free and open-source, no App Store account needed",
     ],
     cons: [
       "Mac only",
-      "Limited to Core ML converted models",
-      "Fewer models than Python tools",
+      "Models must be downloaded and installed manually (no in-app browser)",
+      "No official FLUX or SD 3.5 support - limited to SD 1.5/SDXL-era Core ML models",
     ],
     website: "https://github.com/MochiDiffusion/MochiDiffusion",
     downloadUrl: {
@@ -65,46 +103,6 @@ export const imageTools: ImageTool[] = [
     supportsFlux: false,
     supportsSD3: false,
     vramEfficiency: "best",
-    recommended: true,
-    recommendedFor: ["mac-users", "apple-silicon"],
-  },
-  {
-    id: "draw-things",
-    name: "Draw Things",
-    tagline: "Great Mac app with wide model support",
-    description:
-      "A polished Mac app that runs AI models locally with Core ML and Metal acceleration. Download different models directly in the app.",
-    simpleDescription:
-      "Mac App Store app - easy model switching, well optimized",
-    difficulty: "beginner",
-    interface: "Native Mac app (polished UI)",
-    platforms: ["mac"],
-    features: [
-      "Core ML and Metal acceleration",
-      "In-app model downloads",
-      "Wide model support (Dreamshaper, Juggernaut, etc.)",
-      "ControlNet and LoRA support",
-      "Clean, intuitive interface",
-    ],
-    pros: [
-      "Great balance of ease and features",
-      "Download models inside the app",
-      "Well optimized for M-series chips",
-      "Regular updates",
-    ],
-    cons: [
-      "Mac only",
-      "Some advanced models not available",
-    ],
-    website: "https://drawthings.ai",
-    downloadUrl: {
-      mac: "https://apps.apple.com/app/draw-things-ai-generation/id6444050820",
-    },
-    modelIncluded: false,
-    supportsFlux: false,
-    supportsSD3: false,
-    vramEfficiency: "best",
-    recommended: true,
     recommendedFor: ["mac-users", "apple-silicon"],
   },
   {
@@ -417,17 +415,17 @@ export function getToolRecommendations(
 ): ToolRecommendation[] {
   const recommendations: ToolRecommendation[] = [];
 
-  // Mac-specific recommendations (Core ML apps are much better on Apple Silicon)
+  // Mac-specific recommendations (native Mac apps beat Python-based tools here)
   if (isAppleSilicon || platform === "mac") {
     if (isAbsoluteBeginner) {
       recommendations.push({
-        toolId: "mochi-diffusion",
-        reason: "Fastest on your Mac - uses Core ML for best performance",
+        toolId: "draw-things",
+        reason: "Best Mac app - supports SDXL, SD 3.5, and FLUX with easy in-app downloads",
         priority: 1,
       });
       recommendations.push({
-        toolId: "draw-things",
-        reason: "Great Mac app with easy model downloads",
+        toolId: "mochi-diffusion",
+        reason: "Lightweight Core ML alternative, if you prefer a non-App-Store app",
         priority: 2,
       });
       recommendations.push({
@@ -439,18 +437,18 @@ export function getToolRecommendations(
       // More advanced Mac user
       recommendations.push({
         toolId: "draw-things",
-        reason: "Best balance of features and Mac optimization",
+        reason: "Best balance of model support and Mac optimization",
         priority: 1,
       });
       recommendations.push({
         toolId: "mochi-diffusion",
-        reason: "Fastest Core ML performance",
+        reason: "Pure Core ML alternative, but narrower model support",
         priority: 2,
       });
       if (wantsFlux) {
         recommendations.push({
           toolId: "comfyui",
-          reason: "FLUX support (but slower on Mac than native apps)",
+          reason: "Node-based FLUX workflows (but slower on Mac than native apps)",
           priority: 3,
         });
       }

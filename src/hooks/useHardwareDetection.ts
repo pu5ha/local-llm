@@ -7,6 +7,8 @@ import {
   DISCRETE_GPU_RAM_HINTS,
 } from "@/lib/catalog/hardwareTables";
 import { getRamCapabilityFlags } from "@/lib/catalog/recommend";
+import { getRecommendationForVram, getImageModelById } from "@/data/imageModels";
+import { getToolRecommendations } from "@/data/imageTools";
 
 export interface HardwareInfo {
   os: "windows" | "mac" | "linux" | "unknown";
@@ -383,71 +385,40 @@ export function getImageRecommendations(hardware: HardwareInfo): ImageRecommenda
     };
   }
 
-  // 24GB+ - Power tier
-  if (vram >= 24) {
+  // Below 4GB - can't realistically run local image generation
+  if (vram < 4) {
     return {
-      canRun: true,
-      tier: "power",
-      tierDescription: "Run any model at full quality - no compromises",
-      recommendedModels: ["FLUX.2 Klein 9B", "FLUX.2 Klein", "Qwen Image", "FLUX.1 Dev", "FLUX.1 Schnell"],
-      recommendedTool: "comfyui",
-      limitations: [],
-    };
-  }
-
-  // 12-23GB - High tier
-  if (vram >= 12) {
-    return {
-      canRun: true,
-      tier: "high",
-      tierDescription: "Run most models at full quality with good speed",
-      recommendedModels: ["FLUX.1 Schnell", "FLUX.1 Dev", "Qwen Image", "SD 3.5 Medium", "SDXL"],
-      recommendedTool: "forge",
-      limitations: ["Largest models (FLUX.2 Dev 32B) need quantization"],
-    };
-  }
-
-  // 8-11GB - Standard tier
-  if (vram >= 8) {
-    return {
-      canRun: true,
-      tier: "standard",
-      tierDescription: "Great for most image creation - FLUX available with quantization",
-      recommendedModels: ["SDXL", "SDXL Lightning", "FLUX.1 (quantized)"],
-      recommendedTool: "forge",
+      canRun: false,
+      tier: "none",
+      tierDescription: "GPU has insufficient memory for AI image generation",
+      recommendedModels: [],
+      recommendedTool: "fooocus",
       limitations: [
-        "FLUX models need GGUF/Q8 quantized versions",
-        "May need to reduce image size for some models",
+        "Minimum 4GB VRAM required",
+        "Consider upgrading your graphics card",
       ],
     };
   }
 
-  // 4-7GB - Basic tier
-  if (vram >= 4) {
-    return {
-      canRun: true,
-      tier: "basic",
-      tierDescription: "You can create images with optimized models",
-      recommendedModels: ["Stable Diffusion 1.5", "SDXL Lightning"],
-      recommendedTool: "forge",
-      limitations: [
-        "Limited to SD 1.5 (512x512) for best results",
-        "SDXL Lightning for occasional 1024x1024",
-        "FLUX models won't work",
-      ],
-    };
-  }
+  // Single source of truth for tier/model data - see src/data/imageModels.ts.
+  // Mirrors how src/lib/catalog/recommend.ts unifies LLM recommendations.
+  const vramRec = getRecommendationForVram(vram);
+  const toolRecs = getToolRecommendations(
+    vram,
+    false,
+    true,
+    hardware.isAppleSilicon,
+    hardware.os
+  );
 
-  // Below 4GB
   return {
-    canRun: false,
-    tier: "none",
-    tierDescription: "GPU has insufficient memory for AI image generation",
-    recommendedModels: [],
-    recommendedTool: "fooocus",
-    limitations: [
-      "Minimum 4GB VRAM required",
-      "Consider upgrading your graphics card",
-    ],
+    canRun: true,
+    tier: vramRec.tier,
+    tierDescription: vramRec.description,
+    recommendedModels: vramRec.recommendedModels
+      .map((id) => getImageModelById(id)?.name)
+      .filter((name): name is string => Boolean(name)),
+    recommendedTool: toolRecs[0]?.toolId ?? "fooocus",
+    limitations: vramRec.limitations,
   };
 }

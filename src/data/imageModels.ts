@@ -16,6 +16,17 @@ export interface ImageModel {
   };
   featured?: boolean;
   recommended?: boolean;
+  // Notes on a specific tool's support for this model, keyed by tool id.
+  // Only set when that tool's support has a real caveat worth surfacing
+  // (e.g. missing controls, step-count limits, or requires a separate
+  // "Community" model source rather than being bundled with the app).
+  toolCaveats?: Partial<Record<string, string>>;
+  // Tool ids (from imageTools.ts) for which this model is only available
+  // through a network-fetched "community" model source rather than being
+  // bundled/always-discoverable in the app's own model picker. Verified
+  // against Draw Things' own model registry source - see toolCaveats for
+  // the user-facing explanation.
+  communityOnlyFor?: string[];
 }
 
 export const imageModels: ImageModel[] = [
@@ -32,7 +43,7 @@ export const imageModels: ImageModel[] = [
     speed: "fast",
     quality: "good",
     bestFor: ["Older/budget GPUs", "Quick generations", "Huge variety of styles"],
-    toolSupport: ["fooocus", "comfyui", "forge", "automatic1111", "invokeai"],
+    toolSupport: ["fooocus", "comfyui", "forge", "automatic1111", "invokeai", "draw-things", "mochi-diffusion"],
     featured: true,
   },
   {
@@ -64,7 +75,7 @@ export const imageModels: ImageModel[] = [
     speed: "medium",
     quality: "great",
     bestFor: ["High quality images", "1024x1024 resolution", "Most use cases"],
-    toolSupport: ["fooocus", "comfyui", "forge", "automatic1111", "invokeai"],
+    toolSupport: ["fooocus", "comfyui", "forge", "automatic1111", "invokeai", "draw-things", "mochi-diffusion"],
     featured: true,
   },
   {
@@ -79,7 +90,36 @@ export const imageModels: ImageModel[] = [
     speed: "medium",
     quality: "excellent",
     bestFor: ["Images with text", "Modern quality", "Professional work"],
-    toolSupport: ["comfyui", "forge"],
+    toolSupport: ["comfyui", "forge", "draw-things"],
+    communityOnlyFor: ["draw-things"],
+    toolCaveats: {
+      "draw-things":
+        "This is a Community model in Draw Things, not one of the bundled Official Models - open Settings → Models → Community (needs internet) to find it.",
+    },
+    featured: true,
+  },
+  {
+    id: "flux2-klein",
+    name: "FLUX.2 Klein 4B",
+    description:
+      "Newest FLUX model optimized for speed. Sub-second generation on modern GPUs with editing capabilities.",
+    simpleDescription:
+      "Latest FLUX - incredibly fast, supports image editing",
+    vramRequired: "13GB",
+    vramRequiredGB: 13,
+    speed: "fast",
+    quality: "excellent",
+    bestFor: ["Fast professional work", "Image editing", "Latest technology"],
+    toolSupport: ["comfyui", "draw-things", "mochi-diffusion"],
+    quantizedOption: {
+      vramRequired: "8GB",
+      vramRequiredGB: 8,
+      notes: "Q5 quantized version fits 8GB GPUs",
+    },
+    toolCaveats: {
+      "mochi-diffusion":
+        "Mochi Diffusion only supports 4-step generation for this model, with no CFG, ControlNet, or negative prompt.",
+    },
     featured: true,
   },
   {
@@ -94,7 +134,7 @@ export const imageModels: ImageModel[] = [
     speed: "fast",
     quality: "excellent",
     bestFor: ["Best prompt following", "Fast high-quality", "Professional use"],
-    toolSupport: ["comfyui", "forge"],
+    toolSupport: ["comfyui", "forge", "draw-things"],
     quantizedOption: {
       vramRequired: "8GB",
       vramRequiredGB: 8,
@@ -115,31 +155,16 @@ export const imageModels: ImageModel[] = [
     speed: "slow",
     quality: "excellent",
     bestFor: ["Maximum quality", "Final renders", "Professional work"],
-    toolSupport: ["comfyui", "forge"],
+    toolSupport: ["comfyui", "forge", "draw-things"],
     quantizedOption: {
       vramRequired: "8GB",
       vramRequiredGB: 8,
       notes: "GGUF-Q8 version runs on 8GB GPUs",
     },
-    featured: true,
-  },
-  {
-    id: "flux2-klein",
-    name: "FLUX.2 Klein 4B",
-    description:
-      "Newest FLUX model optimized for speed. Sub-second generation on modern GPUs with editing capabilities.",
-    simpleDescription:
-      "Latest FLUX - incredibly fast, supports image editing",
-    vramRequired: "13GB",
-    vramRequiredGB: 13,
-    speed: "fast",
-    quality: "excellent",
-    bestFor: ["Fast professional work", "Image editing", "Latest technology"],
-    toolSupport: ["comfyui"],
-    quantizedOption: {
-      vramRequired: "8GB",
-      vramRequiredGB: 8,
-      notes: "Q5 quantized version fits 8GB GPUs",
+    communityOnlyFor: ["draw-things"],
+    toolCaveats: {
+      "draw-things":
+        "This is a Community model in Draw Things, not one of the bundled Official Models - open Settings → Models → Community (needs internet) to find it.",
     },
     featured: true,
   },
@@ -155,7 +180,7 @@ export const imageModels: ImageModel[] = [
     speed: "medium",
     quality: "excellent",
     bestFor: ["Text in images", "Posters/signage", "Logos and typography"],
-    toolSupport: ["comfyui"],
+    toolSupport: ["comfyui", "draw-things"],
     quantizedOption: {
       vramRequired: "10GB",
       vramRequiredGB: 10,
@@ -176,7 +201,12 @@ export const imageModels: ImageModel[] = [
     speed: "fast",
     quality: "excellent",
     bestFor: ["Maximum FLUX.2 quality", "Professional work", "24GB+ GPUs"],
-    toolSupport: ["comfyui"],
+    toolSupport: ["comfyui", "draw-things"],
+    communityOnlyFor: ["draw-things"],
+    toolCaveats: {
+      "draw-things":
+        "This is a Community model in Draw Things, not one of the bundled Official Models - open Settings → Models → Community (needs internet) to find it.",
+    },
     featured: true,
   },
 ];
@@ -215,7 +245,7 @@ export const vramRecommendations: VramRecommendation[] = [
     tier: "standard",
     tierName: "Standard",
     description: "Great for most image creation - good quality at reasonable speed",
-    recommendedModels: ["sdxl", "sdxl-lightning", "flux-schnell", "flux-dev"],
+    recommendedModels: ["flux2-klein", "sdxl", "sdxl-lightning", "flux-schnell", "flux-dev"],
     limitations: [
       "FLUX models need quantized versions",
       "May need to reduce image size for some models",
@@ -228,7 +258,7 @@ export const vramRecommendations: VramRecommendation[] = [
     tier: "high",
     tierName: "High",
     description: "Run most models at full quality with good speed",
-    recommendedModels: ["flux-schnell", "flux-dev", "sd-3.5-medium", "qwen-image", "sdxl"],
+    recommendedModels: ["flux2-klein", "flux-schnell", "flux-dev", "sd-3.5-medium", "qwen-image", "sdxl"],
     limitations: [
       "FLUX.2 Dev 32B still needs quantization",
     ],

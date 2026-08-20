@@ -18,7 +18,7 @@ import {
 import { Button, Card, Badge, CodeBlock } from "@/components/ui";
 import useHardwareDetection from "@/hooks/useHardwareDetection";
 import { getImageToolById, getToolRecommendations } from "@/data/imageTools";
-import { imageModels, getRecommendationForVram } from "@/data/imageModels";
+import { imageModels, getRecommendationForVram, getImageModelById } from "@/data/imageModels";
 
 type Step = "tool" | "install" | "model" | "complete";
 
@@ -652,6 +652,7 @@ function StepModel({
   const vram = hardware.estimatedVram;
   const tool = getImageToolById(selectedTool || "");
   const vramRec = vram ? getRecommendationForVram(vram) : null;
+  const [showOtherModels, setShowOtherModels] = useState(false);
 
   // Bundled-model tools - nothing to choose
   if (selectedTool === "diffusionbee" || selectedTool === "fooocus") {
@@ -687,75 +688,80 @@ function StepModel({
     );
   }
 
-  // Mac-native apps needing a Core ML model download
-  if (selectedTool === "mochi-diffusion" || selectedTool === "draw-things") {
-    const appName = selectedTool === "mochi-diffusion" ? "Mochi Diffusion" : "Draw Things";
+  // Mochi Diffusion is Core ML-only and needs a manual model download/install.
+  // (Draw Things falls through to the tier-based model list below, since its
+  // in-app downloader now supports the full catalog - see imageModels.ts.)
+  if (selectedTool === "mochi-diffusion") {
+    const isPowerTier = !!vram && vram >= 24;
+    const recommended = getImageModelById("sdxl")!;
+
     return (
       <div>
         <Card>
           <h3 className="text-lg font-semibold mb-2">Download a Model</h3>
           <p className="text-muted mb-4">
-            {appName} needs a model to generate images. Mac apps like this use special
+            Mochi Diffusion needs a model to generate images. Mac apps like this use special
             &quot;Core ML&quot; versions of models that run faster on Apple Silicon.
           </p>
 
-          {selectedTool === "draw-things" ? (
-            <div className="bg-primary-pale rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Check className="w-5 h-5 text-primary" />
-                <span className="font-semibold text-primary">Draw Things downloads models for you!</span>
+          <div className="space-y-4">
+            <div className="bg-background-alt rounded-lg p-4 space-y-3">
+              <div>
+                <p className="font-medium text-sm mb-1">1. Open the model download page</p>
+                <a
+                  href="https://huggingface.co/apple/coreml-stable-diffusion-mixed-bit-palettization/tree/main"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-primary hover:underline text-sm"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Open {recommended.name} model page
+                </a>
               </div>
-              <p className="text-sm text-muted mb-2">
-                Go to <strong>Settings → Models</strong> in the app to browse and download. Popular options:
-              </p>
-              <ul className="text-sm space-y-1">
-                <li>• <strong>Dreamshaper</strong> - Artistic, creative styles</li>
-                <li>• <strong>Juggernaut</strong> - Realistic images</li>
-                <li>• <strong>Playground 2.5</strong> - High quality, general purpose</li>
-              </ul>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <div className="bg-background-alt rounded-lg p-4 space-y-3">
-                <div>
-                  <p className="font-medium text-sm mb-1">1. Open the model download page</p>
-                  <a
-                    href="https://huggingface.co/coreml-community/coreml-stable-diffusion-2-1-base/tree/main"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-primary hover:underline text-sm"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    Open Stable Diffusion 2.1 model page
-                  </a>
-                </div>
-                <div>
-                  <p className="font-medium text-sm mb-1">2. Download the model file</p>
-                  <p className="text-sm text-muted">
-                    Look for <code className="bg-foreground/10 px-1.5 py-0.5 rounded text-xs">split_einsum_v2_compiled.zip</code> and download it (~2.5GB).
-                  </p>
-                </div>
-                <div>
-                  <p className="font-medium text-sm mb-1">3. Unzip and move it into place</p>
-                  <p className="text-sm text-muted">
-                    Unzip the file, then in Finder press <strong>Cmd+Shift+G</strong>, paste{" "}
-                    <code className="bg-foreground/10 px-1.5 py-0.5 rounded text-xs">~/Documents/MochiDiffusion/models</code>,
-                    and drag your unzipped folder there.
-                  </p>
-                </div>
-                <div>
-                  <p className="font-medium text-sm mb-1">4. Restart Mochi Diffusion</p>
-                  <p className="text-sm text-muted">Your model will now appear in the model dropdown.</p>
-                </div>
-              </div>
-              <div className="bg-primary-pale rounded-lg p-3">
-                <p className="text-sm">
-                  <strong>Tip:</strong> Stable Diffusion 2.1 is a solid, well-tested starting point -
-                  you can add more models later.
+              <div>
+                <p className="font-medium text-sm mb-1">2. Download the model file</p>
+                <p className="text-sm text-muted">
+                  Look for <code className="bg-foreground/10 px-1.5 py-0.5 rounded text-xs">coreml-stable-diffusion-mixed-bit-palettization_original_compiled.zip</code> and download it (~6.7GB).
                 </p>
               </div>
+              <div>
+                <p className="font-medium text-sm mb-1">3. Unzip and move it into place</p>
+                <p className="text-sm text-muted">
+                  Unzip the file, then in Finder press <strong>Cmd+Shift+G</strong>, paste{" "}
+                  <code className="bg-foreground/10 px-1.5 py-0.5 rounded text-xs">~/Documents/MochiDiffusion/models</code>,
+                  and drag your unzipped folder there.
+                </p>
+              </div>
+              <div>
+                <p className="font-medium text-sm mb-1">4. Restart Mochi Diffusion</p>
+                <p className="text-sm text-muted">Your model will now appear in the model dropdown.</p>
+              </div>
             </div>
-          )}
+            <div className="bg-primary-pale rounded-lg p-3">
+              <p className="text-sm">
+                <strong>Tip:</strong> SDXL is a much higher-quality, well-tested choice than older
+                Stable Diffusion versions, and this compressed build keeps the download reasonable
+                for Apple Silicon.
+              </p>
+            </div>
+            {isPowerTier && (
+              <div className="bg-background-alt rounded-lg p-3">
+                <p className="text-xs text-muted">
+                  <strong>Have plenty of RAM to spare?</strong> Mochi Diffusion 6.0+ also supports
+                  FLUX.2 Klein natively - see the{" "}
+                  <a
+                    href="https://github.com/MochiDiffusion/MochiDiffusion"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    Mochi Diffusion GitHub page
+                  </a>{" "}
+                  for setup steps. Note: {getImageModelById("flux2-klein")?.toolCaveats?.["mochi-diffusion"]}
+                </p>
+              </div>
+            )}
+          </div>
         </Card>
         <div className="mt-8 flex justify-between">
           <Button variant="ghost" onClick={onPrev}>
@@ -772,6 +778,37 @@ function StepModel({
   }
 
   // Forge, ComfyUI, and anything else - VRAM-tier-based recommendation
+  const canRunModel = (model: (typeof imageModels)[number]) => {
+    const canRunDirect = !vram || model.vramRequiredGB <= vram;
+    const canRunQuantized = !!(model.quantizedOption && vram && model.quantizedOption.vramRequiredGB <= vram);
+    return canRunDirect || canRunQuantized;
+  };
+  const needsQuantizationFor = (model: (typeof imageModels)[number]) => {
+    const canRunDirect = !vram || model.vramRequiredGB <= vram;
+    return !canRunDirect && !!(model.quantizedOption && vram && model.quantizedOption.vramRequiredGB <= vram);
+  };
+
+  const qualityRank: Record<string, number> = { excellent: 3, great: 2, good: 1 };
+  const isCommunityOnly = (model: (typeof imageModels)[number]) =>
+    !!model.communityOnlyFor?.includes(selectedTool || "");
+
+  const eligibleModels = imageModels.filter((model) => model.toolSupport.includes(selectedTool || ""));
+  const runnableEligible = eligibleModels.filter(canRunModel);
+  // Prefer models that are always discoverable in the tool's own model
+  // picker over "community"-tier ones that require a separate, network-
+  // dependent source and may not show up in a plain search.
+  const preferredEligible = runnableEligible.filter((m) => !isCommunityOnly(m));
+
+  const topModel =
+    preferredEligible.find((m) => vramRec?.recommendedModels.includes(m.id)) ??
+    runnableEligible.find((m) => vramRec?.recommendedModels.includes(m.id)) ??
+    [...preferredEligible].sort((a, b) => qualityRank[b.quality] - qualityRank[a.quality])[0] ??
+    [...runnableEligible].sort((a, b) => qualityRank[b.quality] - qualityRank[a.quality])[0] ??
+    eligibleModels[0] ??
+    null;
+
+  const otherModels = eligibleModels.filter((m) => m.id !== topModel?.id);
+
   return (
     <div>
       <Card>
@@ -800,77 +837,130 @@ function StepModel({
           </div>
         )}
 
-        <div className="space-y-3">
-          {imageModels.map((model) => {
-            const canRunDirect = !vram || model.vramRequiredGB <= vram;
-            const canRunQuantized = !!(model.quantizedOption && vram && model.quantizedOption.vramRequiredGB <= vram);
-            const canRun = canRunDirect || canRunQuantized;
-            const needsQuantization = !canRunDirect && canRunQuantized;
-            const toolSupports = model.toolSupport.includes(selectedTool || "");
-            const isRecommended = vramRec?.recommendedModels.includes(model.id);
-
-            return (
-              <div
-                key={model.id}
-                className={`p-4 rounded-lg border ${
-                  !canRun || !toolSupports
-                    ? "border-border opacity-40"
-                    : isRecommended
-                    ? "border-primary/50 bg-primary/5"
-                    : "border-border"
-                }`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className="font-semibold">{model.name}</span>
-                      {vramRec && (
-                        <span className={`tag text-xs ${tierColorClass[vramRec.tier]}`}>
-                          {tierEmoji[vramRec.tier]} {needsQuantization ? model.quantizedOption?.vramRequired : model.vramRequired}
-                        </span>
-                      )}
-                      {isRecommended && canRun && toolSupports && (
-                        <Badge variant="primary">Recommended</Badge>
-                      )}
-                      {!toolSupports && <Badge variant="default">Not supported by {tool?.name}</Badge>}
-                      {!canRun && toolSupports && (
-                        <Badge variant="default">Needs {model.vramRequired}+ VRAM</Badge>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted mb-1">{model.simpleDescription}</p>
-                    <div className="flex flex-wrap gap-2 text-xs text-muted">
-                      <span>Quality: {model.quality}</span>
-                      <span>•</span>
-                      <span>Speed: {model.speed}</span>
-                    </div>
-                    {needsQuantization && model.quantizedOption && (
-                      <p className="text-xs text-amber-600 mt-1">{model.quantizedOption.notes}</p>
-                    )}
-                  </div>
-                </div>
+        {topModel && (
+          <div className="p-5 rounded-lg border-2 border-primary bg-primary/5 mb-4">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 bg-primary text-white">
+                <ImageIcon className="w-6 h-6" />
               </div>
-            );
-          })}
-        </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <span className="font-semibold text-lg">{topModel.name}</span>
+                  <Badge variant="primary">Recommended</Badge>
+                </div>
+                <p className="text-muted mb-3">{topModel.simpleDescription}</p>
+                <ul className="space-y-1 text-sm text-muted">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary flex-shrink-0" />
+                    Good for: {topModel.bestFor.join(", ")}
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary flex-shrink-0" />
+                    Quality: {topModel.quality} · Speed: {topModel.speed}
+                    {vramRec && <> · fits your {vramRec.tierName} tier</>}
+                  </li>
+                </ul>
+                {needsQuantizationFor(topModel) && topModel.quantizedOption && (
+                  <p className="text-xs text-amber-600 mt-2">{topModel.quantizedOption.notes}</p>
+                )}
+                {topModel.toolCaveats?.[selectedTool || ""] && (
+                  <p className="text-xs text-amber-600 mt-2">{topModel.toolCaveats[selectedTool || ""]}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!showOtherModels ? (
+          <button
+            onClick={() => setShowOtherModels(true)}
+            className="text-sm text-muted hover:text-foreground transition-colors flex items-center gap-1"
+          >
+            <ChevronDown className="w-4 h-4" />
+            See other options
+          </button>
+        ) : (
+          <div className="pt-4 border-t border-border">
+            <p className="text-sm text-muted mb-3">Other options:</p>
+            <div className="space-y-3">
+              {otherModels.map((model) => {
+                const canRun = canRunModel(model);
+                const needsQuantization = needsQuantizationFor(model);
+
+                return (
+                  <div
+                    key={model.id}
+                    className={`p-4 rounded-lg border ${canRun ? "border-border" : "border-border opacity-40"}`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-background-alt">
+                        <ImageIcon className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <span className="font-semibold">{model.name}</span>
+                          {vramRec && (
+                            <span className={`tag text-xs ${tierColorClass[vramRec.tier]}`}>
+                              {tierEmoji[vramRec.tier]} {needsQuantization ? model.quantizedOption?.vramRequired : model.vramRequired}
+                            </span>
+                          )}
+                          {!canRun && (
+                            <Badge variant="default">Needs {model.vramRequired}+ VRAM</Badge>
+                          )}
+                          {isCommunityOnly(model) && (
+                            <Badge variant="default">Community model</Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-muted mb-1">{model.simpleDescription}</p>
+                        <div className="flex flex-wrap gap-2 text-xs text-muted">
+                          <span>Quality: {model.quality}</span>
+                          <span>•</span>
+                          <span>Speed: {model.speed}</span>
+                        </div>
+                        {needsQuantization && model.quantizedOption && (
+                          <p className="text-xs text-amber-600 mt-1">{model.quantizedOption.notes}</p>
+                        )}
+                        {model.toolCaveats?.[selectedTool || ""] && (
+                          <p className="text-xs text-amber-600 mt-1">{model.toolCaveats[selectedTool || ""]}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="mt-6 bg-background-alt rounded-lg p-4">
           <h4 className="font-medium mb-2">Where to download models</h4>
-          <p className="text-sm text-muted mb-2">
-            <strong>SDXL models:</strong>{" "}
-            <a href="https://civitai.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-              Civitai.com
-            </a>
-          </p>
-          <p className="text-sm text-muted mb-2">
-            <strong>FLUX / Qwen Image:</strong>{" "}
-            <a href="https://huggingface.co/black-forest-labs" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-              Hugging Face
-            </a>
-          </p>
-          {vram && vram <= 10 && (
-            <p className="text-xs text-amber-600 mt-2">
-              Tip: look for &quot;GGUF&quot; or &quot;Q8&quot; quantized versions to fit your {vram}GB GPU.
+          {selectedTool === "draw-things" ? (
+            <p className="text-sm text-muted">
+              Draw Things downloads and quantizes models for you - go to{" "}
+              <strong>Settings → Models</strong> in the app and search for the name above.
+              Models tagged &quot;Community model&quot; won&apos;t show under Official Models -
+              switch to the <strong>Community</strong> tab there instead (needs internet).
             </p>
+          ) : (
+            <>
+              <p className="text-sm text-muted mb-2">
+                <strong>SDXL models:</strong>{" "}
+                <a href="https://civitai.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                  Civitai.com
+                </a>
+              </p>
+              <p className="text-sm text-muted mb-2">
+                <strong>FLUX / Qwen Image:</strong>{" "}
+                <a href="https://huggingface.co/black-forest-labs" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                  Hugging Face
+                </a>
+              </p>
+              {vram && vram <= 10 && (
+                <p className="text-xs text-amber-600 mt-2">
+                  Tip: look for &quot;GGUF&quot; or &quot;Q8&quot; quantized versions to fit your {vram}GB GPU.
+                </p>
+              )}
+            </>
           )}
         </div>
       </Card>

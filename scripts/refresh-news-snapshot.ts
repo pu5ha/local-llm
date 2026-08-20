@@ -12,14 +12,17 @@
 import fs from "node:fs";
 import path from "node:path";
 import Parser from "rss-parser";
-import Anthropic from "@anthropic-ai/sdk";
-import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
+import { GoogleGenAI } from "@google/genai";
 import { categorizeByKeyword } from "../src/lib/news/categorize";
 import { dedupeAndSort, capAndFilterRecent } from "../src/lib/news/dedupeAndSort";
 import { cleanRawSummary } from "../src/lib/news/plainLanguage/cleanRawSummary";
 import { buildRewritePrompt } from "../src/lib/news/plainLanguage/buildRewritePrompt";
 import { applyRewriteResults } from "../src/lib/news/plainLanguage/applyRewriteResults";
-import { RewriteResponseSchema, type RewriteResponse } from "../src/lib/news/plainLanguage/schema";
+import {
+  RewriteResponseSchema,
+  REWRITE_JSON_SCHEMA,
+  type RewriteResponse,
+} from "../src/lib/news/plainLanguage/schema";
 import {
   REWRITE_MODEL,
   REWRITE_BATCH_SIZE,
@@ -35,6 +38,7 @@ const SNAPSHOT_PATH = path.join(
 );
 
 const HF_TRENDING_API = "https://huggingface.co/api/trending?type=model&limit=20";
+const HF_MODEL_DETAIL_API = "https://huggingface.co/api/models";
 const HF_DAILY_PAPERS_API = "https://huggingface.co/api/daily_papers?limit=20";
 
 const CURATED_REPOS = [
@@ -65,6 +69,21 @@ const CURATED_FEEDS = [
 
 const parser = new Parser();
 
+// The trending endpoint only exposes lastModified (last file/metadata edit),
+// not the model's actual release date — a model can look "10h ago" forever
+// if someone tweaks its README. Fetch the real createdAt per model; fall
+// back to lastModified for any one model whose detail lookup fails.
+async function fetchCreatedAt(hfModelId: string, fallback: string): Promise<string> {
+  try {
+    const res = await fetch(`${HF_MODEL_DETAIL_API}/${hfModelId}`);
+    if (!res.ok) return fallback;
+    const json = (await res.json()) as { createdAt?: string };
+    return json.createdAt ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 async function fetchHfModelsNews(): Promise<NewsItem[]> {
   try {
     const res = await fetch(HF_TRENDING_API);
@@ -75,10 +94,12 @@ async function fetchHfModelsNews(): Promise<NewsItem[]> {
       }>;
     };
     const entries = Array.isArray(json.recentlyTrending) ? json.recentlyTrending : [];
-    return entries
-      .filter((e) => e.repoData?.id && e.repoData?.lastModified)
-      .map((e) => {
+    const candidates = entries.filter((e) => e.repoData?.id && e.repoData?.lastModified);
+
+    return await Promise.all(
+      candidates.map(async (e) => {
         const r = e.repoData!;
+        const publishedAt = await fetchCreatedAt(r.id as string, r.lastModified as string);
         return {
           title: r.id as string,
           url: `https://huggingface.co/${r.id}`,
@@ -89,9 +110,10 @@ async function fetchHfModelsNews(): Promise<NewsItem[]> {
           source: "Hugging Face",
           sourceKind: "hf-models" as const,
           category: "models" as const,
-          publishedAt: r.lastModified as string,
+          publishedAt,
         };
-      });
+      })
+    );
   } catch {
     return [];
   }
@@ -127,7 +149,7 @@ async function fetchHfPapersNews(): Promise<NewsItem[]> {
 async function fetchOneRepo(entry: (typeof CURATED_REPOS)[number]): Promise<NewsItem[]> {
   try {
     const res = await fetch(
-      `https://api.github.com/repos/${entry.owner}/${entry.repo}/releases?per_page=5`,
+      `https://api.github.com/repos/${entry.owner}/${entry.repo}/releases?per_page=2`,
       { headers: { Accept: "application/vnd.github+json" } }
     );
     if (!res.ok) return [];
@@ -143,7 +165,7 @@ async function fetchOneRepo(entry: (typeof CURATED_REPOS)[number]): Promise<News
     if (!Array.isArray(json)) return [];
     return json
       .filter((r) => !r.draft && r.html_url && (r.published_at ?? r.created_at))
-      .slice(0, 5)
+      .slice(0, 2)
       .map((r) => ({
         title: `${entry.displayName} ${r.tag_name ?? r.name ?? ""}`.trim(),
         url: r.html_url as string,
@@ -227,31 +249,28 @@ async function fetchRssNews(): Promise<NewsItem[]> {
   return results.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
 }
 
-// Duplicates rewriteNewsItems.ts's Anthropic call as plain code (that module
-// is `server-only`-guarded and can't be imported from a standalone ts-node
+// Duplicates rewriteNewsItems.ts's Gemini call as plain code (that module is
+// `server-only`-guarded and can't be imported from a standalone ts-node
 // script) but reuses the shared prompt/model/batch-size constants and the
 // pure buildRewritePrompt/applyRewriteResults helpers so nothing drifts from
 // the live path.
-async function rewriteBatch(client: Anthropic, batch: NewsItem[]): Promise<NewsItem[]> {
+async function rewriteBatch(client: GoogleGenAI, batch: NewsItem[]): Promise<NewsItem[]> {
   try {
     const payload = buildRewritePrompt(batch);
-    const message = await client.messages.parse(
-      {
-        model: REWRITE_MODEL,
-        max_tokens: 4096,
-        system: [
-          {
-            type: "text",
-            text: REWRITE_SYSTEM_PROMPT,
-            cache_control: { type: "ephemeral" },
-          },
-        ],
-        messages: [{ role: "user", content: JSON.stringify(payload) }],
-        output_config: { format: zodOutputFormat(RewriteResponseSchema) },
+    const response = await client.models.generateContent({
+      model: REWRITE_MODEL,
+      contents: JSON.stringify(payload),
+      config: {
+        systemInstruction: REWRITE_SYSTEM_PROMPT,
+        responseMimeType: "application/json",
+        responseJsonSchema: REWRITE_JSON_SCHEMA,
+        httpOptions: { timeout: REWRITE_TIMEOUT_MS },
       },
-      { timeout: REWRITE_TIMEOUT_MS }
-    );
-    return applyRewriteResults(batch, message.parsed_output as RewriteResponse | null);
+    });
+    if (!response.text) return batch;
+    const parsed = RewriteResponseSchema.safeParse(JSON.parse(response.text));
+    if (!parsed.success) return batch;
+    return applyRewriteResults(batch, parsed.data as RewriteResponse);
   } catch (err) {
     console.warn("Plain-language rewrite batch failed, keeping raw text:", err);
     return batch;
@@ -259,11 +278,11 @@ async function rewriteBatch(client: Anthropic, batch: NewsItem[]): Promise<NewsI
 }
 
 async function rewriteNewsItems(items: NewsItem[]): Promise<NewsItem[]> {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.log("ANTHROPIC_API_KEY not set — skipping plain-language rewrite.");
+  if (!process.env.GEMINI_API_KEY) {
+    console.log("GEMINI_API_KEY not set — skipping plain-language rewrite.");
     return items;
   }
-  const client = new Anthropic();
+  const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   const batches = chunk(items, REWRITE_BATCH_SIZE);
   const results = await Promise.all(batches.map((batch) => rewriteBatch(client, batch)));
   return results.flat();

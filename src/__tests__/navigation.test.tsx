@@ -11,6 +11,7 @@ describe('Navigation', () => {
     expect(screen.getByText('Learn')).toBeInTheDocument();
     expect(screen.getByText('Images')).toBeInTheDocument();
     expect(screen.getByText('Help')).toBeInTheDocument();
+    expect(screen.getByText('News')).toBeInTheDocument();
   });
 
   it('has correct href for Start link (should be /setup, not /computers)', () => {

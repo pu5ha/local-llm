@@ -38,6 +38,13 @@ export function dedupeAndSort(items: NewsItem[]): NewsItem[] {
  * fallback (committed-snapshot) path skips the age cutoff entirely, since a
  * stale snapshot shouldn't be zeroed out by its own staleness if the site
  * hasn't been redeployed in a while.
+ *
+ * hf-models items are exempt from the age cutoff: their publishedAt is the
+ * model's true creation date (for an honest displayed timestamp), but a
+ * model surfacing on Hugging Face's trending list is itself the recency
+ * signal — a model can keep trending for months after release, and
+ * age-filtering it back out by creation date would silently drop items the
+ * source fetch specifically selected as currently relevant.
  */
 export function capAndFilterRecent(
   items: NewsItem[],
@@ -47,6 +54,6 @@ export function capAndFilterRecent(
 ): NewsItem[] {
   const cutoff = now.getTime() - maxAgeDays * 24 * 60 * 60 * 1000;
   return items
-    .filter((i) => Date.parse(i.publishedAt) >= cutoff)
+    .filter((i) => i.sourceKind === "hf-models" || Date.parse(i.publishedAt) >= cutoff)
     .slice(0, maxItems);
 }

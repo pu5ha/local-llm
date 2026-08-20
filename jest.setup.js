@@ -1,8 +1,10 @@
 import '@testing-library/jest-dom';
 import { TextEncoder, TextDecoder } from 'node:util';
+import { ReadableStream, WritableStream, TransformStream } from 'node:stream/web';
 
-// jsdom doesn't provide these Web APIs; grammy (and other libs) need them at import time.
-Object.assign(global, { TextEncoder, TextDecoder });
+// jsdom doesn't provide these Web APIs; grammy, @google/genai (and other libs)
+// need them at import time.
+Object.assign(global, { TextEncoder, TextDecoder, ReadableStream, WritableStream, TransformStream });
 
 // Mock next/navigation
 jest.mock('next/navigation', () => ({

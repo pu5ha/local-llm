@@ -15,7 +15,7 @@
     "telegram:set-webhook": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/set-telegram-webhook.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.120.0",
+    "@google/genai": "^2.18.0",
     "@upstash/redis": "^1.38.2",
     "@vercel/analytics": "^1.6.1",
     "framer-motion": "^12.29.0",

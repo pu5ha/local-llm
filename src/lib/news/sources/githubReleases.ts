@@ -23,7 +23,10 @@ interface GithubRelease {
 async function fetchOneRepo(entry: (typeof CURATED_REPOS)[number]): Promise<NewsItem[]> {
   try {
     const res = await fetch(
-      `https://api.github.com/repos/${entry.owner}/${entry.repo}/releases?per_page=5`,
+      // Build-number-versioned repos (llama.cpp) ship many releases a day;
+      // capping at 2 keeps a real release visible without flooding each
+      // rewrite batch with near-identical micro-updates.
+      `https://api.github.com/repos/${entry.owner}/${entry.repo}/releases?per_page=2`,
       {
         headers: { Accept: "application/vnd.github+json" },
         next: { revalidate: NEWS_REVALIDATE_SECONDS, tags: [NEWS_TAG] },
@@ -35,7 +38,7 @@ async function fetchOneRepo(entry: (typeof CURATED_REPOS)[number]): Promise<News
     if (!Array.isArray(json)) return [];
     return json
       .filter((r) => !r.draft && r.html_url && (r.published_at ?? r.created_at))
-      .slice(0, 5)
+      .slice(0, 2)
       .map((r) => ({
         title: `${entry.displayName} ${r.tag_name ?? r.name ?? ""}`.trim(),
         url: r.html_url as string,

@@ -1,9 +1,8 @@
 import "server-only";
-import Anthropic from "@anthropic-ai/sdk";
-import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
+import { GoogleGenAI } from "@google/genai";
 import { buildRewritePrompt } from "./buildRewritePrompt";
 import { applyRewriteResults } from "./applyRewriteResults";
-import { RewriteResponseSchema, type RewriteResponse } from "./schema";
+import { RewriteResponseSchema, REWRITE_JSON_SCHEMA, type RewriteResponse } from "./schema";
 import {
   REWRITE_MODEL,
   REWRITE_BATCH_SIZE,
@@ -13,30 +12,23 @@ import {
 } from "./constants";
 import type { NewsItem } from "../types";
 
-async function rewriteBatch(
-  client: Anthropic,
-  batch: NewsItem[]
-): Promise<NewsItem[]> {
+async function rewriteBatch(client: GoogleGenAI, batch: NewsItem[]): Promise<NewsItem[]> {
   try {
     const payload = buildRewritePrompt(batch);
-    const message = await client.messages.parse(
-      {
-        model: REWRITE_MODEL,
-        max_tokens: 4096,
-        system: [
-          {
-            type: "text",
-            text: REWRITE_SYSTEM_PROMPT,
-            cache_control: { type: "ephemeral" },
-          },
-        ],
-        messages: [{ role: "user", content: JSON.stringify(payload) }],
-        output_config: { format: zodOutputFormat(RewriteResponseSchema) },
+    const response = await client.models.generateContent({
+      model: REWRITE_MODEL,
+      contents: JSON.stringify(payload),
+      config: {
+        systemInstruction: REWRITE_SYSTEM_PROMPT,
+        responseMimeType: "application/json",
+        responseJsonSchema: REWRITE_JSON_SCHEMA,
+        httpOptions: { timeout: REWRITE_TIMEOUT_MS },
       },
-      { timeout: REWRITE_TIMEOUT_MS }
-    );
-    const parsed = message.parsed_output as RewriteResponse | null;
-    return applyRewriteResults(batch, parsed);
+    });
+    if (!response.text) return batch;
+    const parsed = RewriteResponseSchema.safeParse(JSON.parse(response.text));
+    if (!parsed.success) return batch;
+    return applyRewriteResults(batch, parsed.data as RewriteResponse);
   } catch (err) {
     console.warn("[news] plain-language rewrite batch failed, keeping raw text:", err);
     return batch;
@@ -44,15 +36,15 @@ async function rewriteBatch(
 }
 
 /**
- * Rewrites items into plain language via a fast/cheap model, batched to keep
+ * Rewrites items into plain language via Gemini's free tier, batched to keep
  * each request small. Skips entirely (no network call) if no API key is
  * configured, and never throws — a failed or missing rewrite just leaves
  * items with their existing title/summary.
  */
 export async function rewriteNewsItems(items: NewsItem[]): Promise<NewsItem[]> {
-  if (!process.env.ANTHROPIC_API_KEY || items.length === 0) return items;
+  if (!process.env.GEMINI_API_KEY || items.length === 0) return items;
 
-  const client = new Anthropic();
+  const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   const batches = chunk(items, REWRITE_BATCH_SIZE);
   const results = await Promise.all(batches.map((batch) => rewriteBatch(client, batch)));
   return results.flat();

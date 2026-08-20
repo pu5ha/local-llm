@@ -2,7 +2,6 @@ import "server-only";
 import { Bot } from "grammy";
 import { getNews } from "@/lib/news/getNews";
 import { formatNewsItemMessage } from "./format";
-import * as store from "./store";
 
 const LATEST_COMMAND_LIMIT = 5;
 
@@ -19,18 +18,19 @@ export function getBot(): Bot {
   return bot;
 }
 
+function channelJoinUrl(): string | null {
+  const channelId = process.env.TELEGRAM_CHANNEL_ID;
+  if (!channelId?.startsWith("@")) return null;
+  return `https://t.me/${channelId.slice(1)}`;
+}
+
 function registerHandlers(bot: Bot): void {
   bot.command("start", async (ctx) => {
-    await store.addSubscriber(ctx.chat.id);
-    await ctx.reply(
-      "Subscribed! I'll message you here whenever new items land in the local-AI news feed.\n\n" +
-        "Send /latest to see the most recent items, or /stop to unsubscribe."
-    );
-  });
-
-  bot.command("stop", async (ctx) => {
-    await store.removeSubscriber(ctx.chat.id);
-    await ctx.reply("Unsubscribed — you won't get any more news updates here.");
+    const joinUrl = channelJoinUrl();
+    const joinLine = joinUrl
+      ? `Join ${joinUrl} to get new local-AI news posted there automatically.`
+      : "Join our news channel to get updates automatically.";
+    await ctx.reply(`${joinLine}\n\nYou can also send /latest here anytime to see recent items.`);
   });
 
   bot.command("latest", async (ctx) => {

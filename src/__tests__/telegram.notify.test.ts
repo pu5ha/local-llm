@@ -3,9 +3,6 @@ import { canonicalizeUrl } from "@/lib/news/dedupeAndSort";
 import type { NewsItem } from "@/lib/news/types";
 
 jest.mock("@/lib/telegram/store", () => ({
-  getSubscribers: jest.fn(),
-  addSubscriber: jest.fn(),
-  removeSubscriber: jest.fn(),
   getLastNotifiedUrl: jest.fn(),
   setLastNotifiedUrl: jest.fn(),
 }));

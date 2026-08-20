@@ -21,7 +21,7 @@ describe("applyRewriteResults", () => {
     expect(applyRewriteResults(items, null)).toEqual(items);
   });
 
-  it("sets plainTitle/plainSummary for items matched by url", () => {
+  it("sets plainTitle/plainSummary for items matched by url with include: true", () => {
     const items = [makeItem({ url: "https://example.com/a" })];
     const response: RewriteResponse = {
       items: [
@@ -29,6 +29,7 @@ describe("applyRewriteResults", () => {
           url: "https://example.com/a",
           plainTitle: "Plain title",
           plainSummary: "Plain summary",
+          include: true,
         },
       ],
     };
@@ -45,12 +46,39 @@ describe("applyRewriteResults", () => {
     ];
     const response: RewriteResponse = {
       items: [
-        { url: "https://example.com/a", plainTitle: "Plain A", plainSummary: "Summary A" },
+        {
+          url: "https://example.com/a",
+          plainTitle: "Plain A",
+          plainSummary: "Summary A",
+          include: true,
+        },
       ],
     };
     const result = applyRewriteResults(items, response);
+    expect(result).toHaveLength(2);
     expect(result[0].plainTitle).toBe("Plain A");
     expect(result[1].plainTitle).toBeUndefined();
     expect(result[1].plainSummary).toBeUndefined();
+  });
+
+  it("drops an item entirely when the model returns include: false", () => {
+    const items = [
+      makeItem({ url: "https://example.com/a" }),
+      makeItem({ url: "https://example.com/b" }),
+    ];
+    const response: RewriteResponse = {
+      items: [
+        {
+          url: "https://example.com/a",
+          plainTitle: "Not newsworthy",
+          plainSummary: "Routine internal fix",
+          include: false,
+        },
+        { url: "https://example.com/b", plainTitle: "Real news", plainSummary: "...", include: true },
+      ],
+    };
+    const result = applyRewriteResults(items, response);
+    expect(result).toHaveLength(1);
+    expect(result[0].url).toBe("https://example.com/b");
   });
 });

@@ -78,4 +78,21 @@ describe("capAndFilterRecent", () => {
     const result = capAndFilterRecent(items, now, 30, 3);
     expect(result).toHaveLength(3);
   });
+
+  it("exempts hf-models items from the age cutoff (trending status is itself the recency signal, not creation date)", () => {
+    const items = [
+      makeItem({
+        url: "https://huggingface.co/org/old-but-trending",
+        sourceKind: "hf-models",
+        publishedAt: "2025-01-01T00:00:00.000Z",
+      }),
+      makeItem({
+        url: "https://example.com/old-rss",
+        sourceKind: "rss",
+        publishedAt: "2025-01-01T00:00:00.000Z",
+      }),
+    ];
+    const result = capAndFilterRecent(items, now, 30, 100);
+    expect(result.map((i) => i.url)).toEqual(["https://huggingface.co/org/old-but-trending"]);
+  });
 });

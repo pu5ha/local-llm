@@ -5,8 +5,10 @@ function escapeHtml(text: string): string {
 }
 
 export function formatNewsItemMessage(item: NewsItem): string {
-  const lines = [`<b>${escapeHtml(item.title)}</b>`, escapeHtml(item.source)];
-  if (item.summary) lines.push(escapeHtml(item.summary));
+  const title = item.plainTitle ?? item.title;
+  const summary = item.plainSummary ?? item.summary;
+  const lines = [`<b>${escapeHtml(title)}</b>`, escapeHtml(item.source)];
+  if (summary) lines.push(escapeHtml(summary));
   lines.push(item.url);
   return lines.join("\n");
 }

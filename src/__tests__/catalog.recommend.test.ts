@@ -42,12 +42,10 @@ describe("getRecommendedModel", () => {
     expect(result.primary?.id).toBe("mid");
   });
 
-  it("applies the GPU RAM boost", () => {
-    // usable = ramGB - OS_OVERHEAD_GB(4) = 16; without a GPU boost, 16 < big's 20GB requirement
-    const withoutGpu = getRecommendedModel(catalog, { ramGB: 20 });
-    const withGpu = getRecommendedModel(catalog, { ramGB: 20, hasDiscreteGpu: true });
-    expect(withoutGpu.primary?.id).toBe("mid");
-    expect(withGpu.primary?.id).toBe("big"); // (20 - 4) * 1.5 = 24 >= 20
+  it("recommends purely off RAM, with no GPU-based boost", () => {
+    // usable = ramGB - OS_OVERHEAD_GB(4) = 16; below big's 20GB requirement either way
+    const result = getRecommendedModel(catalog, { ramGB: 20 });
+    expect(result.primary?.id).toBe("mid");
   });
 
   it("reserves OS/app overhead so a mid-size model doesn't get recommended at every tier", () => {

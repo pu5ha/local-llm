@@ -2,7 +2,6 @@ import type { Model } from "./types";
 
 export interface RecommendationInput {
   ramGB: number;
-  hasDiscreteGpu?: boolean;
 }
 
 export interface RecommendationResult {
@@ -10,9 +9,6 @@ export interface RecommendationResult {
   alternatives: Model[];
   maxParametersB: number;
 }
-
-/** GPU-equipped machines can often run a bigger model than raw system RAM implies. */
-export const GPU_RAM_BOOST_MULTIPLIER = 1.5;
 
 /**
  * Reserved for the OS, browser, and background apps before any RAM is
@@ -34,10 +30,7 @@ export function getRecommendedModel(
   catalog: Model[],
   input: RecommendationInput
 ): RecommendationResult {
-  const usableRamGB = Math.max(0, input.ramGB - OS_OVERHEAD_GB);
-  const effectiveRamGB = input.hasDiscreteGpu
-    ? usableRamGB * GPU_RAM_BOOST_MULTIPLIER
-    : usableRamGB;
+  const effectiveRamGB = Math.max(0, input.ramGB - OS_OVERHEAD_GB);
 
   const candidates = catalog
     .filter((m) => m.featured && m.ramRequiredGB <= effectiveRamGB)

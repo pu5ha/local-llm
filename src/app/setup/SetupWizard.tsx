@@ -602,21 +602,21 @@ function StepModel({
   const [showRamHelp, setShowRamHelp] = useState(false);
   const { hardware } = useHardwareDetection();
   const userRam = selectedRam || 16;
-  const hasDiscreteGpu = hardware.gpuType === "nvidia" || hardware.gpuType === "amd";
 
   const { primary: recommendedModel } = getRecommendedModel(models, {
     ramGB: userRam,
-    hasDiscreteGpu,
   });
   const recommendedModelId = recommendedModel?.id ?? null;
 
-  // Auto-select recommended model on mount
+  // Select the recommended model whenever the user confirms a RAM tier -
+  // both on first pick and after "Change RAM", so a stale recommendation
+  // from an earlier (or the pre-selection default 16GB) tier never lingers.
   useEffect(() => {
-    if (!selectedModel && recommendedModelId) {
+    if (selectedRam && recommendedModelId) {
       onSelect(recommendedModelId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recommendedModelId]);
+  }, [selectedRam]);
 
   const selectedModelData = models.find((m) => m.id === selectedModel);
   const otherModels = models
@@ -755,7 +755,7 @@ function StepModel({
       <Card>
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-lg font-semibold">
-            We recommend {recommendedModel?.name} for your computer
+            We recommend {recommendedModel?.name} {recommendedModel?.parameters} for your computer
           </h3>
           <button
             onClick={() => setSelectedRam(null)}
@@ -779,7 +779,10 @@ function StepModel({
             <span className="terminal-output">→ {userRam}GB RAM found</span>
             <br />
             <span className="terminal-output">
-              → Recommended model: {recommendedModel?.name ?? "none"}{" "}
+              → Recommended model:{" "}
+              {recommendedModel
+                ? `${recommendedModel.name} ${recommendedModel.parameters}`
+                : "none"}{" "}
               <span className="text-terminal-green">✓</span>
             </span>
           </div>
@@ -803,7 +806,9 @@ function StepModel({
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="font-semibold text-lg">{recommendedModel.name}</span>
+                  <span className="font-semibold text-lg">
+                    {recommendedModel.name} {recommendedModel.parameters}
+                  </span>
                   <Badge variant="primary">Best for your computer</Badge>
                 </div>
                 <p className="text-muted mb-3">{recommendedModel.description}</p>
@@ -863,7 +868,9 @@ function StepModel({
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <span className="font-semibold">{model.name}</span>
+                          <span className="font-semibold">
+                            {model.name} {model.parameters}
+                          </span>
                           <Badge variant="default">{model.ramRequired} memory</Badge>
                           {!canRun && (
                             <Badge variant="default">Too big for your computer</Badge>
@@ -885,7 +892,9 @@ function StepModel({
         {/* Download instructions - show when model is selected */}
         {selectedModel && selectedModelData && selectedTool === "ollama" && (
           <div className="mt-6 pt-6 border-t border-border">
-            <h4 className="font-medium mb-4">Download {selectedModelData.name} to your computer</h4>
+            <h4 className="font-medium mb-4">
+              Download {selectedModelData.name} {selectedModelData.parameters} to your computer
+            </h4>
 
             {/* Simple 3-step process */}
             <div className="space-y-4">
@@ -977,7 +986,7 @@ function StepModel({
                       </div>
                     </div>
                     <p className="text-xs text-muted mt-3">
-                      Once the download finishes, {selectedModelData.name} will respond to your message automatically. It may take a few minutes depending on your internet speed.
+                      Once the download finishes, {selectedModelData.name} {selectedModelData.parameters} will respond to your message automatically. It may take a few minutes depending on your internet speed.
                     </p>
                   </div>
                 </div>
@@ -1022,7 +1031,7 @@ function StepModel({
           <div className="mt-6 pt-6 border-t border-border">
             <p className="text-muted">
               Open {tools.find((t) => t.id === selectedTool)?.name} and look for
-              "{selectedModelData?.name}" in the model browser to download it.
+              "{selectedModelData?.name} {selectedModelData?.parameters}" in the model browser to download it.
             </p>
             <div className="mt-4">
               <label className="flex items-center gap-3 cursor-pointer">
@@ -1327,7 +1336,7 @@ function StepComplete({
                         </ul>
                         {smallestModel && (
                           <p className="mt-2">
-                            Try a smaller model like <strong>{smallestModel.name}</strong> - it's faster and uses less memory.
+                            Try a smaller model like <strong>{smallestModel.name} {smallestModel.parameters}</strong> - it's faster and uses less memory.
                           </p>
                         )}
                       </div>

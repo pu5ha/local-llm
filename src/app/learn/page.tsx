@@ -348,17 +348,17 @@ export default function LearnPage() {
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-primary" />
-                    <strong>Llama 3</strong> - Made by Meta (Facebook), very
-                    capable
+                    <strong>Llama</strong> - Made by Meta, a reliable all-rounder
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-primary" />
-                    <strong>Mistral</strong> - Made in France, great for
-                    reasoning
+                    <strong>Qwen</strong> - Made by Alibaba, excellent at coding
+                    and multilingual tasks even at small sizes
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-primary" />
-                    <strong>DeepSeek</strong> - Excellent for coding tasks
+                    <strong>DeepSeek R1</strong> - Shows its reasoning step-by-step,
+                    great for logic and math
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-primary" />

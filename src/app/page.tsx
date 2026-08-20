@@ -67,41 +67,46 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Compact visual comparison */}
+      {/* Before/after comparison - asymmetric, private side rendered as a terminal */}
       <section className="pb-12 md:pb-16">
         <div className="max-w-3xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="grid sm:grid-cols-2 gap-4"
+            className="grid sm:grid-cols-[1fr_auto_1.3fr] gap-4 sm:gap-3 items-center"
           >
-            {/* ChatGPT way */}
-            <div className="paper-card p-5 border-red-200">
-              <div className="flex items-center gap-2 mb-3 text-red-600">
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <span className="font-medium text-sm">ChatGPT</span>
+            {/* ChatGPT way - plain, pale, deliberately unremarkable */}
+            <div className="rounded-lg border border-accent-pale bg-accent-pale/50 px-4 py-5 text-center">
+              <div className="text-[11px] font-mono text-accent mb-3 uppercase tracking-wider">
+                The ChatGPT way
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted">
+              <div className="flex items-center justify-center gap-1.5 text-sm text-muted flex-wrap">
                 <span>You</span>
                 <ArrowRight className="w-3 h-3" />
                 <span>Internet</span>
                 <ArrowRight className="w-3 h-3" />
-                <span className="text-red-600">OpenAI servers</span>
+                <span className="text-accent font-medium">Their servers</span>
               </div>
             </div>
 
-            {/* PrivateAI way */}
-            <div className="paper-card p-5 border-primary/30 bg-primary-pale/30">
-              <div className="flex items-center gap-2 mb-3 text-primary">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                <span className="font-medium text-sm">PrivateAI</span>
+            <div className="hidden sm:block font-serif italic text-muted text-sm text-center">
+              vs
+            </div>
+
+            {/* PrivateAI way - rendered as a terminal to feel technical/trustworthy */}
+            <div className="terminal">
+              <div className="terminal-header">
+                <div className="terminal-dot red" />
+                <div className="terminal-dot yellow" />
+                <div className="terminal-dot green" />
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted">
-                <span>You</span>
-                <ArrowRight className="w-3 h-3" />
-                <span className="text-primary font-medium">Your computer</span>
-                <Check className="w-4 h-4 text-primary" />
+              <div className="terminal-body text-sm">
+                <span className="terminal-prompt">$</span>{" "}
+                <span className="terminal-command">whoami</span>
+                <br />
+                <span className="terminal-output">→ stays on your computer</span>{" "}
+                <span className="text-terminal-green">✓</span>
               </div>
             </div>
           </motion.div>
@@ -160,7 +165,11 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="space-y-6">
+          <div className="relative space-y-6">
+            <div
+              aria-hidden="true"
+              className="squiggle-vertical absolute left-[17px] top-9 bottom-9 opacity-40"
+            />
             {[
               {
                 num: 1,
@@ -189,9 +198,9 @@ export default function Home() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="flex gap-4 items-start"
+                className="relative flex gap-4 items-start"
               >
-                <div className="step-number flex-shrink-0">{step.num}</div>
+                <div className="step-number flex-shrink-0 relative z-10">{step.num}</div>
                 <div>
                   <h4 className="font-semibold mb-1">{step.title}</h4>
                   <p className="text-muted">{step.desc}</p>
@@ -209,44 +218,38 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="paper-card p-8"
           >
-            <h2 className="font-serif text-xl sm:text-2xl mb-6 text-center">
+            <h2 className="font-serif text-xl sm:text-2xl mb-8 text-center">
               You might be wondering...
             </h2>
 
-            <div className="grid sm:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-semibold mb-2">Do I need to be tech-savvy?</h3>
-                <p className="text-sm text-muted">
-                  Nope! If you can download an app and follow instructions, you can do this.
-                  We explain everything like you've never done it before.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Is this as good as ChatGPT?</h3>
-                <p className="text-sm text-muted">
-                  For everyday tasks, yes! These AI models are really capable.
-                  The tradeoff is total privacy and no monthly fees.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Will it slow down my computer?</h3>
-                <p className="text-sm text-muted">
-                  Only when you're actively chatting. When you're not using it,
-                  it doesn't use any resources at all.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">How much does it cost?</h3>
-                <p className="text-sm text-muted">
-                  Nothing! The AI models are free. The software is free.
-                  You just need a computer that can run it.
-                </p>
-              </div>
+            <div className="grid sm:grid-cols-2 gap-5">
+              {[
+                {
+                  q: "Do I need to be tech-savvy?",
+                  a: "Nope! If you can download an app and follow instructions, you can do this. We explain everything like you've never done it before.",
+                },
+                {
+                  q: "Is this as good as ChatGPT?",
+                  a: "For most things people actually use ChatGPT for—writing, brainstorming, answering questions, even basic coding help—yes. The small models that run on a laptop today handle tasks that needed a data-center-scale AI just two years ago.",
+                },
+                {
+                  q: "Will it slow down my computer?",
+                  a: "Only when you're actively chatting. When you're not using it, it doesn't use any resources at all.",
+                },
+                {
+                  q: "How much does it cost?",
+                  a: "Nothing! The AI models are free. The software is free. You just need a computer that can run it.",
+                },
+              ].map((item) => (
+                <div key={item.q} className="paper-card p-5">
+                  <h3 className="font-semibold mb-2">{item.q}</h3>
+                  <p className="text-sm text-muted">{item.a}</p>
+                </div>
+              ))}
             </div>
 
-            <div className="text-center mt-6 pt-6 border-t border-border">
+            <div className="text-center mt-8">
               <Link
                 href="/learn"
                 className="text-primary hover:underline text-sm font-medium"
@@ -257,6 +260,24 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      {/* Marquee reinforcing the core claims with motion instead of static badges */}
+      <div className="marquee-banner">
+        <div className="marquee-content font-mono text-xs tracking-wider">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <span key={i} className="flex items-center gap-12">
+              <span>NO SUBSCRIPTIONS</span>
+              <span>•</span>
+              <span>NO DATA COLLECTION</span>
+              <span>•</span>
+              <span>RUNS OFFLINE</span>
+              <span>•</span>
+              <span>FREE FOREVER</span>
+              <span>•</span>
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* Final CTA */}
       <section className="py-16 md:py-24 bg-foreground text-background">

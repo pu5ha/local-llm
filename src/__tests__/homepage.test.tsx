@@ -5,14 +5,15 @@ describe('Homepage', () => {
   it('renders the main headline', () => {
     render(<Home />);
 
-    expect(screen.getByText('Run AI on your computer.')).toBeInTheDocument();
-    expect(screen.getByText('Private. Free. Forever.')).toBeInTheDocument();
+    const heading = screen.getByRole('heading', { level: 1 });
+    expect(heading).toHaveTextContent(/Your AI conversations,\s*seen by no one\./i);
   });
 
   it('has CTA buttons linking to /setup (not /computers)', () => {
     render(<Home />);
 
-    const ctaButtons = screen.getAllByText('Start Your Private AI');
+    const ctaButtons = screen.getAllByText('Get Started Free');
+    expect(ctaButtons.length).toBeGreaterThan(0);
     ctaButtons.forEach(button => {
       const link = button.closest('a');
       expect(link).toHaveAttribute('href', '/setup');

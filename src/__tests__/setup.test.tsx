@@ -1,5 +1,16 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import SetupPage from '@/app/setup/page';
+import SetupWizard from '@/app/setup/SetupWizard';
+import { curatedModels } from '@/lib/catalog/curated';
+import { mergeCatalog } from '@/lib/catalog/mergeCatalog';
+
+// Deterministic, network-free catalog built from the real curated roster -
+// setup/page.tsx (a Server Component) fetches this at request time in
+// production, but tests render SetupWizard directly with fixture data.
+const testModels = mergeCatalog(curatedModels, [], 'fallback-snapshot').models;
+
+function SetupPage() {
+  return <SetupWizard models={testModels} />;
+}
 
 // Mock the useHardwareDetection hook
 jest.mock('@/hooks/useHardwareDetection', () => ({

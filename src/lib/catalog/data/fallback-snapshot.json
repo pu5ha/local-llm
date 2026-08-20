@@ -1,0 +1,409 @@
+{
+  "generatedAt": "2026-08-20T01:49:35.075Z",
+  "facts": [
+    {
+      "hfModelId": "meta-llama/Llama-3.2-3B-Instruct",
+      "downloads": 1102483,
+      "likes": 2434,
+      "lastModified": "2024-10-24T15:07:29.000Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen3-4B",
+      "downloads": 4819812,
+      "likes": 683,
+      "lastModified": "2025-07-26T03:46:39.000Z"
+    },
+    {
+      "hfModelId": "google/gemma-3-4b-it",
+      "downloads": 1257750,
+      "likes": 1459,
+      "lastModified": "2025-03-21T20:20:53.000Z"
+    },
+    {
+      "hfModelId": "microsoft/Phi-4-mini-instruct",
+      "downloads": 488163,
+      "likes": 814,
+      "lastModified": "2025-12-10T20:24:40.000Z"
+    },
+    {
+      "hfModelId": "meta-llama/Llama-3.1-8B-Instruct",
+      "downloads": 7199331,
+      "likes": 6628,
+      "lastModified": "2024-09-25T17:00:57.000Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen3-8B",
+      "downloads": 15796910,
+      "likes": 1305,
+      "lastModified": "2025-07-26T03:49:13.000Z"
+    },
+    {
+      "hfModelId": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+      "downloads": 291893,
+      "likes": 874,
+      "lastModified": "2025-02-24T03:32:20.000Z"
+    },
+    {
+      "hfModelId": "google/gemma-3-12b-it",
+      "downloads": 1215679,
+      "likes": 809,
+      "lastModified": "2025-03-21T20:28:56.000Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen3-32B",
+      "downloads": 3608960,
+      "likes": 736,
+      "lastModified": "2025-07-26T03:45:22.000Z"
+    },
+    {
+      "hfModelId": "openai/gpt-oss-20b",
+      "downloads": 7682588,
+      "likes": 4929,
+      "lastModified": "2025-08-26T17:25:47.000Z"
+    },
+    {
+      "hfModelId": "mistralai/Mistral-Small-3.1-24B-Instruct-2503",
+      "downloads": 264646,
+      "likes": 1377,
+      "lastModified": "2025-12-22T10:15:41.000Z"
+    },
+    {
+      "hfModelId": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+      "downloads": 122091,
+      "likes": 798,
+      "lastModified": "2025-02-24T03:31:15.000Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen3-0.6B",
+      "downloads": 28202544,
+      "likes": 1521
+    },
+    {
+      "hfModelId": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+      "downloads": 12307094,
+      "likes": 558
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-7B-Instruct",
+      "downloads": 12229058,
+      "likes": 1549
+    },
+    {
+      "hfModelId": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
+      "downloads": 11047071,
+      "likes": 905
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-1.5B-Instruct",
+      "downloads": 10189084,
+      "likes": 801
+    },
+    {
+      "hfModelId": "meta-llama/Llama-3.2-1B-Instruct",
+      "downloads": 8694182,
+      "likes": 1577
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-0.5B-Instruct",
+      "downloads": 6933328,
+      "likes": 595
+    },
+    {
+      "hfModelId": "deepseek-ai/DeepSeek-R1",
+      "downloads": 6911569,
+      "likes": 13581
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-3B-Instruct",
+      "downloads": 6876082,
+      "likes": 552
+    },
+    {
+      "hfModelId": "Qwen/Qwen3-1.7B",
+      "downloads": 6319327,
+      "likes": 520
+    },
+    {
+      "hfModelId": "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
+      "downloads": 5919810,
+      "likes": 13
+    },
+    {
+      "hfModelId": "ornith-ai/Ornith-1.0-9B-GGUF",
+      "downloads": 5025073,
+      "likes": 657
+    },
+    {
+      "hfModelId": "google/gemma-3-1b-it",
+      "downloads": 4983962,
+      "likes": 1103
+    },
+    {
+      "hfModelId": "openai/gpt-oss-120b",
+      "downloads": 4657776,
+      "likes": 5112
+    },
+    {
+      "hfModelId": "dphn/dolphin-2.9.1-yi-1.5-34b",
+      "downloads": 4607714,
+      "likes": 65
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-7B-Instruct-AWQ",
+      "downloads": 4582873,
+      "likes": 50
+    },
+    {
+      "hfModelId": "ornith-ai/Ornith-1.0-35B-GGUF",
+      "downloads": 3880268,
+      "likes": 1050
+    },
+    {
+      "hfModelId": "EleutherAI/pythia-160m",
+      "downloads": 3350100,
+      "likes": 45
+    },
+    {
+      "hfModelId": "Qwen/Qwen3-4B-Instruct-2507",
+      "downloads": 3336971,
+      "likes": 923
+    },
+    {
+      "hfModelId": "ornith-ai/Ornith-1.0-35B",
+      "downloads": 3335266,
+      "likes": 503
+    },
+    {
+      "hfModelId": "ibm-granite/granite-4.1-8b",
+      "downloads": 3002399,
+      "likes": 252
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-14B-Instruct",
+      "downloads": 2878964,
+      "likes": 359
+    },
+    {
+      "hfModelId": "zai-org/GLM-5.2",
+      "downloads": 2748563,
+      "likes": 5012
+    },
+    {
+      "hfModelId": "RadixArk/Kimi-K3-DSpark",
+      "downloads": 2675137,
+      "likes": 50
+    },
+    {
+      "hfModelId": "Qwen/Qwen3-30B-A3B",
+      "downloads": 2664072,
+      "likes": 922
+    },
+    {
+      "hfModelId": "Qwen/Qwen-72B",
+      "downloads": 2663088,
+      "likes": 361
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-0.5B",
+      "downloads": 2533898,
+      "likes": 437
+    },
+    {
+      "hfModelId": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "downloads": 2434605,
+      "likes": 1730
+    },
+    {
+      "hfModelId": "nvidia/Gemma-4-31B-IT-NVFP4",
+      "downloads": 2419709,
+      "likes": 558
+    },
+    {
+      "hfModelId": "ornith-ai/Ornith-1.0-9B",
+      "downloads": 2400766,
+      "likes": 534
+    }
+  ],
+  "uncurated": [
+    {
+      "hfModelId": "Qwen/Qwen3-0.6B",
+      "downloads": 28202544,
+      "likes": 1521,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+      "downloads": 12307094,
+      "likes": 558,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-7B-Instruct",
+      "downloads": 12229058,
+      "likes": 1549,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
+      "downloads": 11047071,
+      "likes": 905,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-1.5B-Instruct",
+      "downloads": 10189084,
+      "likes": 801,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "meta-llama/Llama-3.2-1B-Instruct",
+      "downloads": 8694182,
+      "likes": 1577,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-0.5B-Instruct",
+      "downloads": 6933328,
+      "likes": 595,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "deepseek-ai/DeepSeek-R1",
+      "downloads": 6911569,
+      "likes": 13581,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-3B-Instruct",
+      "downloads": 6876082,
+      "likes": 552,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen3-1.7B",
+      "downloads": 6319327,
+      "likes": 520,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
+      "downloads": 5919810,
+      "likes": 13,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "ornith-ai/Ornith-1.0-9B-GGUF",
+      "downloads": 5025073,
+      "likes": 657,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "google/gemma-3-1b-it",
+      "downloads": 4983962,
+      "likes": 1103,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "openai/gpt-oss-120b",
+      "downloads": 4657776,
+      "likes": 5112,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "dphn/dolphin-2.9.1-yi-1.5-34b",
+      "downloads": 4607714,
+      "likes": 65,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-7B-Instruct-AWQ",
+      "downloads": 4582873,
+      "likes": 50,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "ornith-ai/Ornith-1.0-35B-GGUF",
+      "downloads": 3880268,
+      "likes": 1050,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "EleutherAI/pythia-160m",
+      "downloads": 3350100,
+      "likes": 45,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen3-4B-Instruct-2507",
+      "downloads": 3336971,
+      "likes": 923,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "ornith-ai/Ornith-1.0-35B",
+      "downloads": 3335266,
+      "likes": 503,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "ibm-granite/granite-4.1-8b",
+      "downloads": 3002399,
+      "likes": 252,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-14B-Instruct",
+      "downloads": 2878964,
+      "likes": 359,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "zai-org/GLM-5.2",
+      "downloads": 2748563,
+      "likes": 5012,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "RadixArk/Kimi-K3-DSpark",
+      "downloads": 2675137,
+      "likes": 50,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen3-30B-A3B",
+      "downloads": 2664072,
+      "likes": 922,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen-72B",
+      "downloads": 2663088,
+      "likes": 361,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "Qwen/Qwen2.5-0.5B",
+      "downloads": 2533898,
+      "likes": 437,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "downloads": 2434605,
+      "likes": 1730,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "nvidia/Gemma-4-31B-IT-NVFP4",
+      "downloads": 2419709,
+      "likes": 558,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    },
+    {
+      "hfModelId": "ornith-ai/Ornith-1.0-9B",
+      "downloads": 2400766,
+      "likes": 534,
+      "firstSeenAt": "2026-08-20T01:48:36.605Z"
+    }
+  ]
+}

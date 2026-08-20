@@ -15,18 +15,32 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PrivateAI - Run AI on Your Computer. Private. Free. Forever.",
+  title: "PrivateAI — Your AI Conversations, Seen By No One",
   description:
-    "The easiest way to run AI privately on your own computer. No subscriptions, no data collection, complete privacy. Simple step-by-step guides for anyone.",
+    "Run powerful open-source AI models on your own computer — private by design, free forever. No subscriptions, no data collection, nobody reading your chats. Step-by-step setup, even if you've never used a terminal.",
   keywords: [
     "private AI",
     "AI privacy",
     "run AI locally",
+    "local LLM",
+    "Ollama",
     "ChatGPT alternative",
     "offline AI",
     "free AI",
   ],
 };
+
+const themeInitScript = `
+  (function () {
+    try {
+      var stored = localStorage.getItem("theme");
+      var theme = stored === "light" || stored === "dark"
+        ? stored
+        : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", theme);
+    } catch (e) {}
+  })();
+`;
 
 export default function RootLayout({
   children,
@@ -34,7 +48,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased min-h-screen`}
       >

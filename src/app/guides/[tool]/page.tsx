@@ -100,35 +100,35 @@ const ollamaGuide: GuideSection[] = [
         <div className="space-y-4">
           <div className="p-4 bg-card-hover rounded-lg">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium">Llama 3.2 (3B)</h4>
+              <h4 className="font-medium">Qwen3 (4B)</h4>
               <Badge variant="success">Recommended for beginners</Badge>
             </div>
             <p className="text-sm text-muted mb-3">
-              Meta's latest compact model. Great balance of quality and speed.
+              Punches well above its size class. Great balance of quality and speed.
             </p>
-            <CodeBlock code="ollama run llama3.2" />
+            <CodeBlock code="ollama run qwen3:4b" />
           </div>
 
           <div className="p-4 bg-card-hover rounded-lg">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium">Mistral 7B</h4>
+              <h4 className="font-medium">Qwen3 (8B)</h4>
               <Badge>Great for coding</Badge>
             </div>
             <p className="text-sm text-muted mb-3">
-              Excellent reasoning and coding capabilities.
+              Excellent coding and multilingual capabilities for mid-range hardware.
             </p>
-            <CodeBlock code="ollama run mistral" />
+            <CodeBlock code="ollama run qwen3:8b" />
           </div>
 
           <div className="p-4 bg-card-hover rounded-lg">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium">DeepSeek Coder</h4>
-              <Badge>Best for programming</Badge>
+              <h4 className="font-medium">DeepSeek R1 (Distill)</h4>
+              <Badge>Best for reasoning</Badge>
             </div>
             <p className="text-sm text-muted mb-3">
-              Specialized coding model with excellent code generation.
+              Shows its work step-by-step — great at logic, math, and code reasoning.
             </p>
-            <CodeBlock code="ollama run deepseek-coder" />
+            <CodeBlock code="ollama run deepseek-r1:7b" />
           </div>
         </div>
 
@@ -318,8 +318,8 @@ const lmStudioGuide: GuideSection[] = [
       <div className="space-y-4">
         <p className="text-muted">
           LM Studio has a built-in model browser. Simply search for models and
-          click to download them. Popular options include Llama 3.2, Mistral,
-          and Phi-3.
+          click to download them. Popular options include Qwen3, Gemma 3,
+          and Phi-4.
         </p>
         <div className="p-4 bg-accent/5 rounded-lg border border-accent/20">
           <p className="text-sm">

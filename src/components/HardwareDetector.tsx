@@ -166,7 +166,7 @@ export default function HardwareDetector({ confirmedRam }: HardwareDetectorProps
             {displayRam >= 16 ? (
               <>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="font-semibold">Llama 3.1 8B</span>
+                  <span className="font-semibold">Qwen3 8B</span>
                   <span className="tag tag-green">Best for {displayRam}GB RAM</span>
                 </div>
                 <p className="text-sm text-muted">
@@ -176,7 +176,7 @@ export default function HardwareDetector({ confirmedRam }: HardwareDetectorProps
             ) : displayRam >= 8 ? (
               <>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="font-semibold">Llama 3.2 3B</span>
+                  <span className="font-semibold">Qwen3 4B</span>
                   <span className="tag tag-green">Best for {displayRam}GB RAM</span>
                 </div>
                 <p className="text-sm text-muted">

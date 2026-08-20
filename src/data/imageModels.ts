@@ -143,6 +143,42 @@ export const imageModels: ImageModel[] = [
     },
     featured: true,
   },
+  {
+    id: "qwen-image",
+    name: "Qwen Image",
+    description:
+      "Alibaba's image model, notably strong at rendering legible text inside images - a historical weak point for FLUX and Stable Diffusion. Apache 2.0 licensed.",
+    simpleDescription:
+      "Great at putting readable text/logos in images - better than most at this",
+    vramRequired: "16GB",
+    vramRequiredGB: 16,
+    speed: "medium",
+    quality: "excellent",
+    bestFor: ["Text in images", "Posters/signage", "Logos and typography"],
+    toolSupport: ["comfyui"],
+    quantizedOption: {
+      vramRequired: "10GB",
+      vramRequiredGB: 10,
+      notes: "GGUF-Q8 version runs on 10GB GPUs",
+    },
+    featured: true,
+  },
+  // Power tier (24GB+)
+  {
+    id: "flux2-klein-9b",
+    name: "FLUX.2 Klein 9B",
+    description:
+      "The larger Klein variant. Same speed-focused architecture as the 4B version with noticeably better detail and prompt adherence.",
+    simpleDescription:
+      "Bigger, sharper version of FLUX.2 Klein - needs a beefy GPU",
+    vramRequired: "29GB",
+    vramRequiredGB: 29,
+    speed: "fast",
+    quality: "excellent",
+    bestFor: ["Maximum FLUX.2 quality", "Professional work", "24GB+ GPUs"],
+    toolSupport: ["comfyui"],
+    featured: true,
+  },
 ];
 
 // Recommendations based on VRAM
@@ -192,7 +228,7 @@ export const vramRecommendations: VramRecommendation[] = [
     tier: "high",
     tierName: "High",
     description: "Run most models at full quality with good speed",
-    recommendedModels: ["flux-schnell", "flux-dev", "sd-3.5-medium", "sdxl"],
+    recommendedModels: ["flux-schnell", "flux-dev", "sd-3.5-medium", "qwen-image", "sdxl"],
     limitations: [
       "FLUX.2 Dev 32B still needs quantization",
     ],
@@ -204,7 +240,7 @@ export const vramRecommendations: VramRecommendation[] = [
     tier: "power",
     tierName: "Power",
     description: "Run any model at full quality - no compromises",
-    recommendedModels: ["flux2-klein", "flux-dev", "flux-schnell", "sd-3.5-medium"],
+    recommendedModels: ["flux2-klein", "flux2-klein-9b", "flux-dev", "flux-schnell", "qwen-image"],
     limitations: [],
   },
 ];

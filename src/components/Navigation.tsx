@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -65,27 +66,33 @@ export default function Navigation() {
             })}
           </div>
 
-          {/* CTA Button */}
-          <Link
-            href="/setup"
-            className="hidden md:flex items-center gap-2 px-4 py-2 bg-foreground text-background text-sm font-medium rounded-full hover:bg-primary transition-colors"
-          >
-            <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse" />
-            Start Your Private AI
-          </Link>
+          {/* CTA + Theme Toggle */}
+          <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle />
+            <Link
+              href="/setup"
+              className="flex items-center gap-2 px-4 py-2 bg-foreground text-background text-sm font-medium rounded-full hover:bg-primary transition-colors"
+            >
+              <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse" />
+              Start Your Private AI
+            </Link>
+          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-background-alt transition-colors"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
-          </button>
+          {/* Mobile Controls */}
+          <div className="flex items-center gap-1 md:hidden">
+            <ThemeToggle />
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-lg hover:bg-background-alt transition-colors"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 

@@ -185,9 +185,9 @@ function StartTab() {
             </span>
             <div className="flex-1">
               <p className="font-medium mb-2">Type this command and press Enter:</p>
-              <CodeBlock code="ollama run llama3.1" />
+              <CodeBlock code="ollama run qwen3:8b" />
               <p className="text-sm text-muted mt-2">
-                Replace <code className="bg-background-alt px-1 rounded">llama3.1</code> with
+                Replace <code className="bg-background-alt px-1 rounded">qwen3:8b</code> with
                 whatever model you downloaded during setup.
               </p>
             </div>
@@ -254,7 +254,7 @@ function TipsTab() {
     {
       title: "Try different models for different tasks",
       description:
-        "Smaller models (like Llama 3.2 3B) are fast for simple questions. Larger models (like Llama 3.1 8B) are better for complex reasoning.",
+        "Smaller models (like Qwen3 4B) are fast for simple questions. Larger models (like Qwen3 8B) are better for complex reasoning.",
       icon: Zap,
     },
     {
@@ -409,7 +409,7 @@ function TroubleshootingTab() {
                 <li>Try again with the pull command:</li>
               </ul>
               <div className="mt-2">
-                <CodeBlock code="ollama pull llama3.1" />
+                <CodeBlock code="ollama pull qwen3:8b" />
               </div>
             </div>
           </div>
@@ -433,11 +433,11 @@ function TroubleshootingTab() {
               </ul>
               <p className="mt-3">
                 Try a smaller model like{" "}
-                <strong>Llama 3.2 3B</strong> - it's faster and uses less
+                <strong>Qwen3 4B</strong> - it's faster and uses less
                 memory:
               </p>
               <div className="mt-2">
-                <CodeBlock code="ollama run llama3.2" />
+                <CodeBlock code="ollama run qwen3:4b" />
               </div>
             </div>
           </div>
@@ -453,21 +453,21 @@ function TroubleshootingTab() {
               <div className="space-y-2 mt-2">
                 <div className="flex items-center gap-2">
                   <code className="bg-background-alt px-2 py-1 rounded text-xs">
-                    ollama run llama3.2
+                    ollama run qwen3:4b
                   </code>
                   <span>- Fast, lightweight</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <code className="bg-background-alt px-2 py-1 rounded text-xs">
-                    ollama run llama3.1
+                    ollama run qwen3:8b
                   </code>
                   <span>- Smarter, best balance</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <code className="bg-background-alt px-2 py-1 rounded text-xs">
-                    ollama run mistral
+                    ollama run deepseek-r1:7b
                   </code>
-                  <span>- Great for reasoning</span>
+                  <span>- Great for step-by-step reasoning</span>
                 </div>
               </div>
               <p className="mt-3">

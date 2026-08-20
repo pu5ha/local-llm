@@ -1,3 +1,6 @@
+import type { Model } from "@/lib/catalog/types";
+import { getRecommendedModel } from "@/lib/catalog/recommend";
+
 export type TierId = "entry" | "standard" | "power";
 
 export interface Tier {
@@ -11,10 +14,7 @@ export interface Tier {
   exampleComputers: string[];
   capabilities: string[];
   limitations: string[];
-  recommendedModel: {
-    name: string;
-    ollamaCommand: string;
-  };
+  stretchNote?: string;
   upgradeInfo?: {
     cost: string;
     action: string;
@@ -26,6 +26,8 @@ export interface Tier {
   };
 }
 
+// Never hardcode a chip generation (M1/M2/M3/M4...) here — it dates within a
+// year. Describe hardware by RAM amount and "current [Mac line]" instead.
 export const tiers: Record<TierId, Tier> = {
   entry: {
     id: "entry",
@@ -36,10 +38,9 @@ export const tiers: Record<TierId, Tier> = {
     description: "Perfect for basic AI tasks. Your computer can handle simple conversations and quick questions.",
     ramRequired: 8,
     exampleComputers: [
-      "MacBook Air (M1/M2, 8GB)",
-      "Basic Windows laptops",
-      "5+ year old computers",
-      "Chromebooks with Linux",
+      "Any Mac with 8GB unified memory",
+      "Budget or older Windows laptops (most made in the last 5-6 years)",
+      "Chromebooks with Linux (Crostini) enabled",
     ],
     capabilities: [
       "Chat with AI privately",
@@ -53,10 +54,6 @@ export const tiers: Record<TierId, Tier> = {
       "Extended conversations",
       "Fast response times",
     ],
-    recommendedModel: {
-      name: "Llama 3.2 3B",
-      ollamaCommand: "ollama run llama3.2:3b",
-    },
     upgradeInfo: {
       cost: "$40-80",
       action: "Add 8GB more RAM",
@@ -65,9 +62,9 @@ export const tiers: Record<TierId, Tier> = {
     buyingGuide: {
       priceRange: "$400-700",
       examples: [
-        "MacBook Air M1 8GB (~$700)",
-        "HP Pavilion 8GB (~$500)",
-        "Lenovo IdeaPad 8GB (~$450)",
+        "Entry-level MacBook Air, any current generation, 8GB config (~$700-900)",
+        "Budget Windows laptop with 8GB RAM (~$400-600)",
+        "Refurbished business laptop, 8GB RAM (~$250-400)",
       ],
     },
   },
@@ -80,10 +77,9 @@ export const tiers: Record<TierId, Tier> = {
     description: "Handle most AI tasks comfortably. Great for coding help, document analysis, and extended conversations.",
     ramRequired: 16,
     exampleComputers: [
-      "MacBook Pro (M1/M2/M3, 16GB)",
-      "MacBook Air (M2/M3, 16GB)",
-      "Gaming laptops (16GB+)",
-      "Recent desktop PCs",
+      "Any current Mac (MacBook Air/Pro, Mac mini) with 16GB unified memory",
+      "Gaming or creator laptops with 16GB+ RAM",
+      "Recent desktop PCs with 16GB RAM",
     ],
     capabilities: [
       "Everything in Entry tier",
@@ -97,10 +93,6 @@ export const tiers: Record<TierId, Tier> = {
       "Book-length documents",
       "Instant responses on complex tasks",
     ],
-    recommendedModel: {
-      name: "Llama 3.2 8B",
-      ollamaCommand: "ollama run llama3.2",
-    },
     upgradeInfo: {
       cost: "$100-200",
       action: "Add 16GB more RAM (if possible)",
@@ -109,9 +101,9 @@ export const tiers: Record<TierId, Tier> = {
     buyingGuide: {
       priceRange: "$800-1500",
       examples: [
-        "MacBook Air M2 16GB (~$1,100)",
-        "MacBook Pro 14\" M3 16GB (~$1,600)",
-        "ASUS ROG Gaming Laptop 16GB (~$900)",
+        "Current MacBook Air, 16GB config (~$1,000-1,300)",
+        "Current MacBook Pro, 16GB config (~$1,500-1,800)",
+        "Windows gaming laptop, 16GB RAM (~$900-1,200)",
       ],
     },
   },
@@ -124,10 +116,9 @@ export const tiers: Record<TierId, Tier> = {
     description: "Handle any AI task with speed. Best for professionals, developers, and power users who need the fastest, most capable models.",
     ramRequired: 32,
     exampleComputers: [
-      "Mac Studio (32GB+)",
-      "MacBook Pro (32GB+)",
-      "High-end gaming PCs",
-      "Workstations with dedicated GPUs",
+      "Any Mac with 32GB+ unified memory (Mac mini, MacBook Pro, Mac Studio)",
+      "High-end gaming or workstation laptops with 32GB+ RAM",
+      "Desktop PC with a dedicated GPU (16GB+ VRAM) or 32GB+ system RAM",
     ],
     capabilities: [
       "Everything in Standard tier",
@@ -138,16 +129,14 @@ export const tiers: Record<TierId, Tier> = {
       "Multiple AI tasks simultaneously",
     ],
     limitations: [],
-    recommendedModel: {
-      name: "Llama 3.2 8B (or larger)",
-      ollamaCommand: "ollama run llama3.2",
-    },
+    stretchNote:
+      "Have 64GB or more? You can step up to 70B-class reasoning models like DeepSeek R1-Distill-Llama-70B — the closest thing to frontier-model quality running entirely on your own machine.",
     buyingGuide: {
       priceRange: "$1,500+",
       examples: [
-        "Mac Studio M2 Max 32GB (~$2,000)",
-        "MacBook Pro 14\" M3 Pro 36GB (~$2,500)",
-        "Custom gaming PC 32GB + RTX 4070 (~$1,500)",
+        "Current Mac with 32GB+ unified memory (~$2,000+)",
+        "Custom desktop, 32GB RAM + 16GB+ VRAM GPU (~$1,500-2,500)",
+        "Workstation laptop, 32GB+ RAM (~$2,200+)",
       ],
     },
   },
@@ -168,4 +157,14 @@ export function getTierById(id: TierId): Tier {
 
 export function getAllTiers(): Tier[] {
   return tierOrder.map((id) => tiers[id]);
+}
+
+/** Computed from the live catalog, not hand-typed — single source of truth. */
+export function getTierRecommendation(
+  tier: Tier,
+  catalog: Model[]
+): { name: string; ollamaCommand: string } | null {
+  const { primary } = getRecommendedModel(catalog, { ramGB: tier.ramRequired });
+  if (!primary) return null;
+  return { name: primary.name, ollamaCommand: `ollama run ${primary.ollamaName}` };
 }

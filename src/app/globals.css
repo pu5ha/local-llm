@@ -25,10 +25,45 @@
   --terminal-green: #4ade80;
   --terminal-amber: #fbbf24;
 
+  /* Tag text/backgrounds not already covered above */
+  --tag-amber-text: #92700c;
+  --tag-blue-bg: #e8f0fb;
+  --tag-blue-text: #1e5aa8;
+  --tag-violet-bg: #f1e9fb;
+  --tag-violet-text: #6b21a8;
+  --glass-bg: rgba(250, 248, 245, 0.9);
+
   /* Fonts */
   --font-serif: 'Instrument Serif', Georgia, serif;
   --font-sans: 'DM Sans', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+}
+
+:root[data-theme="dark"] {
+  /* Warm, cozy palette — dark */
+  --background: #17140f;
+  --background-alt: #1f1b14;
+  --foreground: #f1ece2;
+  --muted: #a89f8f;
+  --border: #38321f;
+  --card: #201c15;
+  --card-hover: #29241a;
+
+  /* Rich, trustworthy accents — brightened for contrast on dark */
+  --primary: #34a883;
+  --primary-light: #4fd6a8;
+  --primary-pale: #16261f;
+  --secondary: #e3c04a;
+  --secondary-pale: #2b230f;
+  --accent: #ff7f6b;
+  --accent-pale: #2e1712;
+
+  --tag-amber-text: #f0d878;
+  --tag-blue-bg: #16202e;
+  --tag-blue-text: #7ab8f5;
+  --tag-violet-bg: #241b30;
+  --tag-violet-text: #c79bf0;
+  --glass-bg: rgba(23, 20, 15, 0.85);
 }
 
 @theme inline {
@@ -56,6 +91,11 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 body {
@@ -63,6 +103,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   line-height: 1.6;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Paper texture overlay */
@@ -275,12 +316,22 @@ body::before {
 
 .tag-amber {
   background: var(--secondary-pale);
-  color: #92700c;
+  color: var(--tag-amber-text);
 }
 
 .tag-red {
   background: var(--accent-pale);
   color: var(--accent);
+}
+
+.tag-blue {
+  background: var(--tag-blue-bg);
+  color: var(--tag-blue-text);
+}
+
+.tag-violet {
+  background: var(--tag-violet-bg);
+  color: var(--tag-violet-text);
 }
 
 /* Decorative elements */
@@ -289,6 +340,13 @@ body::before {
   background-repeat: repeat-x;
   height: 8px;
   width: 100%;
+}
+
+/* Vertical variant - connects stacked steps into one journey */
+.squiggle-vertical {
+  background-image: url("data:image/svg+xml,%3Csvg width='8' height='100' viewBox='0 0 8 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 0C0 8.33333 0 16.6667 4 25C8 33.3333 8 41.6667 4 50C0 58.3333 0 66.6667 4 75C8 83.3333 8 91.6667 4 100' stroke='%231a5f4a' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: repeat-y;
+  width: 8px;
 }
 
 /* Marquee banner */
@@ -342,9 +400,9 @@ body::before {
   outline-offset: 2px;
 }
 
-/* Glass effect for nav (light version) */
+/* Glass effect for nav */
 .glass {
-  background: rgba(250, 248, 245, 0.9);
+  background: var(--glass-bg);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }

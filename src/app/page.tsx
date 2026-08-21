@@ -10,7 +10,7 @@ const STEPS = [
   {
     num: 1,
     title: "Choose your app",
-    desc: "We recommend Ollama - it's free, easy, and works just like ChatGPT.",
+    desc: "We recommend Ollama - it's free, easy, and has a chat window just like ChatGPT.",
   },
   {
     num: 2,
@@ -36,7 +36,7 @@ const FAQS = [
   },
   {
     q: "Is this as good as ChatGPT?",
-    a: "For most things people actually use ChatGPT for—writing, brainstorming, answering questions, even basic coding help—yes. The small models that run on a laptop today handle tasks that needed a data-center-scale AI just two years ago.",
+    a: "For everyday things—writing, brainstorming, answering questions, basic coding—local models hold up well. For the hardest problems, cloud AI like ChatGPT is still smarter and faster. But it's improving fast, and unlike ChatGPT, everything stays on your computer.",
   },
   {
     q: "Will it slow down my computer?",
@@ -87,7 +87,7 @@ export default function Home() {
               style={{ color: "var(--home-muted)" }}
             >
               Everything you type in ChatGPT gets stored on their servers.
-              Keep the same experience—without anyone watching.
+              Chat the same way—just privately, without anyone watching.
             </p>
 
             <div className="flex justify-center md:justify-start mb-10">
@@ -102,7 +102,7 @@ export default function Home() {
             >
               <span>10-min setup</span>
               <span style={{ color: "var(--home-border)" }}>|</span>
-              <span>Same experience</span>
+              <span>Good enough for daily use</span>
               <span style={{ color: "var(--home-border)" }}>|</span>
               <span>Nothing to buy</span>
             </div>

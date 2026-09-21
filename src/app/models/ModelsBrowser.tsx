@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import { Search, Filter, Cpu, Zap, HardDrive, X, Star } from "lucide-react";
 import { Button, Card, Badge, CopyButton } from "@/components/ui";
 import type { Model } from "@/lib/catalog/types";
-import { getTierForRam, getTierById, tierOrder } from "@/data/tiers";
-import { getRecommendedModel } from "@/lib/catalog/recommend";
+import { getTierForRam, getTierById } from "@/data/tiers";
+import { getTierRoster } from "@/lib/catalog/recommend";
 
 const ramOptions = ["4GB", "8GB", "16GB+"];
 
@@ -16,6 +16,14 @@ const tierColorClass: Record<string, string> = {
   blue: "tag-blue",
 };
 
+/** Badge colour per RAM tier, smallest to largest. */
+function tierBadgeClass(ramGB: number): string {
+  if (ramGB >= 64) return "tag-violet";
+  if (ramGB >= 32) return "tag-blue";
+  if (ramGB >= 16) return "tag-amber";
+  return "tag-green";
+}
+
 export default function ModelsBrowser({ models }: { models: Model[] }) {
   const [search, setSearch] = useState("");
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
@@ -24,15 +32,19 @@ export default function ModelsBrowser({ models }: { models: Model[] }) {
 
   const providers = useMemo(() => [...new Set(models.map((m) => m.provider))], [models]);
 
-  const editorsPicks = useMemo(() => {
-    return tierOrder
-      .map((tierId) => {
-        const tier = getTierById(tierId);
-        const { primary } = getRecommendedModel(models, { ramGB: tier.ramRequired });
-        return primary ? { tier, model: primary } : null;
-      })
-      .filter((entry): entry is { tier: ReturnType<typeof getTierById>; model: Model } => entry !== null);
-  }, [models]);
+  /**
+   * One pick per RAM tier the setup wizard offers. Driven by getTierRoster
+   * rather than src/data/tiers, which only defines three tiers (8/16/32) — so
+   * the 64GB recommendation used to be invisible here even though the wizard
+   * offers a 64GB button.
+   */
+  const editorsPicks = useMemo(
+    () =>
+      getTierRoster(models)
+        .filter((row) => row.pick !== null)
+        .map((row) => ({ ramGB: row.ramGB, model: row.pick as Model })),
+    [models]
+  );
 
   const filteredModels = useMemo(() => {
     return models.filter((model) => {
@@ -92,12 +104,12 @@ export default function ModelsBrowser({ models }: { models: Model[] }) {
             <Star className="w-4 h-4 text-secondary" />
             <h2 className="font-serif text-xl">Editor&apos;s Picks</h2>
           </div>
-          <div className="grid sm:grid-cols-3 gap-4">
-            {editorsPicks.map(({ tier, model }) => (
-              <div key={tier.id} className="paper-card p-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {editorsPicks.map(({ ramGB, model }) => (
+              <div key={ramGB} className="paper-card p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className={`tag ${tierColorClass[tier.color] ?? "tag-green"}`}>
-                    {tier.emoji} {tier.name} · {tier.ramRequired}GB+
+                  <span className={`tag ${tierBadgeClass(ramGB)}`}>
+                    {ramGB}GB RAM
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold mb-1">

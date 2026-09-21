@@ -1,4 +1,4 @@
-import { getRecommendedModel, getRamCapabilityFlags } from "@/lib/catalog/recommend";
+import { getRecommendedModel, getRamCapabilityFlags, getTierRoster } from "@/lib/catalog/recommend";
 import { lookupVramGB, getAppleSiliconSuggestion } from "@/lib/catalog/hardwareTables";
 import type { Model } from "@/lib/catalog/types";
 
@@ -16,19 +16,23 @@ function makeModel(overrides: Partial<Model>): Model {
     curatedAt: "2026-01-01",
     parameters: "8B",
     parametersB: 8,
-    ramRequiredGB: 5,
-    ramRequired: "5GB",
+    ramRequiredGB: 13,
+    ramRequired: "13GB",
+    ramSource: "measured",
     factsSource: "live",
     ...overrides,
   };
 }
 
+// ramRequiredGB is TOTAL system RAM the model needs, OS reserve included
+// (mergeCatalog.ramRequiredFor), so it's compared against a machine's RAM
+// directly with no second subtraction.
 describe("getRecommendedModel", () => {
   const catalog: Model[] = [
-    makeModel({ id: "small", featured: true, ramRequiredGB: 3, parametersB: 4 }),
-    makeModel({ id: "mid", featured: true, ramRequiredGB: 5, parametersB: 8 }),
-    makeModel({ id: "big", featured: true, ramRequiredGB: 20, parametersB: 32 }),
-    makeModel({ id: "unfeatured-fits", featured: false, ramRequiredGB: 3, parametersB: 4 }),
+    makeModel({ id: "small", featured: true, ramRequiredGB: 8, parametersB: 4 }),
+    makeModel({ id: "mid", featured: true, ramRequiredGB: 13, parametersB: 8 }),
+    makeModel({ id: "big", featured: true, ramRequiredGB: 26, parametersB: 32 }),
+    makeModel({ id: "unfeatured-fits", featured: false, ramRequiredGB: 8, parametersB: 4 }),
   ];
 
   it("only ever recommends featured models", () => {
@@ -43,7 +47,8 @@ describe("getRecommendedModel", () => {
   });
 
   it("recommends purely off RAM, with no GPU-based boost", () => {
-    // usable = ramGB - OS_OVERHEAD_GB(4) = 16; below big's 20GB requirement either way
+    // 20GB cannot hold big (needs 26GB), regardless of what GPU is present —
+    // useHardwareDetection's x1.5 boost must not leak into model choice.
     const result = getRecommendedModel(catalog, { ramGB: 20 });
     expect(result.primary?.id).toBe("mid");
   });
@@ -58,6 +63,51 @@ describe("getRecommendedModel", () => {
     const result = getRecommendedModel(catalog, { ramGB: 1 });
     expect(result.primary).toBeNull();
     expect(result.maxParametersB).toBe(0);
+  });
+});
+
+describe("getRecommendedModel with explicit tier assignments", () => {
+  // A Mixture-of-Experts model is the case that broke the old derived rule: 35B
+  // total params outranks a dense 27B when sorting by parametersB, and its
+  // measured footprint ties the 32GB budget exactly, so a "biggest that fits"
+  // rule hands it BOTH the 32GB and 64GB tiers.
+  const catalog: Model[] = [
+    makeModel({ id: "t8", featured: true, recommendedForRamGB: 8, ramRequiredGB: 8, parametersB: 4 }),
+    makeModel({ id: "t16", featured: true, recommendedForRamGB: 16, ramRequiredGB: 13, parametersB: 12 }),
+    makeModel({ id: "t32", featured: true, recommendedForRamGB: 32, ramRequiredGB: 26, parametersB: 27 }),
+    makeModel({
+      id: "t64-moe",
+      featured: true,
+      recommendedForRamGB: 64,
+      ramRequiredGB: 32,
+      parametersB: 35,
+      activeParametersB: 3,
+    }),
+  ];
+
+  it("gives each RAM tier a distinct pick", () => {
+    const roster = getTierRoster(catalog);
+    expect(roster.map((r) => r.pick?.id)).toEqual(["t8", "t16", "t32", "t64-moe"]);
+    expect(roster.every((r) => r.isDistinct)).toBe(true);
+  });
+
+  it("does not let a high-total-param MoE take the tier below its own", () => {
+    expect(getRecommendedModel(catalog, { ramGB: 32 }).primary?.id).toBe("t32");
+  });
+
+  it("rounds an in-between RAM amount down to the tier it belongs to", () => {
+    expect(getRecommendedModel(catalog, { ramGB: 12 }).primary?.id).toBe("t8");
+    expect(getRecommendedModel(catalog, { ramGB: 48 }).primary?.id).toBe("t32");
+    expect(getRecommendedModel(catalog, { ramGB: 128 }).primary?.id).toBe("t64-moe");
+  });
+
+  it("reports a roster gap instead of silently downgrading a tier", () => {
+    const gapped = catalog.filter((m) => m.recommendedForRamGB !== 64);
+    const roster = getTierRoster(gapped);
+    const top = roster.find((r) => r.ramGB === 64)!;
+    // 64GB falls back to the biggest that fits, which is the 32GB pick.
+    expect(top.pick?.id).toBe("t32");
+    expect(top.isDistinct).toBe(false);
   });
 });
 

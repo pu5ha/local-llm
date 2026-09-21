@@ -931,7 +931,7 @@ function StepModel({
                     <p className="text-sm text-muted mb-3">
                       Below the message box, in the row of small icons just to the left of the send button, click the <strong>model dropdown</strong> (it may show a different model name by default). Type or select it from the list:
                     </p>
-                    <CodeBlock code={selectedModelData.ollamaName || "llama3.2"} />
+                    <CodeBlock code={selectedModelData.ollamaName} />
                     {/* Visual representation of the input bar + model dropdown */}
                     <div className="mt-3 bg-background border border-border rounded-lg p-3">
                       <div className="text-xs text-muted mb-2 pb-2 border-b border-border flex items-center gap-2">
@@ -944,7 +944,7 @@ function StepModel({
                           <span className="w-6 h-6 rounded-full bg-background border border-border flex items-center justify-center text-muted text-xs">+</span>
                           <span className="w-6 h-6 rounded-full bg-background border border-border flex items-center justify-center text-muted text-xs">🌐</span>
                           <span className="bg-primary/10 border border-primary/30 rounded-full px-2 py-1 text-primary font-mono text-xs flex items-center gap-1 ring-2 ring-primary">
-                            {selectedModelData.ollamaName || "llama3.2"} <span>▾</span>
+                            {selectedModelData.ollamaName} <span>▾</span>
                           </span>
                           <span className="w-6 h-6 rounded-full bg-primary/40 flex items-center justify-center text-white text-xs">↑</span>
                         </div>

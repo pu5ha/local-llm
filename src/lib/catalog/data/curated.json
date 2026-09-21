@@ -1,0 +1,240 @@
+[
+  {
+    "id": "qwen3.5-2b",
+    "ollamaName": "qwen3.5:2b",
+    "hfModelId": "Qwen/Qwen3.5-2B",
+    "name": "Qwen3.5",
+    "provider": "Alibaba",
+    "description": "The smallest model worth running. Fine for short questions and rewriting text on older or low-memory machines.",
+    "bestFor": [
+      "Older hardware",
+      "Quick questions",
+      "Rewriting text"
+    ],
+    "quality": "good",
+    "speed": "fast",
+    "curatedAt": "2026-09-21",
+    "parametersB": 2,
+    "weightsGB": 2.74,
+    "visionCapable": false
+  },
+  {
+    "id": "qwen3.5-4b",
+    "ollamaName": "qwen3.5:4b",
+    "hfModelId": "Qwen/Qwen3.5-4B",
+    "name": "Qwen3.5",
+    "provider": "Alibaba",
+    "description": "Runs comfortably on an 8GB machine and still handles multi-step questions. The best starting point if your computer is on the smaller side.",
+    "bestFor": [
+      "General chat",
+      "8GB machines",
+      "Everyday questions"
+    ],
+    "quality": "good",
+    "speed": "fast",
+    "featured": true,
+    "recommendedForRamGB": 8,
+    "curatedAt": "2026-09-21",
+    "parametersB": 4,
+    "weightsGB": 3.39,
+    "visionCapable": false
+  },
+  {
+    "id": "granite-4.2-8b",
+    "ollamaName": "granite4.2:8b",
+    "hfModelId": "ibm-granite/granite-4.2-8b",
+    "name": "Granite 4.2",
+    "provider": "IBM",
+    "description": "IBM's small workhorse. Reliable at following instructions and producing structured output like lists and JSON.",
+    "bestFor": [
+      "Following instructions",
+      "Structured output",
+      "Summarising"
+    ],
+    "quality": "good",
+    "speed": "fast",
+    "curatedAt": "2026-09-21",
+    "parametersB": 8,
+    "weightsGB": 5.35,
+    "visionCapable": false
+  },
+  {
+    "id": "qwen3.5-9b",
+    "ollamaName": "qwen3.5:9b",
+    "hfModelId": "Qwen/Qwen3.5-9B",
+    "name": "Qwen3.5",
+    "provider": "Alibaba",
+    "description": "A step up from the 4B with noticeably better reasoning, and still light enough to leave your machine responsive.",
+    "bestFor": [
+      "General chat",
+      "Longer documents",
+      "Light coding"
+    ],
+    "quality": "great",
+    "speed": "fast",
+    "curatedAt": "2026-09-21",
+    "parametersB": 9,
+    "weightsGB": 6.59,
+    "visionCapable": false
+  },
+  {
+    "id": "gemma-4-12b",
+    "ollamaName": "gemma4:12b",
+    "hfModelId": "google/gemma-4-12B-it",
+    "name": "Gemma 4",
+    "provider": "Google",
+    "description": "Strong all-rounder for a 16GB computer, and it reads images as well as text — you can paste in a screenshot or photo and ask about it.",
+    "bestFor": [
+      "General chat",
+      "Images and screenshots",
+      "Long documents"
+    ],
+    "quality": "great",
+    "speed": "medium",
+    "featured": true,
+    "recommendedForRamGB": 16,
+    "curatedAt": "2026-09-21",
+    "parametersB": 12,
+    "weightsGB": 7.56,
+    "visionCapable": true
+  },
+  {
+    "id": "gpt-oss-20b",
+    "ollamaName": "gpt-oss:20b",
+    "hfModelId": "openai/gpt-oss-20b",
+    "name": "gpt-oss",
+    "provider": "OpenAI",
+    "description": "OpenAI's open-weights model. A good option if you specifically want to compare against what you're used to from ChatGPT.",
+    "bestFor": [
+      "General chat",
+      "Reasoning",
+      "Familiar style"
+    ],
+    "quality": "great",
+    "speed": "medium",
+    "curatedAt": "2026-09-21",
+    "parametersB": 20,
+    "weightsGB": 13.79,
+    "visionCapable": false
+  },
+  {
+    "id": "gemma-4-26b",
+    "ollamaName": "gemma4:26b",
+    "hfModelId": "google/gemma-4-26B-A4B-it",
+    "name": "Gemma 4",
+    "provider": "Google",
+    "description": "Nearly as capable as a dense model its size but much faster, because only a small part of it runs for each word. A good trade if speed matters more to you than peak quality.",
+    "bestFor": [
+      "Fast responses",
+      "General chat",
+      "Images and screenshots"
+    ],
+    "quality": "great",
+    "speed": "fast",
+    "curatedAt": "2026-09-21",
+    "parametersB": 26,
+    "activeParametersB": 3.8,
+    "weightsGB": 18.6,
+    "visionCapable": true
+  },
+  {
+    "id": "qwen3.6-27b",
+    "ollamaName": "qwen3.6:27b",
+    "hfModelId": "Qwen/Qwen3.6-27B",
+    "name": "Qwen3.6",
+    "provider": "Alibaba",
+    "description": "The previous generation of this size. Still very capable, and a reasonable fallback if the newer one gives you trouble.",
+    "bestFor": [
+      "Coding",
+      "Complex reasoning",
+      "Images and screenshots"
+    ],
+    "quality": "excellent",
+    "speed": "medium",
+    "curatedAt": "2026-09-21",
+    "parametersB": 27,
+    "weightsGB": 17.77,
+    "visionCapable": true
+  },
+  {
+    "id": "qwen3.8-27b",
+    "ollamaName": "qwen3.8:27b",
+    "hfModelId": "Qwen/Qwen3.8-27B",
+    "name": "Qwen3.8",
+    "provider": "Alibaba",
+    "description": "The best all-round pick once you have 32GB. Handles long documents and larger coding tasks, and reads images as well as text.",
+    "bestFor": [
+      "Coding",
+      "Complex reasoning",
+      "Images and screenshots"
+    ],
+    "quality": "excellent",
+    "speed": "medium",
+    "featured": true,
+    "recommendedForRamGB": 32,
+    "curatedAt": "2026-09-21",
+    "parametersB": 27,
+    "weightsGB": 17.74,
+    "visionCapable": true
+  },
+  {
+    "id": "muse-glimmer-30b",
+    "ollamaName": "muse-glimmer:30b",
+    "hfModelId": "meta-models/Muse-Glimmer-30B",
+    "name": "Muse Glimmer",
+    "provider": "Meta",
+    "description": "Meta's model built for multi-step tasks that use tools. Fully Apache-2.0 licensed. Its published scores are Meta's own, so treat them as vendor-reported.",
+    "bestFor": [
+      "Multi-step tasks",
+      "Tool use",
+      "Images and screenshots"
+    ],
+    "quality": "great",
+    "speed": "medium",
+    "curatedAt": "2026-09-21",
+    "parametersB": 30,
+    "weightsGB": 18.16,
+    "visionCapable": true
+  },
+  {
+    "id": "gemma-4-31b",
+    "ollamaName": "gemma4:31b",
+    "hfModelId": "google/gemma-4-31B-it",
+    "name": "Gemma 4",
+    "provider": "Google",
+    "description": "Google's largest Gemma 4. The most downloaded model in this size class, and the most consistent at clean, well-formatted answers.",
+    "bestFor": [
+      "Complex reasoning",
+      "Structured output",
+      "Long documents"
+    ],
+    "quality": "excellent",
+    "speed": "slow",
+    "curatedAt": "2026-09-21",
+    "parametersB": 31,
+    "weightsGB": 19.87,
+    "visionCapable": false
+  },
+  {
+    "id": "qwen3.6-35b-a3b",
+    "ollamaName": "qwen3.6:35b",
+    "hfModelId": "Qwen/Qwen3.6-35B-A3B",
+    "name": "Qwen3.6",
+    "provider": "Alibaba",
+    "description": "Top-tier quality that still answers quickly, because only about 3B of its 35B runs for each word. Worth the 64GB it asks for.",
+    "bestFor": [
+      "Coding",
+      "Multi-step tasks",
+      "Images and screenshots"
+    ],
+    "quality": "excellent",
+    "speed": "fast",
+    "featured": true,
+    "recommendedForRamGB": 64,
+    "curatedAt": "2026-09-21",
+    "parametersB": 35,
+    "activeParametersB": 3,
+    "weightsGB": 22.62,
+    "visionCapable": true
+  }
+]

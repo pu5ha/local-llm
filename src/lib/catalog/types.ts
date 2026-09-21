@@ -2,6 +2,14 @@ export type Quality = "excellent" | "great" | "good";
 export type Speed = "fast" | "medium" | "slow";
 
 /**
+ * The RAM tiers the setup wizard offers (SetupWizard.tsx's RAM buttons). Exactly
+ * one curated model carries each value via `recommendedForRamGB` — that is the
+ * recommendation, rather than something derived from parameter counts.
+ */
+export const RAM_TIERS_GB = [8, 16, 32, 64] as const;
+export type RamTierGB = (typeof RAM_TIERS_GB)[number];
+
+/**
  * Hand-curated by the site owner. This is the only thing that decides which
  * models get shown as "featured"/recommended to a beginner — never derived
  * or promoted automatically from live data.
@@ -23,7 +31,24 @@ export interface CuratedModel {
   speed: Speed;
   featured?: boolean;
   curatedAt: string; // ISO date the owner last reviewed this entry
-  parametersB: number; // e.g. 8 — authoritative, drives ramRequiredGB via a Q4 formula
+  parametersB: number; // e.g. 8 — total params. Display + fallback sizing only (see weightsGB)
+
+  /**
+   * Measured size of the Ollama model layer for `ollamaName`, in GB, from the
+   * registry manifest. Authoritative for sizing when present — the parametersB
+   * estimate runs ~10% low against real Q4_K_M downloads and ignores the vision
+   * projector layer. Refreshed by scripts/refresh-modelwatch.ts.
+   */
+  weightsGB?: number;
+  /** Active params for Mixture-of-Experts models (e.g. 3 for a 35B-A3B). Display/copy only. */
+  activeParametersB?: number;
+  /** True when the manifest carries an `image.projector` layer, i.e. it accepts images. */
+  visionCapable?: boolean;
+  /**
+   * The RAM tier this model is *the* recommendation for. At most one model per
+   * tier; a model can be `featured` (shown in browse lists) without owning a tier.
+   */
+  recommendedForRamGB?: RamTierGB;
 }
 
 /** Auto-refreshed popularity/freshness facts. Never hand-edited. */
@@ -39,8 +64,9 @@ export type FactsSource = "live" | "fallback-snapshot" | "missing";
 /** What components actually render: curated entry enriched with fresh facts. */
 export interface Model extends CuratedModel, Omit<ModelFacts, "hfModelId"> {
   parameters: string; // "8B" display, derived from parametersB
-  ramRequiredGB: number;
+  ramRequiredGB: number; // total system RAM needed — see ramRequiredFor()
   ramRequired: string; // "8GB" display
+  ramSource: "measured" | "estimated"; // whether weightsGB backed the number
   factsSource: FactsSource;
 }
 

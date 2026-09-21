@@ -1,0 +1,148 @@
+# Keeps the per-RAM-tier model recommendations current without being asked.
+#
+# Routine version bumps (a newer release of a family already recommended, same
+# size class, same tier) are committed straight to main. Anything else — a new
+# family, a new size class, a first-time tier fill, a missing API key, an
+# unreadable upstream — opens a PR instead. A run that can't trust its inputs
+# writes nothing at all.
+#
+# Required secret: none. Optional: GEMINI_API_KEY (without it every change goes
+# to a PR), TELEGRAM_BOT_TOKEN + TELEGRAM_ADMIN_CHAT_ID (for the ping).
+name: model-watch
+
+on:
+  schedule:
+    # Mondays 09:17 UTC. Off the hour on purpose: top-of-hour cron slots are
+    # heavily oversubscribed on GitHub and get delayed.
+    - cron: "17 9 * * 1"
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Write changes (off = report only)"
+        type: boolean
+        default: true
+
+concurrency:
+  group: model-watch
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run model watch
+        id: watch
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ADMIN_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}
+        run: |
+          set -o pipefail
+          APPLY=""
+          if [ "${{ inputs.apply }}" != "false" ]; then APPLY="--apply"; fi
+          # Exit 1 means degraded: nothing was written, so stop without failing
+          # the workflow. Any other non-zero is a real error.
+          if ! npm run models:watch -- $APPLY --report "$RUNNER_TEMP/report.json" --notify; then
+            if [ -f "$RUNNER_TEMP/report.json" ] && [ "$(jq -r .status "$RUNNER_TEMP/report.json")" = "degraded" ]; then
+              echo "degraded=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            exit 1
+          fi
+          echo "risk=$(jq -r .risk "$RUNNER_TEMP/report.json")" >> "$GITHUB_OUTPUT"
+          echo "summary=$(jq -r .summary "$RUNNER_TEMP/report.json")" >> "$GITHUB_OUTPUT"
+
+      - name: Check for changes
+        if: steps.watch.outputs.degraded != 'true'
+        id: diff
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Nothing changed — current recommendations are still the best available."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git --no-pager diff --stat
+          fi
+
+      # Gate on the test suite, which includes the tier-fit invariants in
+      # catalog.curatedData.test.ts. Not tsc/lint: both carry large
+      # pre-existing baselines in this repo, so they can't be a pass/fail gate.
+      - name: Test
+        if: steps.diff.outputs.changed == 'true'
+        id: tests
+        continue-on-error: true
+        run: npm test
+
+      - name: Commit routine update
+        id: commit
+        if: |
+          steps.diff.outputs.changed == 'true' &&
+          steps.watch.outputs.risk == 'low' &&
+          steps.tests.outcome == 'success'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore(model-watch): ${{ steps.watch.outputs.summary }}"
+          # Branch protection on main would reject this; fall through to a PR
+          # rather than losing the work.
+          if ! git push; then
+            echo "push rejected (branch protection?) — falling through to the PR path"
+            echo "fallback=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open a PR for review
+        if: |
+          steps.diff.outputs.changed == 'true' &&
+          (steps.watch.outputs.risk != 'low' ||
+           steps.tests.outcome != 'success' ||
+           steps.commit.outputs.fallback == 'true')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="model-watch/$(date +%F)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          # The commit step may already have committed locally before its push
+          # was rejected; only commit if there is still something staged.
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(model-watch): ${{ steps.watch.outputs.summary }}"
+          fi
+          git push -u origin "$BRANCH"
+
+          {
+            echo "Model watch proposes a change that needs a human."
+            echo
+            echo '```'
+            jq -r '.proposals[] | "[\(.risk)] \(.tier)GB -> \(.candidate.ollamaName) (\(.candidate.residentGB)GB, needs \(.candidate.ramRequiredGB)GB RAM)", (.reasons[] | "    - \(.)")' "$RUNNER_TEMP/report.json"
+            echo '```'
+            echo
+            if [ "${{ steps.tests.outcome }}" != "success" ]; then
+              echo "> The test suite failed on this change — most likely a tier-fit invariant in \`catalog.curatedData.test.ts\`. Do not merge without looking."
+              echo
+            fi
+            echo "Sizes are measured from the Ollama registry manifest, not estimated."
+          } > "$RUNNER_TEMP/pr-body.md"
+
+          DRAFT=""
+          if [ "${{ steps.tests.outcome }}" != "success" ]; then DRAFT="--draft"; fi
+          gh pr create $DRAFT \
+            --title "Model watch: ${{ steps.watch.outputs.summary }}" \
+            --body-file "$RUNNER_TEMP/pr-body.md" \
+            --base main --head "$BRANCH"

@@ -12,7 +12,8 @@
     "catalog:snapshot": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/refresh-fallback-snapshot.ts",
     "gap:snapshot": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/refresh-gap-snapshot.ts",
     "news:snapshot": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/refresh-news-snapshot.ts",
-    "telegram:set-webhook": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/set-telegram-webhook.ts"
+    "telegram:set-webhook": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/set-telegram-webhook.ts",
+    "models:watch": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/refresh-modelwatch.ts"
   },
   "dependencies": {
     "@google/genai": "^2.18.0",
@@ -43,5 +44,8 @@
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

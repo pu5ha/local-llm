@@ -1,6 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import {
+  ENTRY_MODEL,
+  POWER_MODEL,
+  STANDARD_MODEL,
+} from "@/lib/catalog/examples";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -185,10 +190,13 @@ function StartTab() {
             </span>
             <div className="flex-1">
               <p className="font-medium mb-2">Type this command and press Enter:</p>
-              <CodeBlock code="ollama run qwen3:8b" />
+              <CodeBlock code={`ollama run ${STANDARD_MODEL.tag}`} />
               <p className="text-sm text-muted mt-2">
-                Replace <code className="bg-background-alt px-1 rounded">qwen3:8b</code> with
-                whatever model you downloaded during setup.
+                Replace{" "}
+                <code className="bg-background-alt px-1 rounded">
+                  {STANDARD_MODEL.tag}
+                </code>{" "}
+                with whatever model you downloaded during setup.
               </p>
             </div>
           </li>
@@ -254,7 +262,7 @@ function TipsTab() {
     {
       title: "Try different models for different tasks",
       description:
-        "Smaller models (like Qwen3 4B) are fast for simple questions. Larger models (like Qwen3 8B) are better for complex reasoning.",
+        `Smaller models (like ${ENTRY_MODEL.name}) are fast for simple questions. Larger models (like ${STANDARD_MODEL.name}) are better for complex reasoning.`,
       icon: Zap,
     },
     {
@@ -409,7 +417,7 @@ function TroubleshootingTab() {
                 <li>Try again with the pull command:</li>
               </ul>
               <div className="mt-2">
-                <CodeBlock code="ollama pull qwen3:8b" />
+                <CodeBlock code={`ollama pull ${STANDARD_MODEL.tag}`} />
               </div>
             </div>
           </div>
@@ -433,11 +441,11 @@ function TroubleshootingTab() {
               </ul>
               <p className="mt-3">
                 Try a smaller model like{" "}
-                <strong>Qwen3 4B</strong> - it's faster and uses less
+                <strong>{ENTRY_MODEL.name}</strong> - it's faster and uses less
                 memory:
               </p>
               <div className="mt-2">
-                <CodeBlock code="ollama run qwen3:4b" />
+                <CodeBlock code={`ollama run ${ENTRY_MODEL.tag}`} />
               </div>
             </div>
           </div>
@@ -453,21 +461,21 @@ function TroubleshootingTab() {
               <div className="space-y-2 mt-2">
                 <div className="flex items-center gap-2">
                   <code className="bg-background-alt px-2 py-1 rounded text-xs">
-                    ollama run qwen3:4b
+                    ollama run {ENTRY_MODEL.tag}
                   </code>
                   <span>- Fast, lightweight</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <code className="bg-background-alt px-2 py-1 rounded text-xs">
-                    ollama run qwen3:8b
+                    ollama run {STANDARD_MODEL.tag}
                   </code>
                   <span>- Smarter, best balance</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <code className="bg-background-alt px-2 py-1 rounded text-xs">
-                    ollama run deepseek-r1:7b
+                    ollama run {POWER_MODEL.tag}
                   </code>
-                  <span>- Great for step-by-step reasoning</span>
+                  <span>- Strongest, needs a roomier machine</span>
                 </div>
               </div>
               <p className="mt-3">

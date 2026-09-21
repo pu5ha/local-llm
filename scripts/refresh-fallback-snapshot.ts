@@ -35,7 +35,11 @@ function toModelFacts(m: HfApiModel): ModelFacts {
 async function fetchOne(hfModelId: string): Promise<ModelFacts | null> {
   const res = await fetch(`${HF_API_BASE}/${hfModelId}`);
   if (!res.ok) return null;
-  return toModelFacts((await res.json()) as HfApiModel);
+  const json = (await res.json()) as HfApiModel;
+  // Gated/renamed repos answer 200 with {"error":...} instead of 404 — see the
+  // matching guard in src/lib/catalog/fetchLiveFacts.ts.
+  if (typeof json.id !== "string") return null;
+  return toModelFacts(json);
 }
 
 async function fetchDiscoveryCandidates(): Promise<ModelFacts[]> {

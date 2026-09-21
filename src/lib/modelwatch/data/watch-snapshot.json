@@ -1,0 +1,181 @@
+{
+  "generatedAt": "2026-09-21T19:57:07.067Z",
+  "status": "ok",
+  "tiers": [
+    {
+      "ramGB": 8,
+      "ollamaName": "qwen3.5:4b",
+      "ramRequiredGB": 8
+    },
+    {
+      "ramGB": 16,
+      "ollamaName": "gemma4:12b",
+      "ramRequiredGB": 13
+    },
+    {
+      "ramGB": 32,
+      "ollamaName": "qwen3.8:27b",
+      "ramRequiredGB": 26
+    },
+    {
+      "ramGB": 64,
+      "ollamaName": "qwen3.6:35b",
+      "ramRequiredGB": 32
+    }
+  ],
+  "watching": [
+    {
+      "ollamaName": "gemma:2b",
+      "pullsBucket": "1M+",
+      "ramRequiredGB": 6,
+      "fitsTier": 8,
+      "heldBack": [
+        "not a clear step up from qwen3.5:4b (1.68GB vs 3.39GB)"
+      ]
+    },
+    {
+      "ollamaName": "gemma:7b",
+      "pullsBucket": "1M+",
+      "ramRequiredGB": 10,
+      "fitsTier": 16,
+      "heldBack": [
+        "not a clear step up from gemma4:12b (5.01GB vs 7.56GB, and would lose image support)"
+      ]
+    },
+    {
+      "ollamaName": "gemma4:12b",
+      "pullsBucket": "10M+",
+      "ramRequiredGB": 13,
+      "fitsTier": 16,
+      "heldBack": [
+        "not a clear step up from gemma4:12b (7.56GB vs 7.56GB)",
+        "already the current pick"
+      ]
+    },
+    {
+      "ollamaName": "gemma4:26b",
+      "pullsBucket": "10M+",
+      "ramRequiredGB": 26,
+      "fitsTier": 32,
+      "heldBack": [
+        "not a clear step up from qwen3.8:27b (18.14GB vs 17.74GB)"
+      ]
+    },
+    {
+      "ollamaName": "gemma4:31b",
+      "pullsBucket": "10M+",
+      "ramRequiredGB": 28,
+      "fitsTier": 32,
+      "heldBack": [
+        "not a clear step up from qwen3.8:27b (19.87GB vs 17.74GB, and would lose image support)"
+      ]
+    },
+    {
+      "ollamaName": "qwen3.5:0.8b",
+      "pullsBucket": "10M+",
+      "ramRequiredGB": 5,
+      "fitsTier": 8,
+      "heldBack": [
+        "not a clear step up from qwen3.5:4b (1.04GB vs 3.39GB)"
+      ]
+    },
+    {
+      "ollamaName": "qwen3.5:27b",
+      "pullsBucket": "10M+",
+      "ramRequiredGB": 25,
+      "fitsTier": 32,
+      "heldBack": [
+        "not a clear step up from qwen3.8:27b (17.42GB vs 17.74GB, and would lose image support)",
+        "older release than the current pick (qwen3.5 < qwen3.8)"
+      ]
+    },
+    {
+      "ollamaName": "qwen3.5:2b",
+      "pullsBucket": "10M+",
+      "ramRequiredGB": 7,
+      "fitsTier": 8,
+      "heldBack": [
+        "not a clear step up from qwen3.5:4b (2.74GB vs 3.39GB)"
+      ]
+    },
+    {
+      "ollamaName": "qwen3.5:35b",
+      "pullsBucket": "10M+",
+      "ramRequiredGB": 33,
+      "fitsTier": 64,
+      "heldBack": [
+        "not a clear step up from qwen3.6:35b (23.87GB vs 22.62GB, and would lose image support)",
+        "older release than the current pick (qwen3.5 < qwen3.6)"
+      ]
+    },
+    {
+      "ollamaName": "qwen3.5:35b-a3b",
+      "pullsBucket": "10M+",
+      "ramRequiredGB": 33,
+      "fitsTier": 64,
+      "heldBack": [
+        "not a clear step up from qwen3.6:35b (23.87GB vs 22.62GB, and would lose image support)",
+        "older release than the current pick (qwen3.5 < qwen3.6)"
+      ]
+    },
+    {
+      "ollamaName": "qwen3.5:4b",
+      "pullsBucket": "10M+",
+      "ramRequiredGB": 8,
+      "fitsTier": 8,
+      "heldBack": [
+        "not a clear step up from qwen3.5:4b (3.39GB vs 3.39GB)",
+        "already the current pick"
+      ]
+    },
+    {
+      "ollamaName": "qwen3.5:9b",
+      "pullsBucket": "10M+",
+      "ramRequiredGB": 12,
+      "fitsTier": 16,
+      "heldBack": [
+        "not a clear step up from gemma4:12b (6.59GB vs 7.56GB, and would lose image support)"
+      ]
+    },
+    {
+      "ollamaName": "qwen3.6:27b",
+      "pullsBucket": "1M+",
+      "ramRequiredGB": 26,
+      "fitsTier": 32,
+      "heldBack": [
+        "not a clear step up from qwen3.8:27b (17.77GB vs 17.74GB)",
+        "older release than the current pick (qwen3.6 < qwen3.8)"
+      ]
+    },
+    {
+      "ollamaName": "qwen3.6:35b",
+      "pullsBucket": "1M+",
+      "ramRequiredGB": 32,
+      "fitsTier": 32,
+      "heldBack": [
+        "already recommended at 64GB, where it has headroom",
+        "older release than the current pick (qwen3.6 < qwen3.8)"
+      ]
+    },
+    {
+      "ollamaName": "qwen3.6:35b-a3b",
+      "pullsBucket": "1M+",
+      "ramRequiredGB": 32,
+      "fitsTier": 32,
+      "heldBack": [
+        "already recommended at 64GB, where it has headroom",
+        "older release than the current pick (qwen3.6 < qwen3.8)"
+      ]
+    },
+    {
+      "ollamaName": "qwen3.8:27b",
+      "pullsBucket": "1M+",
+      "ramRequiredGB": 26,
+      "fitsTier": 32,
+      "heldBack": [
+        "not a clear step up from qwen3.8:27b (17.74GB vs 17.74GB)",
+        "already the current pick"
+      ]
+    }
+  ]
+}

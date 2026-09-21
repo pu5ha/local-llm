@@ -36,6 +36,11 @@ async function fetchOne(hfModelId: string): Promise<ModelFacts | null> {
     });
     if (!res.ok) return null;
     const json = (await res.json()) as HfApiModel;
+    // A gated or renamed repo answers 200 with {"error":"Invalid username or
+    // password."} rather than a 404, so res.ok alone lets a factless object
+    // through. Unchecked, that becomes { hfModelId: undefined } and surfaces in
+    // /admin/catalog as a model literally named "undefined".
+    if (typeof json.id !== "string") return null;
     return toModelFacts(json);
   } catch {
     return null;

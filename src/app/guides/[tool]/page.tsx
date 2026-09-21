@@ -1,6 +1,11 @@
 "use client";
 
 import { useParams, notFound } from "next/navigation";
+import {
+  ENTRY_MODEL,
+  POWER_MODEL,
+  STANDARD_MODEL,
+} from "@/lib/catalog/examples";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -100,35 +105,37 @@ const ollamaGuide: GuideSection[] = [
         <div className="space-y-4">
           <div className="p-4 bg-card-hover rounded-lg">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium">Qwen3 (4B)</h4>
+              <h4 className="font-medium">{ENTRY_MODEL.name}</h4>
               <Badge variant="success">Recommended for beginners</Badge>
             </div>
             <p className="text-sm text-muted mb-3">
               Punches well above its size class. Great balance of quality and speed.
             </p>
-            <CodeBlock code="ollama run qwen3:4b" />
+            <CodeBlock code={`ollama run ${ENTRY_MODEL.tag}`} />
           </div>
 
           <div className="p-4 bg-card-hover rounded-lg">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium">Qwen3 (8B)</h4>
-              <Badge>Great for coding</Badge>
+              <h4 className="font-medium">{STANDARD_MODEL.name}</h4>
+              <Badge>Reads images too</Badge>
             </div>
             <p className="text-sm text-muted mb-3">
-              Excellent coding and multilingual capabilities for mid-range hardware.
+              Strong all-rounder for mid-range hardware, and it can read images
+              as well as text.
             </p>
-            <CodeBlock code="ollama run qwen3:8b" />
+            <CodeBlock code={`ollama run ${STANDARD_MODEL.tag}`} />
           </div>
 
           <div className="p-4 bg-card-hover rounded-lg">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium">DeepSeek R1 (Distill)</h4>
-              <Badge>Best for reasoning</Badge>
+              <h4 className="font-medium">{POWER_MODEL.name}</h4>
+              <Badge>Best for complex work</Badge>
             </div>
             <p className="text-sm text-muted mb-3">
-              Shows its work step-by-step — great at logic, math, and code reasoning.
+              Handles long documents and larger coding tasks. Needs a roomier
+              machine — check the setup guide first.
             </p>
-            <CodeBlock code="ollama run deepseek-r1:7b" />
+            <CodeBlock code={`ollama run ${POWER_MODEL.tag}`} />
           </div>
         </div>
 
@@ -150,7 +157,7 @@ const ollamaGuide: GuideSection[] = [
         </p>
 
         <div className="p-4 bg-[#0d0d12] rounded-lg font-mono text-sm">
-          <div className="text-muted mb-2">$ ollama run llama3.2</div>
+          <div className="text-muted mb-2">$ ollama run {ENTRY_MODEL.tag}</div>
           <div className="text-muted mb-2">pulling manifest...</div>
           <div className="text-muted mb-2">pulling model...</div>
           <div className="text-accent mb-4">success</div>
@@ -201,17 +208,17 @@ const ollamaGuide: GuideSection[] = [
 
           <div>
             <h4 className="font-medium mb-2">Download a model without running</h4>
-            <CodeBlock code="ollama pull llama3.2" />
+            <CodeBlock code={`ollama pull ${ENTRY_MODEL.tag}`} />
           </div>
 
           <div>
             <h4 className="font-medium mb-2">Remove a model</h4>
-            <CodeBlock code="ollama rm llama3.2" />
+            <CodeBlock code={`ollama rm ${ENTRY_MODEL.tag}`} />
           </div>
 
           <div>
             <h4 className="font-medium mb-2">Show model information</h4>
-            <CodeBlock code="ollama show llama3.2" />
+            <CodeBlock code={`ollama show ${ENTRY_MODEL.tag}`} />
           </div>
         </div>
 
@@ -248,7 +255,7 @@ const ollamaGuide: GuideSection[] = [
           <h4 className="font-medium mb-3">Example API Call</h4>
           <CodeBlock
             code={`curl http://localhost:11434/api/generate -d '{
-  "model": "llama3.2",
+  "model": "${ENTRY_MODEL.tag}",
   "prompt": "Why is the sky blue?"
 }'`}
           />

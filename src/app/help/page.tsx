@@ -68,7 +68,7 @@ export default function HelpPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                     isActive
-                      ? "bg-white shadow-sm text-primary"
+                      ? "bg-background shadow-sm text-primary"
                       : "text-muted hover:text-foreground"
                   }`}
                 >

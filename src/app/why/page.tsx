@@ -408,19 +408,19 @@ export default function WhyPage() {
             <h2 className="font-serif text-3xl md:text-4xl mb-6">
               Ready to take back your privacy?
             </h2>
-            <p className="text-lg text-gray-400 mb-8 max-w-xl mx-auto">
+            <p className="text-lg text-background/70 mb-8 max-w-xl mx-auto">
               Find out if your computer can run private AI, then follow our simple
               guide to get started.
             </p>
             <Link
               href="/setup"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-foreground font-semibold rounded-lg hover:bg-primary-pale transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-background text-foreground font-semibold rounded-lg hover:bg-primary-pale transition-colors"
             >
               <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse" />
               Check My Computer
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <div className="flex items-center justify-center gap-6 mt-8 text-sm text-gray-400">
+            <div className="flex items-center justify-center gap-6 mt-8 text-sm text-background/70">
               <span className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-terminal-green" />
                 No account needed

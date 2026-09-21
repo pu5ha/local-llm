@@ -649,7 +649,7 @@ function StepModel({
                   className={`relative py-4 px-3 rounded-xl border-2 font-semibold text-lg transition-all cursor-pointer hover:scale-[1.02] ${
                     isSuggested
                       ? "border-primary bg-primary text-white hover:bg-primary/90 shadow-md"
-                      : "border-border bg-white hover:border-primary hover:shadow-sm"
+                      : "border-border bg-background text-foreground hover:border-primary hover:shadow-sm"
                   }`}
                 >
                   {ram}GB
@@ -730,7 +730,7 @@ function StepModel({
                     </div>
                     <div className="flex gap-2">
                       <span className="font-medium">Linux:</span>
-                      <span className="text-muted">Run <code className="bg-white px-1 rounded">free -h</code> in terminal</span>
+                      <span className="text-muted">Run <code className="bg-background px-1 rounded">free -h</code> in terminal</span>
                     </div>
                   </div>
                 </div>
@@ -854,7 +854,7 @@ function StepModel({
                     disabled={!canRun}
                     className={`w-full text-left p-4 rounded-lg border-2 transition-colors ${
                       !canRun
-                        ? "border-border bg-gray-50 opacity-60 cursor-not-allowed"
+                        ? "border-border bg-background-alt opacity-60 cursor-not-allowed"
                         : isSelected
                         ? "border-primary bg-primary/5"
                         : "border-border hover:border-primary/50"
@@ -908,10 +908,10 @@ function StepModel({
                       Click the <strong>llama icon</strong> in your menu bar (Mac) or system tray (Windows), then click <strong>"Open Ollama"</strong>.
                     </p>
                     {/* Visual representation of menu bar */}
-                    <div className="bg-white border border-border rounded-lg p-3 inline-block">
+                    <div className="bg-background border border-border rounded-lg p-3 inline-block">
                       <div className="flex items-center gap-3 text-xs text-muted">
                         <span>Menu bar:</span>
-                        <div className="flex items-center gap-1.5 bg-gray-100 px-2 py-1 rounded">
+                        <div className="flex items-center gap-1.5 bg-background-alt px-2 py-1 rounded">
                           <span>📶</span>
                           <span>🔋</span>
                           <span className="bg-primary/20 px-1.5 py-0.5 rounded font-medium text-primary">🦙 ← click this</span>
@@ -933,7 +933,7 @@ function StepModel({
                     </p>
                     <CodeBlock code={selectedModelData.ollamaName || "llama3.2"} />
                     {/* Visual representation of the input bar + model dropdown */}
-                    <div className="mt-3 bg-white border border-border rounded-lg p-3">
+                    <div className="mt-3 bg-background border border-border rounded-lg p-3">
                       <div className="text-xs text-muted mb-2 pb-2 border-b border-border flex items-center gap-2">
                         <MessageSquare className="w-3 h-3" />
                         Ollama input bar
@@ -941,8 +941,8 @@ function StepModel({
                       <div className="bg-background-alt rounded-2xl p-3">
                         <p className="text-muted text-xs mb-3">Send a message</p>
                         <div className="flex items-center justify-end gap-1.5">
-                          <span className="w-6 h-6 rounded-full bg-white border border-border flex items-center justify-center text-muted text-xs">+</span>
-                          <span className="w-6 h-6 rounded-full bg-white border border-border flex items-center justify-center text-muted text-xs">🌐</span>
+                          <span className="w-6 h-6 rounded-full bg-background border border-border flex items-center justify-center text-muted text-xs">+</span>
+                          <span className="w-6 h-6 rounded-full bg-background border border-border flex items-center justify-center text-muted text-xs">🌐</span>
                           <span className="bg-primary/10 border border-primary/30 rounded-full px-2 py-1 text-primary font-mono text-xs flex items-center gap-1 ring-2 ring-primary">
                             {selectedModelData.ollamaName || "llama3.2"} <span>▾</span>
                           </span>
@@ -967,7 +967,7 @@ function StepModel({
                       Type anything — even just <strong>"hi"</strong> — and press Enter. The model will start downloading, and you'll see a progress bar right in the chat.
                     </p>
                     {/* Visual representation of the download progress in chat */}
-                    <div className="bg-white border border-border rounded-lg p-3">
+                    <div className="bg-background border border-border rounded-lg p-3">
                       <div className="text-xs text-muted mb-2 pb-2 border-b border-border flex items-center gap-2">
                         <MessageSquare className="w-3 h-3" />
                         Ollama Chat Preview
@@ -1106,7 +1106,7 @@ function StepComplete({
             <p className="text-sm text-muted mb-3">Ready to chat? Open Ollama now:</p>
             <div className="flex items-center justify-center gap-2 text-sm">
               <span className="text-muted">Click the</span>
-              <span className="bg-white border border-border px-2 py-1 rounded font-medium">🦙 llama icon</span>
+              <span className="bg-background border border-border px-2 py-1 rounded font-medium">🦙 llama icon</span>
               <span className="text-muted">in your menu bar</span>
             </div>
           </div>
@@ -1130,7 +1130,7 @@ function StepComplete({
                 The Ollama chat window works just like ChatGPT. Type your message
                 at the bottom and press <strong>Enter</strong> to send.
               </p>
-              <div className="bg-white border border-border rounded-lg p-4">
+              <div className="bg-background border border-border rounded-lg p-4">
                 <div className="flex items-center gap-2 text-xs text-muted mb-3 pb-2 border-b border-border">
                   <MessageSquare className="w-3 h-3" />
                   <span>Ollama Chat</span>

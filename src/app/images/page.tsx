@@ -339,19 +339,19 @@ export default function ImagesPage() {
             <h2 className="font-serif text-3xl md:text-4xl mb-6">
               Ready to create your first image?
             </h2>
-            <p className="text-lg text-gray-400 mb-8 max-w-xl mx-auto">
+            <p className="text-lg text-background/70 mb-8 max-w-xl mx-auto">
               We&apos;ll walk you through checking your computer, choosing a tool,
               and generating your first AI image.
             </p>
             <Link
               href="/images/setup"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-foreground font-semibold rounded-lg hover:bg-primary-pale transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-background text-foreground font-semibold rounded-lg hover:bg-primary-pale transition-colors"
             >
               <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse" />
               Start Setup
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <div className="flex items-center justify-center gap-6 mt-8 text-sm text-gray-400">
+            <div className="flex items-center justify-center gap-6 mt-8 text-sm text-background/70">
               <span className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-terminal-green" />
                 No account needed

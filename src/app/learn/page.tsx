@@ -499,13 +499,13 @@ export default function LearnPage() {
             <h2 className="font-serif text-2xl md:text-3xl mb-4">
               Ready to try it yourself?
             </h2>
-            <p className="text-gray-400 mb-8">
+            <p className="text-background/70 mb-8">
               Now that you understand how it works, let's get you set up.
               We'll guide you through every step.
             </p>
             <Link
               href="/setup"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-foreground font-semibold rounded-lg hover:bg-primary-pale transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-background text-foreground font-semibold rounded-lg hover:bg-primary-pale transition-colors"
             >
               <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse" />
               Check My Computer

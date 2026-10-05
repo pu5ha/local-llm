@@ -170,8 +170,6 @@
     ],
     "quality": "excellent",
     "speed": "medium",
-    "featured": true,
-    "recommendedForRamGB": 32,
     "curatedAt": "2026-09-21",
     "parametersB": 27,
     "weightsGB": 17.74,
@@ -210,10 +208,12 @@
     ],
     "quality": "excellent",
     "speed": "slow",
-    "curatedAt": "2026-09-21",
+    "featured": true,
+    "recommendedForRamGB": 32,
+    "curatedAt": "2026-10-05",
     "parametersB": 31,
     "weightsGB": 19.87,
-    "visionCapable": false
+    "visionCapable": true
   },
   {
     "id": "qwen3.6-35b-a3b",
